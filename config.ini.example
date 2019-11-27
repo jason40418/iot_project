@@ -1,0 +1,11 @@
+[host]
+host=
+port=
+
+[database]
+host=
+port=
+user=
+password=
+database=
+charset=
