@@ -12,6 +12,7 @@ config = cfg.Config(root_dir)
 #####################################
 app.register_blueprint(api, url_prefix='/api')
 socketio = SocketIO(app)
+from controllers import WebSocket
 
 ######################################
 # Route
