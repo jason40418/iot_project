@@ -20,4 +20,9 @@ def test(data):
 
 @socketio.on('front-end-publish')
 def monitor(data):
-    emit('front-end-publish', json, json=True, broadcast=True)
+    json = {
+        'yes': 'succcess'
+    }
+    print(json)
+    emit('server_receive', {'receive': True}, json=True)
+    emit('front-end-response', json, json=True, broadcast=True)
