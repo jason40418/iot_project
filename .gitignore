@@ -1,7 +1,7 @@
 # Config File
 config.ini
-face_recognization/dataset/*
-face_recognization/images/*
+model/face/dataset/*
+model/face/images/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
