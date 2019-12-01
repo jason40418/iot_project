@@ -1,18 +1,21 @@
-import os
-from flask import Flask, make_response, render_template, jsonify, send_from_directory
+import os, time
+from flask import Flask, make_response, render_template, jsonify, send_from_directory, request
 from flask_socketio import SocketIO, send, emit
-from controllers.API import api
 from model.util import Config as cfg
+import RPi.GPIO as GPIO
 
 app = Flask(__name__)
 root_dir = app.root_path
 config = cfg.Config(root_dir)
+
+socketio = SocketIO(app)
+from controllers import API, LED, WebSocket
+
 #####################################
 # 註冊，包含前輟字
 #####################################
-app.register_blueprint(api, url_prefix='/api')
-socketio = SocketIO(app)
-from controllers import WebSocket
+app.register_blueprint(API.api, url_prefix='/api')
+app.register_blueprint(LED.led, url_prefix='/led')
 
 ######################################
 # Route
@@ -21,6 +24,12 @@ from controllers import WebSocket
 def index():
     resp = make_response(render_template('app/index.html'))
     return resp
+
+@app.route('/test', methods=['GET'])
+def path():
+    socketio.emit('server_led_check', {'action': 'check'}, json=True)
+    time.sleep(.5)
+    return str(LED.led_status)
 
 ######################################
 # 靜態文件
@@ -37,9 +46,37 @@ def static_file(path):
     print(static_path)
     return app.send_static_file(static_path)
 
+######################################
+# 正確關閉伺服器
+######################################
+
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+    try:
+        # 離開時清除掉GPIO所有設定
+        GPIO.cleanup()
+    except RuntimeWarning:
+        print("[@App] 可能沒有任何channel被設定，沒有任何東西被清理！")
+
+@app.route('/shutdown', methods=['GET'])
+def shutdown():
+    socketio.emit('server_clean', data, json=True)
+    time.sleep(10)
+    shutdown_server()
+    return 'Server shutting down...'
+
 # debug=True 可讓更新後即時顯示，不用重開
 if __name__ == '__main__':
     ip = config.getIPAddress()
+    port = config.getValue('host', 'port')
     # 印出所有網頁路徑
     print(app.url_map)
-    socketio.run(app, host= ip, port=3000, debug=True)
+    data = {
+        'action': "清除可能未正確關閉的元件！"
+    }
+    socketio.emit('server_clean', data, json=True)
+    GPIO.cleanup()
+    socketio.run(app, host= ip, port=port, debug=True)

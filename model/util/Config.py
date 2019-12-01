@@ -27,6 +27,10 @@ class Config:
     def getValue(self, section, key):
         self.value = self.__config[section][key]
         return self.value
+    
+    def getWebSocketUrl(self):
+        ws = 'http://' + self.getIPAddress() + ':' + self.getValue('host', 'port')
+        return ws
 
     @staticmethod
     def getIPAddress():
