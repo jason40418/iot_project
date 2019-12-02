@@ -3,3 +3,12 @@ body {
   min-height: 75rem;
   padding-top: 7.0rem;
 }
+
+.navbar-brand {
+  padding: 0px;
+}
+.navbar-brand > img {
+  height: 100%;
+  padding: 2px;
+  width: auto;
+}
