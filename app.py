@@ -1,7 +1,9 @@
 import os, time
 from flask import Flask, make_response, render_template, jsonify, send_from_directory, request
 from flask_socketio import SocketIO, send, emit
+from model import Auth
 from model.util import Config as cfg
+from model.util import General
 import RPi.GPIO as GPIO
 
 app = Flask(__name__)
@@ -9,13 +11,14 @@ root_dir = app.root_path
 config = cfg.Config(root_dir)
 
 socketio = SocketIO(app)
-from controllers import API, LED, WebSocket
+from controllers import API, LED, WebSocket, Avatar
 
 #####################################
 # 註冊，包含前輟字
 #####################################
-app.register_blueprint(API.api, url_prefix='/api')
-app.register_blueprint(LED.led, url_prefix='/led')
+app.register_blueprint(API.api_blueprint, url_prefix='/api')
+app.register_blueprint(LED.led_blueprint, url_prefix='/led')
+app.register_blueprint(Avatar.avatar_blueprint, url_prefix='/member/avatar')
 
 ######################################
 # Route
@@ -49,7 +52,6 @@ def static_file(path):
 ######################################
 # 正確關閉伺服器
 ######################################
-
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')
     if func is None:
