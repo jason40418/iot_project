@@ -13,7 +13,7 @@ root_dir = app.root_path
 config = cfg.Config(root_dir)
 
 # 定義
-led = Blueprint('led', __name__)
+led_blueprint = Blueprint('led', __name__)
 led_status = False
 led_pin_num = config.getValue('led', 'pin')
 led_pin_mode = config.getValue('led', 'mode')
@@ -24,7 +24,7 @@ def bread_led_status(data):
    led_status = data['status']
    print(data)
 
-@led.route("/")
+@led_blueprint.route("/")
 def main():
    global led_status
    global led_pin_num
@@ -49,7 +49,7 @@ def main():
          'message' : '請勿重複開啟呼吸燈！'
       }), 400
 
-@led.route("/off")
+@led_blueprint.route("/off")
 def off_led():
    global led_status
    global led_pin_num
