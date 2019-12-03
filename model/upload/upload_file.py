@@ -1,14 +1,17 @@
 import os
+import time
 
 class uploadfile():
     def __init__(self, name, type=None, size=None, not_allowed_msg=''):
+        # 增加隨機碼避免瀏覽器快取造成圖片無法正確存取
+        self.random = time.time()
         self.name = name
         self.type = type
         self.size = size
         self.not_allowed_msg = not_allowed_msg
         self.url = "/member/avatar/image/%s" % name
-        self.thumbnail_url = "/member/avatar/image/thumbnail/%s" % name
-        self.delete_url = "/member/avatar/delete/%s" % name
+        self.thumbnail_url = "/member/avatar/image/thumbnail/%s?randon=%s" % (name, self.random)
+        self.delete_url = "/member/avatar/delete/%s?randon=%s" % (name, self.random)
         self.delete_type = "DELETE"
 
 

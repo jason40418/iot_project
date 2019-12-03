@@ -62,7 +62,7 @@ def create_thumbnail(image):
 def index():
    return render_template('app/member/upload.html')
 
-@avatar_blueprint.route("/upload", methods=['GET', 'POST'])
+@avatar_blueprint.route("/upload", methods=['GET', 'POST', 'HEAD'])
 def upload():
     if request.method == 'POST':
         files = request.files['files[]']
@@ -104,6 +104,11 @@ def upload():
             file_display.append(file_saved.get_file())
 
         return simplejson.dumps({"files": file_display})
+    
+    if request.method == 'HEAD':
+        return jsonify({
+            'Request': 'HEAD'
+        }), 200
 
     return redirect(url_for('/'))
 
@@ -128,6 +133,8 @@ def delete(filename):
 @avatar_blueprint.route('/image/<path:path>', methods=['GET'])
 def face_static_file(path):
     # 完整靜態路徑
+    path = path.split('?')[0]
+    print(path)
     static_path = os.path.join(ROOT_DIR, 'model/face/dataset', path)
     folder, file_name = General.get_folder_and_file_name(static_path)
     ext = file_name.split('.')[-1]
