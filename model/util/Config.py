@@ -13,7 +13,7 @@ class Config:
     # 取用「設定檔」內資料庫參數
     def getDatabase(self):
         data = {
-            "host": str(self.__config["database"]["host"]),
+            "host": self.getIPAddress(),
             "port": int(self.__config["database"]["port"]),
             "user": str(self.__config["database"]["user"]),
             "passwd": str(self.__config["database"]["password"]),
@@ -27,7 +27,7 @@ class Config:
     def getValue(self, section, key):
         self.value = self.__config[section][key]
         return self.value
-    
+
     def getWebSocketUrl(self):
         ws = 'http://' + self.getIPAddress() + ':' + self.getValue('host', 'port')
         return ws
