@@ -2,7 +2,7 @@ from os.path import join, dirname, realpath, pardir, abspath
 import time, jwt, sys
 
 class Key():
-    
+
     def __init__(self):
         # 取得根目錄
         self.__ROOT_DIR = abspath(join(dirname(realpath(__file__)), pardir, pardir))
@@ -15,6 +15,6 @@ class Key():
 
     def getPublicKey(self):
         return self.__PUBLIC_KEY
-    
+
     def getPrivateKey(self):
         return self.__PRIVATE_KEY

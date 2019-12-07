@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>IoT | PiEnvir</title>
+
+  {# favicon #}
+  {% include "favicon.html" %}
+
+  {# CSS #}
+  {% include "css.html" %}
+
+</head>
+
+<body>
+  {% include "app/nav.html" %}
+
+  <main role="main" class="container">
+    <div class="jumbotron">
+      <h1>會員註冊</h1>
+      <p class="lead">This example is a quick exercise to illustrate how the top-aligned navbar works. As you
+        scroll, this navbar remains in its original position and moves with the rest of the page.</p>
+    </div>
+    <form id="form" data-toggle="validator" role="form">
+      <div class="form-group" has-feedback>
+        <label for="account" class="control-label">帳號</label>
+        <div class="input-group">
+          <span class="input-group-addon">@</span>
+          <input type="text" pattern="^[a-zA-Z][a-zA-Z0-9]{6,15}$" maxlength="15" class="form-control input-lg"
+            id="account" name="account" placeholder="account" data-error="請輸入6~15字的帳號（僅限英文與數字）以符合格式" required>
+          <!-- data-remote="/api/member/duplicate_confirm" data-remote-error="此帳號資料庫已經存在，請勿重複註冊" required> -->
+        </div>
+        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="name" class="control-label">姓名</label>
+        <input type="text" pattern="^[^\s].+[^\s]$" maxlength="20" class="form-control input-lg" id="name"
+          placeholder="name" data-error="不允許空值與單獨空格出現（起始與結束不為空格）" required>
+        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="control-label">電子郵件</label>
+        <input type="email" class="form-control input-lg" id="email" placeholder="e-mail"
+          data-error="請輸入正確之電子郵件信箱格式（必須包含@）" required>
+        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="control-label">密碼</label>
+        <div class="row">
+          <div class="col-sm-6">
+            <input type="password" pattern="[^\s]+" data-minlength="6" class="form-control input-lg" id="password"
+              data-pattern-error="密碼不允許任何空格" data-minlength-error="請輸入至少6位數以上密碼" data-required-error="此欄位必須填寫"
+              placeholder="passworsd" autocomplete required>
+            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+            <div class="help-block">請輸入至少6位數以上密碼</div>
+          </div>
+          <div class="col-sm-6">
+            <input type="password" pattern="[^\s]+" class="form-control input-lg" id="password_confirm"
+              data-pattern-error="密碼不允許任何空格" data-error="請填寫此欄位" data-required-error="此欄位必須填寫"
+              data-match-error="請確認密碼與先前輸入相同" data-match="#password" placeholder="password confirm" autocomplete
+              required>
+            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+            <div class="help-block with-errors"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button id="terms_contents" type="button" class="btn btn-default">檢視服務條款</button>
+        <div class="form-check checkbox checkbox-primary">
+          <input class="form-check-input" id="terms" type="checkbox" data-error="您必須同意此條款才能繼續申請" required>
+          <label class="form-check-label" for="terms">我同意服務條款</label>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">申請</button>
+      </div>
+      <div id="rsa-key" data-public-key="{{ rsa.public_key }}" data-key-id="{{ rsa.id }}"></div>
+    </form>
+  </main>
+
+  {# JavaScript #}
+  {% include "js.html" %}
+  <script src="/static/js/key.js" defer></script>
+
+  <script>
+    (() => {
+      var submit_action = () => {
+        let data = get_data();
+        let [key_id, encrypt_data] = rsa_encrypt(data, 'rsa-key', 'public-key', 'key-id');
+        let request = {
+          'id': key_id,
+          'payload': encrypt_data,
+          'datetime': current_time()
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: '/api/member/register',
+          data: JSON.stringify(request),
+          crossDomain: true,
+          cache: false,
+          dataType: 'json',
+          contentType: 'application/json',
+          timeout: 5000,
+          statusCode: {
+            0: () => {
+              $.alert({
+                theme: 'modern',
+                icon: 'fa fa-minus-circle',
+                type: 'red',
+                btnClass: 'btn-red',
+                useBootstrap: false,
+                animation: 'scale',
+                title: '錯誤',
+                content: "遠端資料庫連線失敗，請稍後再嘗試！"
+              });
+            },
+            200: () => {
+              alert('錯誤', '遠端資料庫連線失敗，請稍後再嘗試！');
+            },
+            400: () => {
+              alert('405 status code! user error');
+            }
+          },
+          error: (xhr, type, message) => {
+            console.log("[", xhr.status, "]", type, ":", message);
+          }
+        });
+      }
+
+      var get_data = () => {
+        let account = document.getElementById('account').value;
+        let name = document.getElementById('name').value;
+        let email = document.getElementById('email').value;
+        let password = document.getElementById('password').value;
+        let password_confirm = document.getElementById('password_confirm').value;
+
+        let data = {
+          'account': account,
+          'name': name,
+          'email': email,
+          'password': password,
+          'password_confirm': password_confirm
+        }
+
+        return data;
+      }
+
+      document.addEventListener("DOMContentLoaded", function (event) {
+        disable_submit_form('form', submit_action);
+        $('#terms_contents').click(() => {
+          $.confirm({
+            theme: 'material',
+            icon: 'fa fa-file-text',
+            columnClass: 'medium',
+            animation: 'scale',
+            closeIcon: true,
+            closeIconClass: "fa fa-close",
+            type: 'green',
+            title: '服務條款',
+            content: 'url:/terms',
+            onContentReady: function () {
+              //hljs.configure({useBR: true});
+              document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightBlock(block);
+                hljs.lineNumbersBlock(block);
+              });
+            },
+            draggable: false,
+            buttons: {
+              confirm: {
+                text: '關閉',
+                action: () => {
+                }
+              }
+            }
+          });
+        });
+      });
+    })()
+  </script>
+</body>
+
+</html>

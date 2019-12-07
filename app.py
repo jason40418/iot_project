@@ -1,5 +1,6 @@
 import os, time
-from flask import Flask, make_response, render_template, jsonify, send_from_directory, request
+from flask import Flask, make_response, render_template, jsonify, send_from_directory, request, render_template_string
+from flask_misaka import Misaka, markdown
 from flask_socketio import SocketIO, send, emit
 from model import Auth
 from model.util import Config as cfg
@@ -7,11 +8,15 @@ from model.util import General
 import RPi.GPIO as GPIO
 
 app = Flask(__name__)
+Misaka(app, fenced_code=True, highlight=True, quote=True, math=True,
+math_explicit=True, space_headers=True, hard_wrap=True, wrap=True,
+footnotes=True, autolink=True)
+
 root_dir = app.root_path
 config = cfg.Config(root_dir)
 
 socketio = SocketIO(app)
-from controllers import API, LED, WebSocket, Avatar
+from controllers import API, LED, WebSocket, Avatar, Member
 
 #####################################
 # 註冊，包含前輟字
@@ -19,6 +24,7 @@ from controllers import API, LED, WebSocket, Avatar
 app.register_blueprint(API.api_blueprint, url_prefix='/api')
 app.register_blueprint(LED.led_blueprint, url_prefix='/led')
 app.register_blueprint(Avatar.avatar_blueprint, url_prefix='/member/avatar')
+app.register_blueprint(Member.member_blueprint, url_prefix='/member')
 
 ######################################
 # Route
@@ -33,6 +39,11 @@ def path():
     socketio.emit('server_led_check', {'action': 'check'}, json=True)
     time.sleep(.5)
     return str(LED.led_status)
+
+@app.route("/terms", methods=['GET'])
+def term():
+    resp = make_response(render_template('terms/latest.md'))
+    return resp
 
 ######################################
 # 靜態文件

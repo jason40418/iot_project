@@ -1,1 +1,24 @@
 # iot_project
+
+Google Font Chinese：https://fonts.google.com/specimen/Noto+Sans+TC?selection.family=Noto+Sans+TC
+Bootstrap
+fileupload
+flask-file-upload
+人臉辨識：
+表單驗證：https://1000hz.github.io/bootstrap-validator/#validator-fields
+
+https://github.com/dabeaz/python-cookbook/blob/master/src/9/multiple_dispatch_with_function_annotations/example1.py
+
+https://fontawesome.com/v4.7.0/
+https://github.com/flatlogic/awesome-bootstrap-checkbox
+https://pjchender.blogspot.com/2017/01/html-5-data-attribute.html
+
+https://medium.com/@DannyAziz97/rsa-encryption-with-js-python-7e031cbb66bb
+https://github.com/digitalbazaar/forge
+
+https://craftpip.github.io/jquery-confirm/
+
+https://stackoverflow.com/questions/17415579/how-to-iso-8601-format-a-date-with-timezone-offset-in-javascript
+
+https://highlightjs.org/
+https://github.com/wcoder/highlightjs-line-numbers.js/

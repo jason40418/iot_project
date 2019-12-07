@@ -109,11 +109,11 @@ class DBMgr:
                     self.commit()
 
             except self.mysql_error() as e:
-                print('[@TaskHandler] 【{}】{!r}'.format(e.args[0], e.args[1]))
+                print('[@DBMgr] 【{}】{!r}'.format(e.args[0], e.args[1]))
                 return False, row, (e.args[0], e.args[1])
 
         else:
-            print("[@TaskHandler] Fails to connect to MySQL Server!!")
+            print("[@DBMgr] Fails to connect to MySQL Server!!")
             return False, row, (e.args[0], e.args[1])
 
         self.close()
