@@ -37,7 +37,7 @@ def member_register(result, data):
             'error_type' : data['error_type'],
             'datetime'   : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'key_id'     : reqest_data['id']
-        }), 400
+        }), data['error_code']
     else:
         # TODO: 使用者傳入資料後端需要再做驗證（含檢查帳戶重複性與資料格式）
         print(data)

@@ -92,19 +92,22 @@ def private_key_require_page(usage, key_id_key='id', encrypt_data_key='payload',
                     except Exception as e:
                         decode_result = {
                             'error_type' : "KeyDecodeError",
-                            'error_msg'  : "請求之內容無法進行解密"
+                            'error_msg'  : "請求之內容無法進行解密",
+                            'error_code' : 400
                         }
                 # 設定私鑰錯誤
                 except (ValueError, TypeError):
                     decode_result = {
                         'error_type' : "PrivateKeyDecodeError",
-                        'error_msg'  : "RSA私鑰設定錯誤"
+                        'error_msg'  : "RSA私鑰設定錯誤",
+                        'error_code' : 500
                     }
                 # 產生解密密碼錯誤
                 except AttributeError:
                     decode_result = {
                         'error_type' : "HashCombineError",
-                        'error_msg'  : "RSA私鑰與Hash演算法組合錯誤"
+                        'error_msg'  : "RSA私鑰與Hash演算法組合錯誤",
+                        'error_code' : 500
                     }
             else:
                 # 金鑰失敗接續處理位置
@@ -120,7 +123,8 @@ def convert_byte_to_dict(data):
     except:
         decode_result = {
             'error_type' : "JSONDecodeError",
-            'error_msg'  : "JSON格式解析錯誤"
+            'error_msg'  : "JSON格式解析錯誤",
+            'error_code' : 400
         }
         return False, decode_result
     return True, form
