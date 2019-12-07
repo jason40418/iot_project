@@ -16,15 +16,15 @@ root_dir = app.root_path
 config = cfg.Config(root_dir)
 
 socketio = SocketIO(app)
-from controllers import API, LED, WebSocket, Avatar, Member
+from controllers import APIController, LEDController, WebSocketController, AvatarController, MemberController
 
 #####################################
 # 註冊，包含前輟字
 #####################################
-app.register_blueprint(API.api_blueprint, url_prefix='/api')
-app.register_blueprint(LED.led_blueprint, url_prefix='/led')
-app.register_blueprint(Avatar.avatar_blueprint, url_prefix='/member/avatar')
-app.register_blueprint(Member.member_blueprint, url_prefix='/member')
+app.register_blueprint(APIController.api_blueprint, url_prefix='/api')
+app.register_blueprint(LEDController.led_blueprint, url_prefix='/led')
+app.register_blueprint(AvatarController.avatar_blueprint, url_prefix='/member/avatar')
+app.register_blueprint(MemberController.member_blueprint, url_prefix='/member')
 
 ######################################
 # Route

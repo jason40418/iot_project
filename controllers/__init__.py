@@ -1,4 +1,4 @@
 # 關聯
-from . import API
-from . import Avatar
-from . import Member
+from . import APIController
+from . import AvatarController
+from . import MemberController
