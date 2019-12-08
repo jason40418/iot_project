@@ -57,6 +57,7 @@ def public_key_require_page(usage, expire_para):
 def private_key_require_page(usage, key_id_key='id', encrypt_data_key='payload', check_keys=[]):
     # 需要使用PrivateKey的資料
     def actual_decorator(f):
+
         @wraps(f)
         def wrapper(*args, **kwds):
             # 請求資源的IP位置
@@ -71,6 +72,8 @@ def private_key_require_page(usage, key_id_key='id', encrypt_data_key='payload',
             # 檢查金鑰有效性（msg: 若金鑰有效則回傳為RSA Object，若無效則回傳dict）
             rsa_key_exist, row, decode_result = RSAHelper.check_key_vaild(key_id, request_ip, usage)
 
+            # 預設解析結果為失敗（False）
+            decode_status = False
             # 金鑰
             if rsa_key_exist:
                 # 詳細金鑰
@@ -81,20 +84,10 @@ def private_key_require_page(usage, key_id_key='id', encrypt_data_key='payload',
                     private_key = ORI_RSA.importKey(rsa_key_info['private_key'])
                     # 設定RSA私鑰與hash演算法組合
                     cipher = PKCS1_OAEP.new(private_key, hashAlgo=SHA256)
-                    try:
-                        # 解密資料
-                        decrypted_message = cipher.decrypt(b64decode(data[encrypt_data_key]))
-                        # 將Byte轉換成JSON格式的dict
-                        decode_result, decrypted_message_dict = convert_byte_to_dict(decrypted_message)
-                        # 回傳最終解析結果
-                        return f(decode_result, decrypted_message_dict)
-                    # 資料解密錯誤
-                    except Exception as e:
-                        decode_result = {
-                            'error_type' : "KeyDecodeError",
-                            'error_msg'  : "請求之內容無法進行解密",
-                            'error_code' : 400
-                        }
+                    # 解密資料
+                    decrypted_message = cipher.decrypt(b64decode(data[encrypt_data_key]))
+                    # 將Byte轉換成JSON格式的dict
+                    decode_status, decode_result = convert_byte_to_dict(decrypted_message)
                 # 設定私鑰錯誤
                 except (ValueError, TypeError):
                     decode_result = {
@@ -109,11 +102,21 @@ def private_key_require_page(usage, key_id_key='id', encrypt_data_key='payload',
                         'error_msg'  : "RSA私鑰與Hash演算法組合錯誤",
                         'error_code' : 500
                     }
+                # 資料解密錯誤
+                finally:
+                    # 回傳最終解析結果
+                    if not decode_status:
+                        decode_result = {
+                            'error_type' : "KeyDecodeError",
+                            'error_msg'  : "請求之內容無法進行解密",
+                            'error_code' : 400
+                        }
             else:
                 # 金鑰失敗接續處理位置
                 pass
 
-            return f(False, decode_result)
+            return f(decode_status, decode_result)
+
         return wrapper
     return actual_decorator
 

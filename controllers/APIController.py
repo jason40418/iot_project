@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
 from datetime import datetime
+from model.entity.Member import Member
 from model.util.General import private_key_require_page, convert_byte_to_dict
+from model.helper.MemberHelper import MemberHelper
 
 # 定義
 api_blueprint = Blueprint('api', __name__)
@@ -11,27 +13,20 @@ def api_index():
 
 @api_blueprint.route('/member/duplicate_confirm', methods=['GET'])
 def member_duplocate_confirm():
+    # TODO: 使用者傳入資料後端需要再做驗證（含檢查所有key存在和資料格式）
     account = request.args.get('account')
-    return jsonify({
-        'msg'     : "此帳號為新使用者，可以使用",
-        'type'    : "AccountPassVerify",
-        'account' : account
-        }), 200
+    status, result, status_code = MemberHelper.check_duplicate_by_account(account)
 
-    return jsonify({
-        'error_msg'  : "此帳號資料庫已經存在，請勿重複註冊",
-        'error_type' : "AccountDuplicateError",
-        'account'    : account
-        }), 400
+    return jsonify(result), status_code
 
 @api_blueprint.route('/member/register', methods=['POST'])
 @private_key_require_page('register')
-def member_register(result, data):
+def member_register(decode_result, data):
     # 取回Request資料
     reqest_data = request.json
 
     # 如果私鑰解密過程失敗
-    if not result:
+    if not decode_result:
         return jsonify({
             'error_msg'  : data['error_msg'],
             'error_type' : data['error_type'],
@@ -39,14 +34,14 @@ def member_register(result, data):
             'key_id'     : reqest_data['id']
         }), data['error_code']
     else:
-        # TODO: 使用者傳入資料後端需要再做驗證（含檢查帳戶重複性與資料格式）
-        print(data)
+        # TODO: 使用者傳入資料後端需要再做驗證（含檢查所有key存在和資料格式）
+        # 檢查使用者名稱重複性
+        duplicate_check, result, status_code = MemberHelper.check_duplicate_by_account(data['account'])
+        if not duplicate_check:
+            return jsonify(result), status_code
 
-        return jsonify({
-            #'msg'  : "此帳號為新使用者，可以使用",
-            #'type' : "AccountPassVerify",
-            'datetime'   : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'key_id'     : reqest_data['id']
-        }), 200
-
-
+        m = Member(str(data['account']), str(data['name']), str(data['email']), str(data['password']), 'member')
+        status, result, code = MemberHelper.create(m)
+        # 增加其他要回傳的欄位資料
+        result.update({'datetime' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'key_id': reqest_data['id']})
+        return jsonify(result), code

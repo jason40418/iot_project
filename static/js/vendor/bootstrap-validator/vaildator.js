@@ -202,7 +202,7 @@
             if (jqXHR.status == 0) {
               errors.push("[Network Error]請檢查網路連線是否正常");
             }
-            else if (jqXHR.status >= 500 & jqXHR.status < 600) {
+            else if (jqXHR.status >= 400 & jqXHR.status < 600) {
               var response = jqXHR.responseJSON;
               if (Object.keys(response).length === 0 || !('error_code' in response) || !('error_type' in response || !('error_msg' in response))) {
                 errors.push("[Server Error]伺服器發生未預期錯誤，請稍後再嘗試");
@@ -213,7 +213,7 @@
               }
             }
             else {
-              errors.push(getErrorMessage('remote-' + String(jqXHR.status)) || error);
+              errors.push(getErrorMessage('remote') || error);
             }
           })
           .always(function () { deferred.resolve(errors)})

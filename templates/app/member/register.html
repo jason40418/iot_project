@@ -29,9 +29,10 @@
         <label for="account" class="control-label">帳號</label>
         <div class="input-group">
           <span class="input-group-addon">@</span>
-          <input type="text" pattern="^[a-zA-Z][a-zA-Z0-9]{6,15}$" maxlength="15" class="form-control input-lg"
-            id="account" name="account" placeholder="account" data-error="請輸入6~15字的帳號（僅限英文與數字）以符合格式" required>
-          <!-- data-remote="/api/member/duplicate_confirm" data-remote-error="此帳號資料庫已經存在，請勿重複註冊" required> -->
+          <input type="text" pattern="^[a-zA-Z][a-zA-Z0-9]{6,30}$" maxlength="30" class="form-control input-lg"
+            id="account" name="account" placeholder="account" data-error="請輸入6~30字的帳號（僅限英文與數字）以符合格式"
+            data-remote="/api/member/duplicate_confirm" data-remote-error="此帳號資料庫已經存在，請勿重複註冊" data-delay="2000"
+            required>
         </div>
         <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
         <div class="help-block with-errors"></div>
@@ -39,16 +40,16 @@
 
       <div class="form-group">
         <label for="name" class="control-label">姓名</label>
-        <input type="text" pattern="^[^\s].+[^\s]$" maxlength="20" class="form-control input-lg" id="name"
-          placeholder="name" data-error="不允許空值與單獨空格出現（起始與結束不為空格）" required>
+        <input type="text" pattern="^[^\s].+[^\s]$" maxlength="30" class="form-control input-lg" id="name"
+          placeholder="name" data-error="不允許空值與單獨空格出現（起始與結束不為空格）（至多30位數）" required>
         <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
         <div class="help-block with-errors"></div>
       </div>
 
       <div class="form-group">
         <label for="email" class="control-label">電子郵件</label>
-        <input type="email" class="form-control input-lg" id="email" placeholder="e-mail"
-          data-error="請輸入正確之電子郵件信箱格式（必須包含@）" required>
+        <input type="email" class="form-control input-lg" id="email" maxlength="50" placeholder="e-mail"
+          data-error="請輸入正確之電子郵件信箱格式（必須包含@）（至多50位數）" required>
         <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
         <div class="help-block with-errors"></div>
       </div>
@@ -57,11 +58,11 @@
         <label for="password" class="control-label">密碼</label>
         <div class="row">
           <div class="col-sm-6">
-            <input type="password" pattern="[^\s]+" data-minlength="6" class="form-control input-lg" id="password"
-              data-pattern-error="密碼不允許任何空格" data-minlength-error="請輸入至少6位數以上密碼" data-required-error="此欄位必須填寫"
-              placeholder="passworsd" autocomplete required>
+            <input type="password" pattern="[^\s]+" data-minlength="6" maxlength="30" class="form-control input-lg"
+              id="password" data-pattern-error="密碼不允許任何空格" data-minlength-error="請輸入至少6位數以上密碼（至多30位數）"
+              data-required-error="此欄位必須填寫" placeholder="passworsd" autocomplete required>
             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-            <div class="help-block">請輸入至少6位數以上密碼</div>
+            <div class="help-block">請輸入至少6位數以上密碼（至多30位數）</div>
           </div>
           <div class="col-sm-6">
             <input type="password" pattern="[^\s]+" class="form-control input-lg" id="password_confirm"
@@ -105,37 +106,19 @@
           'datetime': current_time()
         }
 
-        $.ajax({
-          type: 'POST',
-          url: '/api/member/register',
-          data: JSON.stringify(request),
-          crossDomain: true,
-          cache: false,
-          dataType: 'json',
-          contentType: 'application/json',
-          timeout: 5000,
-          statusCode: {
-            0: () => {
-              $.alert({
-                theme: 'modern',
-                icon: 'fa fa-minus-circle',
-                type: 'red',
-                btnClass: 'btn-red',
-                useBootstrap: false,
-                animation: 'scale',
-                title: '錯誤',
-                content: "遠端資料庫連線失敗，請稍後再嘗試！"
-              });
-            },
-            200: () => {
-              alert('錯誤', '遠端資料庫連線失敗，請稍後再嘗試！');
-            },
-            400: () => {
-              alert('405 status code! user error');
+        api_request('POST', '/api/member/register', request, {
+          '2XX': {
+            完成: () => {
+              document.location.href = '/login';
             }
           },
-          error: (xhr, type, message) => {
-            console.log("[", xhr.status, "]", type, ":", message);
+          '4XX': {
+            確認: () => {
+            }
+          },
+          '5XX': {
+            確認: () => {
+            }
           }
         });
       }
@@ -161,32 +144,29 @@
       document.addEventListener("DOMContentLoaded", function (event) {
         disable_submit_form('form', submit_action);
         $('#terms_contents').click(() => {
-          $.confirm({
-            theme: 'material',
-            icon: 'fa fa-file-text',
-            columnClass: 'medium',
-            animation: 'scale',
-            closeIcon: true,
-            closeIconClass: "fa fa-close",
-            type: 'green',
-            title: '服務條款',
-            content: 'url:/terms',
-            onContentReady: function () {
-              //hljs.configure({useBR: true});
-              document.querySelectorAll('pre code').forEach((block) => {
-                hljs.highlightBlock(block);
-                hljs.lineNumbersBlock(block);
-              });
-            },
-            draggable: false,
-            buttons: {
+          var ready = () => {
+            //hljs.configure({useBR: true});
+            document.querySelectorAll('pre code').forEach((block) => {
+              hljs.highlightBlock(block);
+              hljs.lineNumbersBlock(block);
+            });
+          };
+
+          prompt_info(
+            icon='fa fa-file-text',
+            url='url:/terms',
+            title='服務條款',
+            color = 'green',
+            button = {
               confirm: {
                 text: '關閉',
                 action: () => {
+
                 }
               }
-            }
-          });
+            },
+            content_ready=ready,
+            close_icon=true);
         });
       });
     })()

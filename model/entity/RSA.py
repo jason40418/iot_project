@@ -2,6 +2,7 @@ from Crypto.PublicKey import RSA
 from datetime import datetime, timedelta
 from time import localtime, strftime
 import random
+from distutils.util import strtobool
 
 from model.util.Overload import MultipleMeta
 from model.util.Config import Config
@@ -47,6 +48,17 @@ class RSA(metaclass=MultipleMeta):
         return (time + rand)
 
     def __insert_to_db(self):
+        # 如果設定檔指定不留下金鑰歷史紀錄
+        if not strtobool(self.__cfg.getValue('history_record', 'rsa_key_history')):
+            sql = "DELETE FROM `iot`.`rsa` WHERE `ip` = %(ip)s AND `usage` = %(usage)s AND `bits` = %(bits)s"
+            args =  {
+                'ip'    : self.__ip,
+                'usage' : self.__usage,
+                'bits'  : self.__rsa_key.get_bits()
+            }
+            status, row, result = self.__dbmgr.delete(sql, args)
+            # TODO: 檢查刪除有無異常（通常只會有連線異常）
+
 
         while 1:
             # 產生一組隨機號碼

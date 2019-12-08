@@ -49,13 +49,123 @@ var current_time = () => {
   return result;
 }
 
-var alert = (title, message) => {
+/**
+ * 檢驗是否是function
+ * @param {*} func
+ */
+var is_function = (func) => {
+  return func && {}.toString.call(func) === '[object Function]';
+}
+
+/**
+ * 使用jquery-confirm跳出
+ * @param {*} title
+ * @param {*} message
+ * @param {*} icon
+ * @param {*} button
+ */
+var alert = (title, message, icon, button) => {
   $.alert({
     theme: 'modern',
-    icon: 'fa fa-minus-circle',
+    icon: icon,
     type: 'red',
     animation: 'scale',
     title: title,
-    content: message
+    content: message,
+    buttons: button
+  });
+}
+
+/**
+ *
+ * @param {*} request_type
+ * @param {*} request_url
+ * @param {*} request_data
+ * @param {*} button
+ */
+var api_request = (request_type, request_url, request_data, button) => {
+  $.ajax({
+    type: request_type,
+    url: request_url,
+    data: JSON.stringify(request_data),
+    crossDomain: true,
+    cache: false,
+    dataType: 'json',
+    contentType: 'application/json',
+    timeout: 5000})
+  .done((response, test_status, xhr) => {
+    $.alert({
+      theme: 'modern',
+      icon: 'fa fa-check-circle',
+      type: 'green',
+      btnClass: 'btn-green',
+      animation: 'scale',
+      title: '成功',
+      content: "[" + response.code + "]" + "[" + response.type + "]" + "<br />" + response.msg,
+      buttons: button['2XX']
+    });
+  })
+  .fail((xhr, type, message) => {
+    let response = xhr.responseJSON;
+    if (xhr.status == 0) {
+      alert('服務無法提供', '請確認網路連線是否正常或伺服器可能現在無法提供服務！', 'fa fa-chain-broken', { 確認: () => { }});
+    }
+    // 使用者端問題（4XX）
+    else if (xhr.status >= 400 & xhr.status < 500) {
+      $.alert({
+        theme: 'modern',
+        icon: 'fa fa-times',
+        type: 'red',
+        btnClass: 'btn-red',
+        animation: 'scale',
+        title: '錯誤',
+        content: "[" + response.error_code + "]" + "[" + response.error_type + "]" + "<br />" + response.error_msg,
+        buttons: button['4XX']
+      });
+    }
+    // 伺服器端問題（5XX）
+    else if (xhr.status >= 500 & xhr.status < 600) {
+      $.alert({
+        theme: 'modern',
+        icon: 'fa fa-server',
+        type: 'red',
+        btnClass: 'btn-red',
+        animation: 'scale',
+        title: '錯誤',
+        content: "[" + response.error_code + "]" + "[" + response.error_type + "]" + "<br />" + response.error_msg + "<br />" + "請將錯誤代碼與訊息聯絡管理員",
+        buttons: button['5XX']
+      });
+    }
+  });
+}
+
+/**
+ *
+ * @param {*} icon
+ * @param {*} url
+ * @param {*} title
+ * @param {*} color
+ * @param {*} button
+ * @param {*} content_ready
+ * @param {*} close_icon
+ */
+var prompt_info = (icon, url, title, color, button, content_ready="", close_icon=true) => {
+  $.confirm({
+    theme: 'material',
+    icon: icon,
+    columnClass: 'medium',
+    animation: 'scale',
+    closeIcon: close_icon,
+    closeIconClass: 'fa fa-close',
+    type: color,
+    title: title,
+    content: url,
+    onContentReady: function () {
+      if (is_function(content_ready)) {
+        content_ready();
+      }
+    },
+    draggable: false,
+    buttons: button
   });
 }
