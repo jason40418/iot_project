@@ -1,24 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+{%  extends  "app/base.html"  %}
+{%  block  title  %}會員註冊{%  endblock  %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>IoT | PiEnvir</title>
-
-  {# favicon #}
-  {% include "favicon.html" %}
-
-  {# CSS #}
-  {% include "css.html" %}
-
-</head>
-
-<body>
-  {% include "app/nav.html" %}
-
-  <main role="main" class="container">
+  {%  block  content  %}
     <div class="jumbotron">
       <h1>會員註冊</h1>
       <p class="lead">This example is a quick exercise to illustrate how the top-aligned navbar works. As you
@@ -89,10 +72,9 @@
       </div>
       <div id="rsa-key" data-public-key="{{ rsa.public_key }}" data-key-id="{{ rsa.id }}"></div>
     </form>
-  </main>
+  {%  endblock  %}
 
-  {# JavaScript #}
-  {% include "js.html" %}
+  {%  block  custom_js  %}
   <script src="/static/js/key.js" defer></script>
 
   <script>
@@ -171,6 +153,4 @@
       });
     })()
   </script>
-</body>
-
-</html>
+  {%  endblock  %}
