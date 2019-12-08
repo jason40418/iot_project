@@ -1,4 +1,4 @@
-import ast, json
+import ast, json, time, jwt
 from functools import wraps
 from flask import request, redirect
 from Crypto.Cipher import PKCS1_OAEP
@@ -6,6 +6,7 @@ from Crypto.PublicKey import RSA as ORI_RSA
 from Crypto.Hash import SHA256
 from base64 import b64decode
 
+from model.util.Key import Key
 from model.util.Config import Config
 from model.util.KeyRSA import KeyRSA
 from model.entity.RSA import RSA
@@ -157,3 +158,21 @@ def check_data_keys_exist(data, keys=[]):
     else:
         return True, None
 
+def generate_token(data, usage):
+    '''
+    核發token給使用者並使用伺服器預設定之固定私鑰加密
+    '''
+    expire_length = Config().getValue('token', usage)
+    print(expire_length)
+    # 取得伺服器核發的私鑰（固定）
+    private_key = Key().getPrivateKey()
+    # 若設定檔沒有該token用途則預設10分鐘過期
+    expired_time = time.time() + 10 * 60 if expire_length == '' else time.time() + int(expire_length)
+    # 使用 jwt 加密
+    payload = data
+    payload.update({
+        'expired_time' : expired_time,
+        'usage'        : usage
+    })
+    token = jwt.encode(payload, private_key, algorithm='RS512')
+    return token, expired_time

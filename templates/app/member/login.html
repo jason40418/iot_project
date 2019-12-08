@@ -1,0 +1,115 @@
+{%  extends  "app/base.html"  %}
+{%  block  title  %}會員登入{%  endblock  %}
+{%  block  description  %}允許使用者進行登入{%  endblock  %}
+
+  {%  block  content  %}
+    <div class="jumbotron">
+      <h1>會員登入 | PiEnvir</h1>
+      <p class="lead">This example is a quick exercise to illustrate how the top-aligned navbar works. As you
+        scroll, this navbar remains in its original position and moves with the rest of the page.</p>
+    </div>
+    <form id="form" data-toggle="validator" role="form">
+      <div class="form-group" has-feedback>
+        <label for="account" class="control-label">帳號</label>
+        <div class="input-group">
+          <span class="input-group-addon">@</span>
+          <input type="text" pattern="^[a-zA-Z][a-zA-Z0-9]{6,30}$" maxlength="30" class="form-control input-lg"
+            id="account" name="account" placeholder="account" data-error="請輸入6~30字的帳號（僅限英文與數字）以符合格式" required>
+        </div>
+        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="control-label">密碼</label>
+          <input type="password" pattern="[^\s]+" data-minlength="6" maxlength="30" class="form-control input-lg"
+            id="password" data-pattern-error="密碼不允許任何空格" data-minlength-error="請輸入至少6位數以上密碼（至多30位數）"
+            data-required-error="此欄位必須填寫" placeholder="passworsd" autocomplete required>
+          <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+          <div class="help-block">請輸入至少6位數以上密碼（至多30位數）</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button id="terms_contents" type="button" class="btn btn-default">檢視服務條款</button>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">申請</button>
+      </div>
+      <div id="rsa-key" data-public-key="{{ rsa.public_key }}" data-key-id="{{ rsa.id }}"></div>
+    </form>
+  {%  endblock  %}
+
+  {%  block  custom_js  %}
+  <script>
+    (() => {
+      var submit_action = () => {
+        let data = get_data();
+        let [key_id, encrypt_data] = rsa_encrypt(data, 'rsa-key', 'public-key', 'key-id');
+        let request = {
+          'id': key_id,
+          'payload': encrypt_data,
+          'datetime': current_time()
+        }
+
+        api_request('POST', '/api/member/login', request, {
+          '2XX': {
+            完成: () => {
+              // document.location.href = '/login';
+            }
+          },
+          '4XX': {
+            確認: () => {
+            }
+          },
+          '5XX': {
+            確認: () => {
+            }
+          }
+        });
+      }
+
+      var get_data = () => {
+        let account = document.getElementById('account').value;
+        let password = document.getElementById('password').value;
+
+        let data = {
+          'account': account,
+          'password': password,
+        }
+
+        return data;
+      }
+
+      document.addEventListener("DOMContentLoaded", function (event) {
+        disable_submit_form('form', submit_action);
+        $('#terms_contents').click(() => {
+          var ready = () => {
+            //hljs.configure({useBR: true});
+            document.querySelectorAll('pre code').forEach((block) => {
+              hljs.highlightBlock(block);
+              hljs.lineNumbersBlock(block);
+            });
+          };
+
+          prompt_info(
+            icon='fa fa-file-text',
+            url='url:/terms',
+            title='服務條款',
+            color = 'green',
+            button = {
+              confirm: {
+                text: '關閉',
+                action: () => {
+
+                }
+              }
+            },
+            content_ready=ready,
+            close_icon=true);
+        });
+      });
+    })()
+    </script>
+  {%  endblock  %}

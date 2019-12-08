@@ -17,6 +17,7 @@ def register(rsa):
 
 @member_blueprint.route('/login', methods=['GET'])
 @token_no_require_page('/member')
-def login():
-    resp = make_response(render_template('app/login.html'))
+@public_key_require_page('login', 'login_rsa_key')
+def login(rsa):
+    resp = make_response(render_template('app/member/login.html', rsa=rsa))
     return resp

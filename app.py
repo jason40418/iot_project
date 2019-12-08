@@ -82,7 +82,7 @@ def shutdown():
     shutdown_server()
     return 'Server shutting down...'
 
-# debug=True 可讓更新後即時顯示，不用重開
+# 除錯=True可讓更新後即時顯示，不用重開
 if __name__ == '__main__':
     ip = config.getIPAddress()
     port = config.getValue('host', 'port')

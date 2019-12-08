@@ -7,14 +7,43 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>{%  block  title  %}{%  endblock  %} | PiEnvir</title>
 
-  <!-- Favicon -->
   {% include "favicon.html" %}
 
-  <!-- CSS -->
   {% include "css.html" %}
 
   {%  block  custom_css  %}{%  endblock  %}
 
+  <!-- SEO -->
+  <meta name="description" content="{%  block  description  %}{%  endblock  %}"/>
+  <meta name="Keywords" content="sdsd">
+  <!-- Open Graph Protocol -->
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{{ self.title() }} | PiEnvir" />
+  <meta property="og:description" content="{{ self.description() }}" />
+  <meta property="og:url" content="https://pienvir.com/" />
+  <meta property="og:site_name" content="PiEnvir" />
+  <meta property="fb:app_id" content="" />
+  <meta property="og:image" content="" />
+  <meta property="og:image:secure_url" content="" />
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:description" content="{{ self.description() }}" />
+  <meta name="twitter:title" content="PiEnvir" />
+  <meta name="twitter:site" content="@pienvir" />
+  <meta name="twitter:image" content="" />
+  <!-- JSON for Linking Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org/",
+      "@type": "WebSite",
+      "name": "Supreme Glory Clan",
+      "alternateName": "PiEnvir",
+      "description": "",
+      "url": "https://pienvir.com"
+    }
+  </script>
+  {%  block  custom_seo  %}{%  endblock  %}
 </head>
 
 <body>
@@ -24,10 +53,8 @@
     {%  block  content  %}{%  endblock  %}
   </main>
 
-  <!-- JavaScript -->
   {% include "js.html" %}
   {%  block  custom_js  %}{%  endblock  %}
-
 </body>
 
 </html>

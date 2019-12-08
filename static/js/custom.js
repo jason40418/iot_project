@@ -94,6 +94,18 @@ var api_request = (request_type, request_url, request_data, button) => {
     contentType: 'application/json',
     timeout: 5000})
   .done((response, test_status, xhr) => {
+    let alert_msg = "";
+    // 確認Response包含所需要的key值以正常顯示
+    if (typeof response === 'undefined') {
+      alert_msg = "[" + xhr.status + "]" + xhr.statusText;
+    }
+    else if ('code' in response && 'type' in response && 'msg' in response) {
+      alert_msg = "[" + response.code + "]" + "[" + response.type + "]" + "<br />" + response.msg;
+    }
+    else {
+      alert_msg = "[" + xhr.status + "]" + xhr.statusText;
+    }
+    // 跳出提示視窗
     $.alert({
       theme: 'modern',
       icon: 'fa fa-check-circle',
@@ -101,12 +113,26 @@ var api_request = (request_type, request_url, request_data, button) => {
       btnClass: 'btn-green',
       animation: 'scale',
       title: '成功',
-      content: "[" + response.code + "]" + "[" + response.type + "]" + "<br />" + response.msg,
+      content: alert_msg,
       buttons: button['2XX']
     });
   })
   .fail((xhr, type, message) => {
     let response = xhr.responseJSON;
+    let alert_msg = "";
+    // 確認Response包含所需要的key值以正常顯示
+    if (typeof response === 'undefined') {
+      alert_msg = "[" + xhr.status + "]" + message;
+    }
+    else if ('error_code' in response && 'error_type' in response && 'error_msg' in response) {
+      alert_msg = "[" + response.error_code + "]" + "[" + response.error_type + "]" + "<br />" + response.error_msg;
+    }
+    else {
+      console.log('test')
+      alert_msg = "[" + xhr.status + "]" + message;
+    }
+
+    // 使用者網路連線異常或伺服器無法進行連線
     if (xhr.status == 0) {
       alert('服務無法提供', '請確認網路連線是否正常或伺服器可能現在無法提供服務！', 'fa fa-chain-broken', { 確認: () => { }});
     }
@@ -119,7 +145,7 @@ var api_request = (request_type, request_url, request_data, button) => {
         btnClass: 'btn-red',
         animation: 'scale',
         title: '錯誤',
-        content: "[" + response.error_code + "]" + "[" + response.error_type + "]" + "<br />" + response.error_msg,
+        content: alert_msg,
         buttons: button['4XX']
       });
     }
@@ -132,7 +158,7 @@ var api_request = (request_type, request_url, request_data, button) => {
         btnClass: 'btn-red',
         animation: 'scale',
         title: '錯誤',
-        content: "[" + response.error_code + "]" + "[" + response.error_type + "]" + "<br />" + response.error_msg + "<br />" + "請將錯誤代碼與訊息聯絡管理員",
+        content: alert_msg + "<br />" + "請將錯誤代碼與訊息聯絡管理員",
         buttons: button['5XX']
       });
     }
