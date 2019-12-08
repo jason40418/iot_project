@@ -1,10 +1,11 @@
 import os, time
-from flask import Flask, make_response, render_template, jsonify, send_from_directory, request, render_template_string
+from flask import Flask, make_response, render_template, jsonify, send_from_directory, request, render_template_string, redirect
 from flask_misaka import Misaka, markdown
 from flask_socketio import SocketIO, send, emit
 from model import Auth
 from model.util import Config as cfg
 from model.util import General
+from model.util.General import token_no_require_page
 import RPi.GPIO as GPIO
 
 app = Flask(__name__)

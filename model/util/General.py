@@ -1,6 +1,6 @@
 import ast, json
 from functools import wraps
-from flask import request
+from flask import request, redirect
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA as ORI_RSA
 from Crypto.Hash import SHA256
@@ -34,6 +34,21 @@ def get_folder_and_file_name(path):
             folder = folder + path_spilt_list[i] + "/"
 
     return folder, file_name
+
+def token_no_require_page(url):
+    '''
+    若token存在，則不允許執行的頁面（需要檢查token有效性）
+    '''
+    # 需要增加產生RSA key
+    def actual_decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwds):
+            if 'token' in request.cookies:
+                return redirect(url, code=302)
+            else:
+                return f(*args, **kwds)
+        return wrapper
+    return actual_decorator
 
 def public_key_require_page(usage, expire_para):
     # 需要增加產生RSA key
