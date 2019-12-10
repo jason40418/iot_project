@@ -65,11 +65,28 @@ def member_login(decode_result, data):
         result.update({'datetime' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'key_id': reqest_data['id']})
         # 如果帳號密碼檢查成功（核發token並設為cookies）
         if status:
-            # TODO: 取回會員資料（帳號、名稱）
-            # 產生token
-            token, expired_time = generate_token({} ,'login_expire')
+            get_member_result, member_result, status = MemberHelper.get(data['account'])
+
+            # 取回原本會員資料結果成功
+            if get_member_result:
+                # 產生token
+                token, expired_time = generate_token({} ,'login_expire')
+                # 取得會員帳號和暱稱
+                account = member_result.get_all_parameter()['account']
+                name = member_result.get_all_parameter()['name']
+                result.update({'account': account, 'name': name})
+                resp = make_response(jsonify(result), status)
+                # 設定 cookies
+                resp.set_cookie(key='token', value=token, expires=expired_time)
+                print(result)
+            # 取回會員資料失敗
+            else:
+                resp = make_response(jsonify(member_result), status)
+                # 設定token過期
+                resp.set_cookie(key='token', value='', expires=0)
+        # 回傳錯誤訊息
+        else:
             resp = make_response(jsonify(result), code)
-            print(token, expired_time)
-            # 設定 cookies
-            resp.set_cookie(key='token', value=token, expires=expired_time)
+            # 設定token過期
+            resp.set_cookie(key='token', value='', expires=0)
         return resp

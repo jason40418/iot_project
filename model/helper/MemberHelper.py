@@ -1,4 +1,5 @@
 import bcrypt
+from model.entity.Member import Member
 from model.util.DBMgr import DBMgr
 
 class MemberHelper():
@@ -54,6 +55,36 @@ class MemberHelper():
                 'error_msg'  : "[" + str(result[0]) + "]" + str(result[1]),
                 'error_code' : 500
             }, 500
+
+    @staticmethod
+    def get(account):
+        sql = "SELECT * FROM `iot`.`member` WHERE `account`=%(account)s"
+        args = { 'account': account}
+        status, row, result = MemberHelper.dbmgr.query(sql, args)
+
+        if not status:
+            return False, {
+                'error_type' : "DatabaseError",
+                'error_msg'  : "[" + str(result[0]) + "]" + str(result[1]),
+                'error_code' : 500
+            }, 500
+        # 發生未預期錯誤（帳號超過一個例外狀況）
+        elif row > 1:
+            return False, {
+                'error_type' : "AccountMoreThanOneException",
+                'error_msg'  : "資料庫存在該帳號之資料超過一筆異常",
+                'error_code' : 500
+            }, 500
+        # 找不到帳號
+        elif row == 0:
+            return False, {
+                'error_type' : "AccountVerifyError",
+                'error_msg'  : "帳號不存在或密碼錯誤，請確認後重新輸入",
+                'error_code' : 400
+            }, 400
+        else:
+            m = Member(result[0]['id'], result[0]['account'], result[0]['name'], result[0]['email'], result[0]['password'], result[0]['identity'], result[0]['create'], result[0]['modify'])
+            return True, m , 200
 
     @staticmethod
     def verify(account, password):

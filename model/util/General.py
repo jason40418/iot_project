@@ -45,6 +45,8 @@ def token_no_require_page(url):
         @wraps(f)
         def wrapper(*args, **kwds):
             if 'token' in request.cookies:
+                # TODO: 檢查token有效性
+                # TODO: 檢查解密成功性
                 return redirect(url, code=302)
             else:
                 return f(*args, **kwds)

@@ -17,6 +17,19 @@ class Member(metaclass=MultipleMeta):
         self.__create = datetime.now().replace(microsecond=0)
         self.__modify = datetime.now().replace(microsecond=0)
 
+    def __init__(self, id: int, account: str, name: str, email: str, password: str, identity: str, create: datetime, modify: datetime):
+        '''
+        <Constructor> 用於新增會員
+        '''
+        self.__id = id
+        self.__account = account
+        self.__name = name
+        self.__email = email
+        self.__password = password
+        self.__identity = identity
+        self.__create = create
+        self.__modify = modify
+
     def set_account_id(self, id):
         self.__id = id
 
