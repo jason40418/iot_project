@@ -39,15 +39,23 @@ def get_folder_and_file_name(path):
 def token_no_require_page(url):
     '''
     若token存在，則不允許執行的頁面（需要檢查token有效性）
+    正常來說過期的token應該會被瀏覽器自動清除
     '''
     # 需要增加產生RSA key
     def actual_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwds):
             if 'token' in request.cookies:
-                # TODO: 檢查token有效性
-                # TODO: 檢查解密成功性
-                return redirect(url, code=302)
+                token = request.cookies.get('token')
+                # 檢查解密成功性
+                decode_status, payload = verify_token(token)
+                if not decode_status:
+                    return f(*args, **kwds)
+                # 檢查token有效性
+                elif time.time() > payload['expired_time']:
+                    return f(*args, **kwds)
+                else:
+                    return redirect(url, code=302)
             else:
                 return f(*args, **kwds)
         return wrapper
@@ -165,7 +173,6 @@ def generate_token(data, usage):
     核發token給使用者並使用伺服器預設定之固定私鑰加密
     '''
     expire_length = Config().getValue('token', usage)
-    print(expire_length)
     # 取得伺服器核發的私鑰（固定）
     private_key = Key().getPrivateKey()
     # 若設定檔沒有該token用途則預設10分鐘過期
@@ -178,3 +185,17 @@ def generate_token(data, usage):
     })
     token = jwt.encode(payload, private_key, algorithm='RS512')
     return token, expired_time
+
+def verify_token(token):
+    # 若token不存在或是為空值
+    if 'token' not in locals() or token is None or token == '':
+        return False, dict()
+    else:
+        try:
+            # 取得伺服器核發的公鑰（固定）
+            public_key = Key().getPublicKey()
+            payload = jwt.decode(token, public_key, algorithms=['RS512'])
+            return True, payload
+        # decode error or expired
+        except (jwt.DecodeError, jwt.ExpiredSignatureError):
+            return False, dict()

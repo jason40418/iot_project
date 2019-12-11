@@ -20,4 +20,6 @@ def register(rsa):
 @public_key_require_page('login', 'login_rsa_key')
 def login(rsa):
     resp = make_response(render_template('app/member/login.html', rsa=rsa))
+    # 設定token過期
+    resp.set_cookie(key='token', value='', expires=0)
     return resp

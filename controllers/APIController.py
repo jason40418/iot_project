@@ -69,13 +69,13 @@ def member_login(decode_result, data):
 
             # 取回原本會員資料結果成功
             if get_member_result:
-                # 產生token
-                token, expired_time = generate_token({} ,'login_expire')
                 # 取得會員帳號和暱稱
                 account = member_result.get_all_parameter()['account']
                 name = member_result.get_all_parameter()['name']
                 result.update({'account': account, 'name': name})
                 resp = make_response(jsonify(result), status)
+                # 產生token
+                token, expired_time = generate_token(result ,'login_expire')
                 # 設定 cookies
                 resp.set_cookie(key='token', value=token, expires=expired_time)
                 print(result)
