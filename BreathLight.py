@@ -1,7 +1,7 @@
 import RPi.GPIO as gpio
 import time
 import socketio
-from util import Config as cfg
+from model.util.Config import Config as cfg
 
 # 取得設定檔案
 config = cfg.Config()
@@ -47,15 +47,14 @@ while True:
         pwm.ChangeDutyCycle(x)
         # Sleep for 100m second
         time.sleep(.1)
-    
+
     # Execute duty cycle from 49% to 0%
     for x in range (50):
         if not status:  break
         pwm.ChangeDutyCycle(50-x)
         # Sleep for 100m second
         time.sleep(.1)
-    
+
     if not status:  break
 
 sio.emit('bread_led_status', {'status': False})
-    

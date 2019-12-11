@@ -22,3 +22,7 @@ https://stackoverflow.com/questions/17415579/how-to-iso-8601-format-a-date-with-
 
 https://highlightjs.org/
 https://github.com/wcoder/highlightjs-line-numbers.js/
+
+# 溫濕感應器
+https://kingfff.blogspot.com/2018/05/raspberry-pi-3-model-bdht22.html
+https://github.com/adafruit/Adafruit_Python_DHT
