@@ -23,6 +23,10 @@ https://stackoverflow.com/questions/17415579/how-to-iso-8601-format-a-date-with-
 https://highlightjs.org/
 https://github.com/wcoder/highlightjs-line-numbers.js/
 
+https://codepen.io/harshabhat86/pen/tAxuF/
+https://github.com/customd/jquery-number/blob/master/jquery.number.min.js.map
+https://kenwheeler.github.io/slick/
+
 # Crontab自動排程
 crontab -l :檢視所有
 crontab -e : 編輯

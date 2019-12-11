@@ -4,7 +4,7 @@
 (() => {
     const socket = io.connect('//');
 
-    socket.on('test', (data) => {
+    socket.on('monitor', (data) => {
         console.log(data);
     });
 

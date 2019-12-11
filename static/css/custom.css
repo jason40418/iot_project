@@ -1,10 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Maven+Pro&display=swap');
 
 /* Show it is fixed to the top */
 body {
   min-height: 75rem;
   padding-top: 7.0rem;
-  font-family: sans-serif, 'Noto Sans TC';
+  font-family: 'Maven Pro', 'Noto Sans TC', sans-serif;
+}
+
+/** ======   Navigation   ====== */
+.navbar {
+  padding: 0px 15px;
 }
 
 .navbar-brand {
@@ -16,6 +22,7 @@ body {
   width: auto;
 }
 
+/** ======   Markdown Code   ====== */
 /* for block of numbers */
 .hljs-ln-numbers {
   -webkit-touch-callout: none;
@@ -38,3 +45,96 @@ body {
 .hljs-ln-code {
   padding-left: 20px;
 }
+
+/** ======   Information Card   ====== */
+.clear {
+  clear: left;
+}
+.card {
+  min-height: 100px;
+  background-color: #FFF;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 15px 0 rgba(0,0,0,0.2);
+  margin: 10px 0px;
+}
+  .card > .icon {
+    float: left;
+  }
+
+    .card > .icon > .fa{
+      font-size: 80px;
+      padding-top: 15px;
+    }
+
+  .card > .info {
+    font-weight: 700;
+    margin-left: 60px;
+  }
+    .card > .info > .hr {
+      border-bottom: 2px solid #EEE;
+      margin-bottom: 5px;
+    }
+    .card > .info > .value {
+      text-align: center;
+      padding-left: 10px;
+      font-size: 40px;
+    }
+      .card > .info > .value > .value-change {
+        text-align: center;
+        padding-left: 10px;
+        font-size: 14px;
+      }
+    .card > .info > .title {
+      margin: 0 auto;
+      text-align: right;
+      font-size: 16px;
+      width: 75%;
+      float: left;
+    }
+    .card > .info > .status-icon {
+      margin: 0 auto;
+      background: radial-gradient(#DDD, #CCC);
+      box-shadow: 0 0 6px 0 rgba(140, 139, 136, 1.0);
+      border-radius: 50%;
+      width: 20px;
+      padding-top: 20px;
+      float: left;
+    }
+    .card > .info > .status {
+      padding-left: 5px;
+      font-size: 16px;
+      float: right;
+    }
+    .card > .header {
+      text-align: right;
+      font-size: 12px;
+    }
+
+    .status-green {
+      background: radial-gradient(#92F08D, #77CC72);
+      box-shadow: 0 0 6px 0 rgba(100, 186, 95, 1.0);
+    }
+
+    .status-yellow {
+      background: radial-gradient(#F5EF5D, #E4E716);
+      box-shadow: 0 0 6px 0 rgba(237, 240, 31, 1.0);
+    }
+
+    .status-orange {
+      background: radial-gradient(#F7D3A1, #F5B65D);
+      box-shadow: 0 0 6px 0 rgba(240, 163, 31, 1.0);
+    }
+
+    .status-red {
+      background: radial-gradient(#F7A5A1, #F75048);
+      box-shadow: 0 0 6px 0 rgba(240, 49, 31, 1.0);
+    }
+
+    .status-purple {
+      background: radial-gradient(#EAA8ED, #DC3BE3);
+      box-shadow: 0 0 6px 0 rgba(240, 31, 205, 1.0);
+    }
+
