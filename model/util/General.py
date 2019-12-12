@@ -68,6 +68,8 @@ def public_key_require_page(usage, expire_para):
         def wrapper(*args, **kwds):
             # 取得RSA過期時間設定
             expire = Config().getValue('expire', expire_para)
+            # 預設為10分鐘
+            expire = 600 if expire == None else expire
             # 請求資源的IP位置
             request_ip = request.remote_addr
             rsa_key = KeyRSA()
@@ -176,7 +178,7 @@ def generate_token(data, usage):
     # 取得伺服器核發的私鑰（固定）
     private_key = Key().getPrivateKey()
     # 若設定檔沒有該token用途則預設10分鐘過期
-    expired_time = time.time() + 10 * 60 if expire_length == '' else time.time() + int(expire_length)
+    expired_time = time.time() + 10 * 60 if expire_length == None else time.time() + int(expire_length)
     # 使用 jwt 加密
     payload = data
     payload.update({

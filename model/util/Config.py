@@ -28,7 +28,7 @@ class Config:
             value = self.__config[section][key]
             return value
         except:
-            return ''
+            return None
 
 
     def getWebSocketUrl(self):
