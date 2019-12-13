@@ -57,6 +57,26 @@ var is_function = (func) => {
   return func && {}.toString.call(func) === '[object Function]';
 }
 
+var number_increase = () =>{
+  $('.number').each(function () {
+    if ($(this).text() === '--.-') {
+      console.log('NaN')
+    }
+    else {
+      $(this).prop('Counter', 0).animate({
+        Counter: Number($(this).text())
+      }, {
+        duration: 2000,
+        easing: 'swing',
+        step: function (now) {
+          $(this).text(Math.ceil(now));
+          $(this).number(true, 1);
+        }
+      });
+    }
+  });
+}
+
 /**
  * 使用jquery-confirm跳出
  * @param {*} title
@@ -193,5 +213,48 @@ var prompt_info = (icon, url, title, color, button, content_ready="", close_icon
     },
     draggable: false,
     buttons: button
+  });
+}
+
+var calc_value_change = (last, curr) => {
+  let change = Number();
+  if (isNaN(last)) { change = 0.0;}
+  else{ change = Number(curr) - Number(last);}
+
+  let sign = "";
+  let color = "";
+  if (change > 0)       { sign = "▲";   color = "#F0382B";}
+  else if (change < 0)  { sign = "▼";   color = "#69F25C";}
+  else                  { sign = "-";   color = "#6B6E6A";}
+
+  return '<span style="color:' + color + ';">' + sign + ' ' + String(Math.abs(Number(change)).toFixed(1)) + '</span>';
+}
+
+var sleep = (ms) => {
+  var start = new Date().getTime();
+  while(1)
+    if ((new Date().getTime() - start) > ms)
+      break;
+}
+
+/**
+ *
+ * @param {*} obj
+ * reference: http://jsfiddle.net/M4Fcd/186/
+ */
+var blink_text = (obj) => {
+  $(obj).each(function() {
+    var elem = $(this);
+    var count = 1;
+    var intervalId = setInterval(function() {
+        if (elem.css('visibility') == 'hidden') {
+            elem.css('visibility', 'visible');
+            if (count++ === 3) {
+                clearInterval(intervalId);
+            }
+        } else {
+            elem.css('visibility', 'hidden');
+        }
+    }, 200);
   });
 }

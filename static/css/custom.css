@@ -51,7 +51,7 @@ body {
   clear: left;
 }
 .card {
-  min-height: 100px;
+  min-height: 135px;
   background-color: #FFF;
   border: 1px solid transparent;
   border-radius: 6px;

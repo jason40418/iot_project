@@ -2,111 +2,56 @@
 {%  block  title  %}IoT{%  endblock  %}
 {%  block  description  %}允許使用者進行登入{%  endblock  %}
 
-{%  block  content  %}
-<div class="row">
-  <div class="real-time-data">
-    <!-- 溫度 -->
-    <div class="col-md-4 col-sm-6">
-      <div class="card">
-        <div class="header">Last Update：2019/10/12 13:15</div>
-        <div class="icon">
-          <i class="fa fa-thermometer-half" aria-hidden="true"></i>
+  {%  block  custom_css  %}
+  {%  endblock  %}
+    {%  block  content  %}
+    <div class="row">
+      <div id="real-time-id" style="visibility:hidden">{% if 'id' in data %}{{ data.id }}{% endif %}</div>
+      <div class="real-time-data">
+        <!-- 感應器資料列表 -->
+        <div class="col-md-4 col-sm-6">
+          <div class="card">
+            <h1>即時數據</h1>
+          </div>
         </div>
-        <div class="info">
-          <div class="value"><span class="number">--.-</span>°C <span class="value-change">(0.2)</span></div>
-          <div class="hr"></div>
-          <div class="title">溫度（Temperature）</div>
-          <div class="status-icon"></div>
-          <div class="status">正常</div>
-          <div class="clear"></div>
+        {% for i in SENSOR_DATA %}
+        <div id="{{ i.id }}" class="col-md-4 col-sm-6">
+          <div class="card">
+            <div class="header">
+              <span id="{{ i.id }}-datetime">{% if i.id in data.data and 'datetime' in data%}{{ data['datetime'] }}{% else %}----/--/-- --:--{% endif %}</span>
+            </div>
+            <div class="icon">
+              <i class="fa {{ i.icon }}" aria-hidden="true"></i>
+            </div>
+            <div class="info">
+              <div class="value">
+                <span id="{{ i.id }}-value" class="number">{% if i.id in data.data %}{{ data['data'][i.id] }}{% else %}--.-{% endif %}</span>{{ i.unit }}
+                <span class="value-change">(<span id="{{ i.id }}-value-change" class="number">--.-</span>)</span>
+              </div>
+              <div class="hr"></div>
+              <div class="title">{{ i.name }}</div>
+              <div id="{{ i.id }}-status-icon "class="status-icon"></div>
+              <div class="status"><span id="{{ i.id }}-status">N/A</span></div>
+              <div class="clear"></div>
+            </div>
+          </div>
         </div>
+        {% endfor %}
       </div>
     </div>
-    <!-- 濕度 -->
-    <div class="col-md-4 col-sm-6">
-      <div class="card">
-        <div class="header">Last Update：2019/10/12 13:15</div>
-        <div class="icon">
-          <i class="fa fa-tint" aria-hidden="true"></i>
-        </div>
-        <div class="info">
-          <div class="value"><span class="number">--.-</span>%<span class="value-change">(0.2)</span></div>
-          <div class="hr"></div>
-          <div class="title">濕度（Humidity）</div>
-          <div class="status-icon"></div>
-          <div class="status">正常</div>
-          <div class="clear"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<h1>104</h1>
-<h1>103</h1>
-<h1>102</h1>
-<div id="tester" style="width:auto;height:auto;"></div>
-{%  endblock  %}
+    <h1>104</h1>
+    <h1>103</h1>
+    <h1>102</h1>
+    <div id="tester" style="width:auto;height:auto;"></div>
+    {%  endblock  %}
 
-{%  block  custom_js  %}
-<script src="/static/js/socket.js" defer></script>
-<script src="/static/js/app/index.js" defer></script>
-<script>
-  (() => {
-    document.addEventListener("DOMContentLoaded", function (event) {
-      $('.number').each(function () {
-        if ($(this).text() === '--.-') {
-          console.log('NaN')
-        }
-        else {
-          $(this).prop('Counter', 0).animate({
-            Counter: Number($(this).text())
-          }, {
-            duration: 2000,
-            easing: 'swing',
-            step: function (now) {
-              $(this).text(Math.ceil(now));
-              $(this).number(true, 1);
-            }
-          });
-        }
-      }, {passive: true});
+    {%  block  custom_js  %}
+    <script src="/static/js/app/index.js" defer></script>
+    <script>
+      (() => {
+        document.addEventListener("DOMContentLoaded", (event) => {
 
-      // 產生slide show
-      $('.real-time-data').slick({
-        slidesToScroll: 1,
-        dots: true,
-        autoplay: true,
-        autoplaySpeed: 2000,
-        mobileFirst: true,
-        infinite: true,
-        respondTo: 'window',
-        responsive: [
-          {
-            breakpoint: 1024,
-            settings: {
-              slidesToShow: 3,
-              slidesToScroll: 1,
-              infinite: true,
-              dots: true
-            }
-          },
-          {
-            breakpoint: 600,
-            settings: {
-              slidesToShow: 2,
-              slidesToScroll: 1
-            }
-          },
-          {
-            breakpoint: 480,
-            settings: {
-              slidesToShow: 1,
-              slidesToScroll: 1
-            }
-          }
-        ]
-      });
-    });
-  })()
-</script>
-{%  endblock  %}
+        }, {passive: true});
+      })()
+    </script>
+    {%  endblock  %}

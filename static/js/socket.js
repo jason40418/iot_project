@@ -2,15 +2,10 @@
 "use strict";
 
 (() => {
-    const socket = io.connect('//');
+  const socket = io.connect('/client');
 
-    socket.on('monitor', (data) => {
-        console.log(data);
-    });
-
-    socket.emit('test', { 'jello': '中文字體' });
-
-    socket.on('front-end-response', (data) => {
-        console.log(data);
-    });
+  // Subscribe the Flask server publish data
+  socket.on('sensor_data_pub_client', (data) => {
+    console.log(data);
+  });
 })()
