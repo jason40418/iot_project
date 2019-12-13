@@ -26,6 +26,7 @@ https://github.com/wcoder/highlightjs-line-numbers.js/
 https://codepen.io/harshabhat86/pen/tAxuF/
 https://github.com/customd/jquery-number/blob/master/jquery.number.min.js.map
 https://kenwheeler.github.io/slick/
+http://jsfiddle.net/M4Fcd/186/
 
 # Crontab自動排程
 crontab -l :檢視所有
