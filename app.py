@@ -3,6 +3,7 @@ from flask import Flask, make_response, render_template, jsonify, send_from_dire
 from flask_misaka import Misaka, markdown
 from flask_socketio import SocketIO, send, emit
 from model import Auth
+from model.helper.SensorHelper import SensorHelper
 from model.util import Config as cfg
 from model.util import General
 from model.util.General import token_no_require_page
@@ -19,6 +20,8 @@ config = cfg.Config(root_dir)
 socketio = SocketIO(app)
 from controllers import APIController, LEDController, WebSocketController, AvatarController, MemberController
 
+SENSOR_DATA_LIST = SensorHelper.SENSOR_LIST
+
 #####################################
 # 註冊，包含前輟字
 #####################################
@@ -32,7 +35,8 @@ app.register_blueprint(MemberController.member_blueprint, url_prefix='/member')
 ######################################
 @app.route('/', methods=['GET'])
 def index():
-    resp = make_response(render_template('app/index.html'))
+    result, data = SensorHelper.get_latest_data()
+    resp = make_response(render_template('app/index.html', SENSOR_DATA = SENSOR_DATA_LIST, data=data))
     return resp
 
 @app.route('/test', methods=['GET'])

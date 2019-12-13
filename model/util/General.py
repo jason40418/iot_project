@@ -5,6 +5,7 @@ from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA as ORI_RSA
 from Crypto.Hash import SHA256
 from base64 import b64decode
+from time import localtime, strftime, sleep
 
 from model.util.Key import Key
 from model.util.Config import Config
@@ -201,3 +202,13 @@ def verify_token(token):
         # decode error or expired
         except (jwt.DecodeError, jwt.ExpiredSignatureError):
             return False, dict()
+
+def get_current_datetime(format=None):
+    datetime_format = "%Y-%m-%d %H:%M:%S" if format == None else format
+    return strftime(datetime_format, localtime())
+
+def round_dict_value(data, decimal=1):
+    result = dict()
+    for k, v in data.items():
+        result.update({k: round(float(v), decimal)})
+    return result
