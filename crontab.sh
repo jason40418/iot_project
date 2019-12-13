@@ -1,6 +1,7 @@
 #!/bin/bash
 # Program:
 #   用於自動排程執行目前環境參數
+# chmod +x /home/user/Location/Of/Script
 # History:
 # 2019/12/11	Ver.1.0.0 Release
 
