@@ -4,16 +4,18 @@ class SensorHelper():
     dbmgr = DBMgr()
     SENSOR_LIST = [
         {
-            'id'   : "temperature",
-            'icon' : "fa-thermometer-half",
-            'name' : "溫度（Temperature）",
-            'unit' : "°C"
+            'id'      : "temperature",
+            'icon'    : "fa-thermometer-half",
+            'name'    : "溫度",
+            'en_name' : "Temperature",
+            'unit'    : "°C"
         },
         {
-            'id'   : "humidity",
-            'icon' : "fa-tint",
-            'name' : "濕度（Humidity）",
-            'unit' : "%"
+            'id'      : "humidity",
+            'icon'    : "fa-tint",
+            'name'    : "濕度",
+            'en_name' : "Humidity",
+            'unit'    : "%"
         },
     ]
     # TODO: 若資料庫出錯是否要印出或做其他處置

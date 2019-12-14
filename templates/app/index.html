@@ -29,7 +29,7 @@
                 <span class="value-change">(<span id="{{ i.id }}-value-change" class="number">--.-</span>)</span>
               </div>
               <div class="hr"></div>
-              <div class="title">{{ i.name }}</div>
+              <div class="title">{{ i.name }}（{{ i.en_name }}）</div>
               <div id="{{ i.id }}-status-icon" class="status-icon"></div>
               <div class="status"><span id="{{ i.id }}-status">N/A</span></div>
               <div class="clear"></div>
@@ -45,12 +45,12 @@
     <div id="tester" style="width:auto;height:auto;"></div>
     {%  endblock  %}
 
-    {%  block  custom_js  %}
-    <script src="/static/js/sensor_status.js" defer></script>
-    <script src="/static/js/app/index.js" defer></script>
-    <script>
-      (() => {
+  {%  block  custom_js  %}
+  <script src="/static/js/sensor_status.js" defer></script>
+  <script src="/static/js/app/index.js" defer></script>
+  <script>
+    (() => {
 
-      })()
-    </script>
-    {%  endblock  %}
+    })()
+  </script>
+  {%  endblock  %}
