@@ -94,15 +94,6 @@ body {
       width: 75%;
       float: left;
     }
-    .card > .info > .status-icon {
-      margin: 0 auto;
-      background: radial-gradient(#DDD, #CCC);
-      box-shadow: 0 0 6px 0 rgba(140, 139, 136, 1.0);
-      border-radius: 50%;
-      width: 20px;
-      padding-top: 20px;
-      float: left;
-    }
     .card > .info > .status {
       padding-left: 5px;
       font-size: 16px;
@@ -113,28 +104,38 @@ body {
       font-size: 12px;
     }
 
-    .status-green {
-      background: radial-gradient(#92F08D, #77CC72);
-      box-shadow: 0 0 6px 0 rgba(100, 186, 95, 1.0);
-    }
+  .status-icon {
+    margin: 0 auto;
+    background: radial-gradient(#DDD, #CCC);
+    box-shadow: 0 0 6px 0 rgba(140, 139, 136, 1.0);
+    border-radius: 50%;
+    width: 20px;
+    padding-top: 20px;
+    float: left;
+  }
 
-    .status-yellow {
-      background: radial-gradient(#F5EF5D, #E4E716);
-      box-shadow: 0 0 6px 0 rgba(237, 240, 31, 1.0);
-    }
+  .status-green {
+    background: radial-gradient(#92F08D, #77CC72);
+    box-shadow: 0 0 6px 0 rgba(100, 186, 95, 1.0);
+  }
 
-    .status-orange {
-      background: radial-gradient(#F7D3A1, #F5B65D);
-      box-shadow: 0 0 6px 0 rgba(240, 163, 31, 1.0);
-    }
+  .status-yellow {
+    background: radial-gradient(#F5EF5D, #E4E716);
+    box-shadow: 0 0 6px 0 rgba(237, 240, 31, 1.0);
+  }
 
-    .status-red {
-      background: radial-gradient(#F7A5A1, #F75048);
-      box-shadow: 0 0 6px 0 rgba(240, 49, 31, 1.0);
-    }
+  .status-orange {
+    background: radial-gradient(#F7D3A1, #F5B65D);
+    box-shadow: 0 0 6px 0 rgba(240, 163, 31, 1.0);
+  }
 
-    .status-purple {
-      background: radial-gradient(#EAA8ED, #DC3BE3);
-      box-shadow: 0 0 6px 0 rgba(240, 31, 205, 1.0);
-    }
+  .status-red {
+    background: radial-gradient(#F7A5A1, #F75048);
+    box-shadow: 0 0 6px 0 rgba(240, 49, 31, 1.0);
+  }
+
+  .status-purple {
+    background: radial-gradient(#EAA8ED, #DC3BE3);
+    box-shadow: 0 0 6px 0 rgba(240, 31, 205, 1.0);
+  }
 

@@ -38,6 +38,28 @@
     ]
   }
 
+  var clean_status = (obj) => {
+    STATUS.forEach((element) => {
+      console.log(element);
+      $(obj).removeClass('status-' + element);
+    })
+  }
+
+  var update_status = (sensor, value) => {
+    // 取回對應的狀態
+    var [result, title, status] = get_sensor_status(sensor, value);
+    // 如果檢驗狀態正確
+    if (result) {
+      // 更新標題
+      $('#' + sensor + '-status').html(title);
+      // 清除原先設定的狀態
+      clean_status('#' + sensor + '-status-icon');
+      // 設定新的狀態燈號
+      console.log('#' + sensor + '-status-icon');
+      $('#' + sensor + '-status-icon').addClass('status-' + status);
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", (event) => {
     const socket = io.connect('/client');
 
@@ -63,13 +85,23 @@
             let change_result = calc_value_change(original, value)
             $('#' + key + '-value-change').html(change_result);
             blink_text('#' + key + '-value');
+            // 更新狀態
+            update_status(key, value);
           }
         });
       }
     });
 
+    // 將原本一開始的狀態更新上去
+    $('.status-icon').each((idx, element) => {
+      let icon_id = $(element).attr("id");
+      let sensor = icon_id.split('-')[0];
+      let value = Number($('#' + sensor + '-value').html())
+      update_status(sensor, value);
+    })
     // 產生slide show
     $('.real-time-data').slick(SLICK_SETTING);
+
   });
 
   let trace1 = {

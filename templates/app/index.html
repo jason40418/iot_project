@@ -30,7 +30,7 @@
               </div>
               <div class="hr"></div>
               <div class="title">{{ i.name }}</div>
-              <div id="{{ i.id }}-status-icon "class="status-icon"></div>
+              <div id="{{ i.id }}-status-icon" class="status-icon"></div>
               <div class="status"><span id="{{ i.id }}-status">N/A</span></div>
               <div class="clear"></div>
             </div>
@@ -46,12 +46,11 @@
     {%  endblock  %}
 
     {%  block  custom_js  %}
+    <script src="/static/js/sensor_status.js" defer></script>
     <script src="/static/js/app/index.js" defer></script>
     <script>
       (() => {
-        document.addEventListener("DOMContentLoaded", (event) => {
 
-        }, {passive: true});
       })()
     </script>
     {%  endblock  %}

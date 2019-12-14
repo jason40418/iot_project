@@ -1,0 +1,84 @@
+{
+  "humidity": {
+    "limit": [10, 20, 30, 40, 50, 60, 80, 90],
+    "level": [
+      {
+        "title": "極乾",
+        "status": 4
+      },
+      {
+        "title": "過乾",
+        "status": 3
+      },
+      {
+        "title": "微乾",
+        "status": 2
+      },
+      {
+        "title": "稍乾",
+        "status": 1
+      },
+      {
+        "title": "適中",
+        "status": 0
+      },
+      {
+        "title": "稍濕",
+        "status": 1
+      },
+      {
+        "title": "微濕",
+        "status": 2
+      },
+      {
+        "title": "過濕",
+        "status": 3
+      },
+      {
+        "title": "極濕",
+        "status": 4
+      }
+    ]
+  },
+  "temperature": {
+    "limit": [10, 15, 20, 22, 25, 27, 30, 32],
+    "level": [
+      {
+        "title": "極寒",
+        "status": 4
+      },
+      {
+        "title": "寒冷",
+        "status": 3
+      },
+      {
+        "title": "冷",
+        "status": 2
+      },
+      {
+        "title": "涼爽",
+        "status": 1
+      },
+      {
+        "title": "正常",
+        "status": 0
+      },
+      {
+        "title": "溫暖",
+        "status": 1
+      },
+      {
+        "title": "熱",
+        "status": 2
+      },
+      {
+        "title": "炎熱",
+        "status": 3
+      },
+      {
+        "title": "酷熱",
+        "status": 4
+      }
+    ]
+  }
+}
