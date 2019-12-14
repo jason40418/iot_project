@@ -45,7 +45,7 @@ SensorHelper.update_fail_list(fail_list, record_id)
 # 透過WebSocket發送資料到伺服器端
 # ==============================================================================
 # 如果WebSocker建立連線成功
-if connection != None:
+if connection:
     payload = {
         'id' : record_id,
         'datetime': get_current_datetime("%Y-%m-%d %H:%M:%S"),

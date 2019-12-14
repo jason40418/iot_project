@@ -1,20 +1,22 @@
 from __main__ import socketio
-from flask import jsonify
+from flask import jsonify, request
 from flask_socketio import send, emit
 
 
-@socketio.on('connect')
+@socketio.on('connect', namespace='/client')
 def connect():
-    print('YES CALL ME')
-    emit('connect', {'data': 'Connected'}, json=True)
+    client_id = request.sid
+    print('[@WebScoketController] A new user {} connect!'.format(client_id))
+    emit('connect', {'id': client_id}, namespace='/client', json=True)
 
 # ==================================================================================================
 # Raspberry Pi and Server
 # ==================================================================================================
 @socketio.on('connect', namespace='/pi')
 def connect():
-    print('YES CALL ME')
-    emit('connect', {'data': 'Connected'}, json=True)
+    client_id = request.sid
+    print('[@WebScoketController] Pi System {} connect!'.format(client_id))
+    emit('connect', {'id': client_id}, namespace='/pi', json=True)
 
 @socketio.on('sensor_data_pub_pi', namespace='/pi')
 def sensor_data_pub_pi(data):
