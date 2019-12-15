@@ -27,6 +27,8 @@ https://codepen.io/harshabhat86/pen/tAxuF/
 https://github.com/customd/jquery-number/blob/master/jquery.number.min.js.map
 https://kenwheeler.github.io/slick/
 http://jsfiddle.net/M4Fcd/186/
+https://bestjquery.com/tutorial/tab/demo77/
+https://github.com/1000hz/bootstrap-validator/issues/52
 
 # Crontab自動排程
 crontab -l :檢視所有

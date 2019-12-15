@@ -18,6 +18,12 @@ def connect():
     print('[@WebScoketController] Pi System {} connect!'.format(client_id))
     emit('connect', {'id': client_id}, namespace='/pi', json=True)
 
+@socketio.on('disconnect', namespace='/pi')
+def disconnect():
+    client_id = request.sid
+    print('[@WebScoketController] Pi System {} disconnect!'.format(client_id))
+    emit('disconnect', {'id': client_id}, namespace='/pi', json=True)
+
 @socketio.on('sensor_data_pub_pi', namespace='/pi')
 def sensor_data_pub_pi(data):
     """Send the sensor data to client

@@ -7,6 +7,11 @@ from __main__ import app
 # 定義
 member_blueprint = Blueprint('member', __name__)
 
+@member_blueprint.route("/", methods=['GET'])
+def index():
+    resp = make_response(render_template('app/member/index.html'))
+    return resp
+
 @member_blueprint.route("/register", methods=['GET'])
 @token_no_require_page('/member')
 @public_key_require_page('register', 'register_rsa_key')

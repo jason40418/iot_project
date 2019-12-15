@@ -40,7 +40,6 @@
 
   var clean_status = (obj) => {
     STATUS.forEach((element) => {
-      console.log(element);
       $(obj).removeClass('status-' + element);
     })
   }
@@ -55,13 +54,16 @@
       // 清除原先設定的狀態
       clean_status('#' + sensor + '-status-icon');
       // 設定新的狀態燈號
-      console.log('#' + sensor + '-status-icon');
       $('#' + sensor + '-status-icon').addClass('status-' + status);
     }
   }
 
   document.addEventListener("DOMContentLoaded", (event) => {
     const socket = io.connect('/client');
+
+    socket.on('connect', (payload) => {
+      console.log(payload);
+    });
 
     // Subscribe the Flask server publish data
     socket.on('sensor_data_pub_client', (payload) => {
@@ -104,24 +106,50 @@
 
   });
 
-  let trace1 = {
-    x: [1, 2, 3, 4],
-    y: [10, 15, 13, 17],
-    type: 'scatter'
+  function rand() {
+    return Math.random();
+  }
+
+  var time = new Date();
+
+  var data = [{
+    x: [time],
+    y: [rand],
+    mode: 'lines',
+    line: { color: '#80CAF6' }
+  }]
+
+  var layout = {
+    title: "Responsive to window's size!",
+    font: {size: 10}
   };
 
-  let trace2 = {
-    x: [1, 2, 3, 4],
-    y: [16, 5, 11, 9],
-    type: 'scatter'
-  };
+  Plotly.plot('tester', data, layout, {responsive: true});
 
-  let data = [trace1, trace2];
+  var cnt = 0;
 
-  let layout = {
-    title: 'Responsive to window\'s size!',
-    font: { size: 18 }
-  };
+  var interval = setInterval(function () {
 
-  Plotly.newPlot('tester', data, layout, { responsive: true });
+    var time = new Date();
+
+    var update = {
+      x: [[time]],
+      y: [[rand()]]
+    }
+
+    var olderTime = time.setMinutes(time.getMinutes() - 1);
+    var futureTime = time.setMinutes(time.getMinutes() + 1);
+
+    var minuteView = {
+      xaxis: {
+        type: 'date',
+        range: [olderTime, futureTime]
+      }
+    };
+
+    Plotly.relayout('tester', minuteView);
+    Plotly.extendTraces('tester', update, [0])
+
+    if (++cnt === 100) clearInterval(interval);
+  }, 1000);
 })()
