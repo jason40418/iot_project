@@ -2,6 +2,7 @@
 config.ini
 model/face/dataset/*
 model/face/images/*
+model/face/thumbnail/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
