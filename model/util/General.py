@@ -47,7 +47,6 @@ def token_no_require_page(url):
         @wraps(f)
         def wrapper(*args, **kwds):
             resp = make_response(redirect(url, code=302))
-            resp.set_cookie(key='token', value='', expires=0)
             if 'token' in request.cookies:
                 token = request.cookies.get('token')
                 # 檢查解密成功性
@@ -72,7 +71,6 @@ def token_require_page(url, request_type='api'):
         @wraps(f)
         def wrapper(*args, **kwds):
             resp = make_response(redirect(url, code=302))
-            resp.set_cookie(key='token', value='', expires=0)
             if 'token' in request.cookies:
                 token = request.cookies.get('token')
                 # 檢查解密成功性
@@ -85,6 +83,7 @@ def token_require_page(url, request_type='api'):
                             'error_code': 400
                         }), 400
                     else:
+                        resp.set_cookie(key='token', value='', expires=0)
                         return resp
                 # 檢查token有效性
                 elif time.time() > payload['expired_time']:
@@ -95,6 +94,7 @@ def token_require_page(url, request_type='api'):
                             'error_code': 401
                         }), 401
                     else:
+                        resp.set_cookie(key='token', value='', expires=0)
                         return resp
                 else:
                     return f(payload, *args, **kwds)
@@ -106,6 +106,7 @@ def token_require_page(url, request_type='api'):
                         'error_code': 401
                     }), 401
                 else:
+                    resp.set_cookie(key='token', value='', expires=0)
                     return resp
         return wrapper
     return actual_decorator
