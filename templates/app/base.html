@@ -49,10 +49,17 @@
 <body>
   {% include "app/nav.html" %}
 
-  <main role="main" class="container">
+  {%  block pre_content  %}{%  endblock  %}
+
+  <main role="main" class="container main">
     {%  block  content  %}{%  endblock  %}
   </main>
 
+  <section class="last">
+    {%  block last_content  %}{%  endblock  %}
+  </section>
+
+  {% include "app/footer.html" %}
   {% include "js.html" %}
   {%  block  custom_js  %}{%  endblock  %}
 </body>

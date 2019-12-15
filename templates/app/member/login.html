@@ -2,43 +2,42 @@
 {%  block  title  %}會員登入{%  endblock  %}
 {%  block  description  %}允許使用者進行登入{%  endblock  %}
 
+  {%  block  custom_css  %}
+  <link rel="stylesheet" href="/static/css/app/member/login.css">
+  {%  endblock  %}
+
   {%  block  content  %}
-    <div class="jumbotron">
-      <h1>會員登入 | PiEnvir</h1>
-      <p class="lead">This example is a quick exercise to illustrate how the top-aligned navbar works. As you
-        scroll, this navbar remains in its original position and moves with the rest of the page.</p>
-    </div>
-    <form id="form" data-toggle="validator" role="form">
-      <div class="form-group" has-feedback>
-        <label for="account" class="control-label">帳號</label>
-        <div class="input-group">
-          <span class="input-group-addon">@</span>
-          <input type="text" pattern="^[a-zA-Z][a-zA-Z0-9]{6,30}$" maxlength="30" class="form-control input-lg"
-            id="account" name="account" placeholder="account" data-error="請輸入6~30字的帳號（僅限英文與數字）以符合格式" required>
-        </div>
-        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-        <div class="help-block with-errors"></div>
-      </div>
-
-      <div class="form-group">
-        <label for="password" class="control-label">密碼</label>
-          <input type="password" pattern="[^\s]+" data-minlength="6" maxlength="30" class="form-control input-lg"
-            id="password" data-pattern-error="密碼不允許任何空格" data-minlength-error="請輸入至少6位數以上密碼（至多30位數）"
-            data-required-error="此欄位必須填寫" placeholder="passworsd" autocomplete required>
+    <section class="login-form">
+      <form id="form" data-toggle="validator" role="login">
+        <img src="/static/images/logo.svg" class="img-responsive" alt="" />
+        <div class="form-group" has-feedback>
+          <label for="account" class="control-label">帳號</label>
+            <input type="text" pattern="^[a-zA-Z][a-zA-Z0-9]{6,30}$" maxlength="30" class="form-control input-lg"
+              id="account" name="account" placeholder="account" data-error="請輸入6~30字的帳號（僅限英文與數字）以符合格式" required>
           <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-          <div class="help-block">請輸入至少6位數以上密碼（至多30位數）</div>
+          <div class="help-block with-errors"></div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <button id="terms_contents" type="button" class="btn btn-default">檢視服務條款</button>
-      </div>
+        <div class="form-group">
+          <label for="password" class="control-label">密碼</label>
+            <input type="password" pattern="[^\s]+" data-minlength="6" maxlength="30" class="form-control input-lg"
+              id="password" data-pattern-error="密碼不允許任何空格" data-minlength-error="請輸入至少6位數以上密碼（至多30位數）"
+              data-required-error="此欄位必須填寫" placeholder="passworsd" autocomplete required>
+            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+            <div class="help-block">請輸入至少6位數以上密碼（至多30位數）</div>
+          </div>
+        </div>
 
-      <div class="form-group">
-        <button type="submit" class="btn btn-primary">申請</button>
-      </div>
-      <div id="rsa-key" data-public-key="{{ rsa.public_key }}" data-key-id="{{ rsa.id }}"></div>
-    </form>
+        <div class="form-group">
+          <button id="terms_contents" type="button" class="btn btn-default">檢視服務條款</button>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-block">登入</button>
+        </div>
+        <div id="rsa-key" data-public-key="{{ rsa.public_key }}" data-key-id="{{ rsa.id }}"></div>
+      </form>
+    </section>
   {%  endblock  %}
 
   {%  block  custom_js  %}

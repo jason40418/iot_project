@@ -4,6 +4,7 @@
 
   {%  block  custom_css  %}
   {%  endblock  %}
+
     {%  block  content  %}
     <div class="row">
       <div id="real-time-id" style="visibility:hidden">{% if 'id' in data %}{{ data.id }}{% endif %}</div>
@@ -44,6 +45,17 @@
     <h1>102</h1>
     <div id="tester" style="width:auto;height:auto;"></div>
     {%  endblock  %}
+
+    {% block last_content %}
+    <div class="jumbotron">
+      <div class="container">
+        <h1>會員登入 | PiEnvir</h1>
+        <p class="lead">This example is a quick exercise to illustrate how the top-aligned navbar works. As you
+          scroll, this navbar remains in its original position and moves with the rest of the page.</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+      </div>
+    </div>
+    {% endblock %}
 
   {%  block  custom_js  %}
   <script src="/static/js/sensor_status.js" defer></script>

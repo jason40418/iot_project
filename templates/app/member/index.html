@@ -1,0 +1,105 @@
+{%  extends  "app/base.html"  %}
+{%  block  title  %}會員{%  endblock  %}
+{%  block  description  %}允許使用者進行登入{%  endblock  %}
+
+  {%  block  custom_css  %}
+  {%  endblock  %}
+
+    {%  block  content  %}
+    <div class="row">
+      <div class="col-sm-3">
+        <!-- ROADMAP: 會員可以自己上傳頭像，並顯示在nav
+        -->
+        <img title="profile image" class="img-circle img-responsive member-avaster" src="https://static-cdn.jtvnw.net/jtv_user_pictures/jason40418-profile_image-0accf77975732597-70x70.jpeg">
+        <span class="fill-all-center"><strong>JasonJasonJasonJasonJasonJason</strong></span>
+
+        <ul class="list-group">
+          <li class="list-group-item text-muted"><i class="fa fa-address-card fa-1x"></i> 個人資料
+            <button class="btn btn-xs btn-default pull-right"><i class="fa fa-pencil"></i> 編輯</button>
+          </li>
+          <li class="list-group-item text-right"><span class="pull-left"><strong>編號</strong></span> Joseph Doe</li>
+          <li class="list-group-item text-right"><span class="pull-left"><strong>暱稱</strong></span> Joseph Doe</li>
+          <li class="list-group-item text-right"><span class="pull-left"><strong>身分</strong></span> Joseph Doe</li>
+          <li class="list-group-item text-right"><span class="pull-left"><strong>修改</strong></span> Yesterday</li>
+          <li class="list-group-item text-right"><span class="pull-left"><strong>加入</strong></span> 2.13.2014</li>
+        </ul>
+
+        <div class="panel panel-default">
+          <div class="panel-heading"><i class="fa fa-envelope-open-o fa-1x"></i> 聯絡資訊</i></div>
+          <div class="panel-body"><i class="fa fa-at fa-1x"></i><a href="mailto:jason40418@gmail.com"> jason40418@gmail.com</a></i></div>
+        </div>
+
+        <ul class="list-group">
+          <li class="list-group-item text-muted"><i class="fa fa-cog fa-1x"></i> 偏好設定
+            <button class="btn btn-xs btn-default pull-right"><i class="fa fa-pencil"></i> 編輯</button>
+          </li>
+          <li class="list-group-item text-right"><span class="pull-left"><strong>Shares</strong></span> 125</li>
+          <li class="list-group-item text-right"><span class="pull-left"><strong>Likes</strong></span> 13</li>
+          <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 37</li>
+          <li class="list-group-item text-right"><span class="pull-left"><strong>Followers</strong></span> 78</li>
+        </ul>
+
+      </div>
+      <!--/col-3-->
+      <div class="col-sm-9">
+        <div class="tab" role="tabpanel">
+          <ul class="nav nav-tabs" id="myTab">
+            <li role="presentation" class="active"><a href="#alert" data-toggle="tab">警示</a></li>
+            <li role="presentation"><a href="#messages" data-toggle="tab">進出紀錄</a></li>
+          </ul>
+
+          <div class="tab-content">
+            <!-- 警示訊息 -->
+            <div class="tab-pane active" id="alert">
+              <div class="alert alert-info" role="alert">
+                <i class="fa fa-info-circle"></i>
+                This is a success alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+                <span class="pull-right"><strong>2019/12/30</strong></span>
+              </div>
+              <div class="alert alert-success" role="alert">
+                <i class="fa fa-check-circle-o"></i>
+                This is a success alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+              </div>
+              <div class="alert alert-danger" role="alert">
+                <i class="fa fa-times"></i>
+                This is a success alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+              </div>
+              <div class="alert alert-warning" role="alert">
+                <i class="glyphicon glyphicon-exclamation-sign"></i>
+                This is a success alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+              </div>
+            </div>
+
+            <!--  -->
+            <div class="tab-pane" id="messages">
+              <ul class="list-group">
+                <li class="list-group-item text-muted">Inbox</li>
+                <li class="list-group-item text-right"><a href="#" class="pull-left">Here is your a link to the latest summary
+                    report from the..</a> 2.13.2014</li>
+                <li class="list-group-item text-right"><a href="#" class="pull-left">Hi Joe, There has been a request on your
+                    account since that was..</a> 2.11.2014</li>
+                <li class="list-group-item text-right"><a href="#" class="pull-left">Nullam sapien massaortor. A lobortis
+                    vitae, condimentum justo...</a> 2.11.2014</li>
+                <li class="list-group-item text-right"><a href="#" class="pull-left">Thllam sapien massaortor. A lobortis
+                    vitae, condimentum justo...</a> 2.11.2014</li>
+                <li class="list-group-item text-right"><a href="#" class="pull-left">Wesm sapien massaortor. A lobortis vitae,
+                    condimentum justo...</a> 2.11.2014</li>
+                <li class="list-group-item text-right"><a href="#" class="pull-left">For therepien massaortor. A lobortis
+                    vitae, condimentum justo...</a> 2.11.2014</li>
+                <li class="list-group-item text-right"><a href="#" class="pull-left">Also we, havesapien massaortor. A
+                    lobortis vitae, condimentum justo...</a> 2.11.2014</li>
+                <li class="list-group-item text-right"><a href="#" class="pull-left">Swedish chef is assaortor. A lobortis
+                    vitae, condimentum justo...</a> 2.11.2014</li>
+              </ul>
+            </div>
+            <!--/tab-pane-->
+          </div>
+        </div>
+        <!--/tab-content-->
+      </div>
+    </div>
+    <!--/col-9-->
+    {%  endblock  %}
+
+  {%  block  custom_js  %}
+  {%  endblock  %}
