@@ -108,6 +108,16 @@
             content_ready=ready,
             close_icon=true);
         });
+
+        // 讓vaildator能夠移動到第一個錯誤的位置
+        $('form[data-toggle="validator"]').on('submit', function (e) {
+        window.setTimeout(function () {
+            var errors = $('.has-error')
+            if (errors.length) {
+                $('html, body').animate({ scrollTop: errors.offset().top - 100 }, 500);
+            }
+        }, 0);
+    });
       });
     })()
     </script>
