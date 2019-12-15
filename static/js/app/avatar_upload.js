@@ -13,9 +13,9 @@ $(() => {
         // send Blob objects via XHR requests:
         disableImageResize: /Android(?!.*Chrome)|Opera/
             .test(window.navigator.userAgent),
-        maxFileSize: 5000000,
-        acceptFileTypes: /(\.|\/)(jpe?g|png)$/i
-    });
+        maxFileSize: 500000000,
+        acceptFileTypes: /(\.|\/)(jpe?g|png|flac)$/i
+    })
 
     // Upload server status check for browsers with CORS support:
     if ($.support.cors) {
@@ -27,6 +27,7 @@ $(() => {
                 .text('Upload server currently unavailable - ' +
                         new Date())
                 .appendTo('#fileupload');
+            // TODO: 處理無法連線到伺服器的問題（可能為使用者toekn有問題或是伺服器發生錯誤）
         });
     }
 

@@ -1,6 +1,6 @@
 import ast, json, time, jwt
 from functools import wraps
-from flask import request, redirect
+from flask import request, redirect, jsonify, make_response
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA as ORI_RSA
 from Crypto.Hash import SHA256
@@ -46,6 +46,8 @@ def token_no_require_page(url):
     def actual_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwds):
+            resp = make_response(redirect(url, code=302))
+            resp.set_cookie(key='token', value='', expires=0)
             if 'token' in request.cookies:
                 token = request.cookies.get('token')
                 # 檢查解密成功性
@@ -56,9 +58,55 @@ def token_no_require_page(url):
                 elif time.time() > payload['expired_time']:
                     return f(*args, **kwds)
                 else:
-                    return redirect(url, code=302)
+                    return resp
             else:
                 return f(*args, **kwds)
+        return wrapper
+    return actual_decorator
+
+def token_require_page(url, request_type='api'):
+    '''需要token的頁面
+    '''
+    # 需要增加產生RSA key
+    def actual_decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwds):
+            resp = make_response(redirect(url, code=302))
+            resp.set_cookie(key='token', value='', expires=0)
+            if 'token' in request.cookies:
+                token = request.cookies.get('token')
+                # 檢查解密成功性
+                decode_status, payload = verify_token(token)
+                if not decode_status:
+                    if request_type == 'api':
+                        return jsonify({
+                            'error_type': "TokenDecodeFail",
+                            'error_msg': "使用者Token無法解析，請重新登入",
+                            'error_code': 400
+                        }), 400
+                    else:
+                        return resp
+                # 檢查token有效性
+                elif time.time() > payload['expired_time']:
+                    if request_type == 'api':
+                        return jsonify({
+                            'error_type': "TokenExpire",
+                            'error_msg': "使用者Token已經失效，請重新登入",
+                            'error_code': 401
+                        }), 401
+                    else:
+                        return resp
+                else:
+                    return f(payload, *args, **kwds)
+            else:
+                if request_type == 'api':
+                    return jsonify({
+                        'error_type': "TokenNotExist",
+                        'error_msg': "請先登入再使用",
+                        'error_code': 401
+                    }), 401
+                else:
+                    return resp
         return wrapper
     return actual_decorator
 
@@ -78,7 +126,7 @@ def public_key_require_page(usage, expire_para):
 
             data = {'id': rsa.get_rsa_key_id(), 'public_key': rsa_key.get_public_key()}
 
-            return f(data)
+            return f(data, *args, **kwds)
 
         return wrapper
     return actual_decorator
@@ -144,7 +192,7 @@ def private_key_require_page(usage, key_id_key='id', encrypt_data_key='payload',
                 # 金鑰失敗接續處理位置
                 pass
 
-            return f(decode_status, decode_result)
+            return f(decode_status, decode_result, *args, **kwds)
 
         return wrapper
     return actual_decorator
