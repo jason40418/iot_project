@@ -55,7 +55,7 @@
         api_request('POST', '/api/member/login', request, {
           '2XX': {
             完成: () => {
-              // document.location.href = '/login';
+              document.location.href = '/member';
             }
           },
           '4XX': {
