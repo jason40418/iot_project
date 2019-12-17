@@ -5,6 +5,7 @@
 body {
   min-height: 75rem;
   padding-top: 7.0rem;
+  /* "Helvetica Neue", Helvetica */
   font-family: 'Maven Pro', 'Noto Sans TC', sans-serif;
 }
 
@@ -157,6 +158,45 @@ body {
   margin: 10px auto;
   width: 150px;
   height: auto;
+}
+
+.table-responsive {
+  max-height: 280px;
+  overflow: scroll;
+}
+.table-fix th, td {
+  word-break: break-word;
+  text-align: center;
+}
+.table-fix tbody {
+  display: block;
+  height: 200px;
+  overflow: auto;
+}
+.table-fix thead, tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+.table-fix thead {
+  padding: 2px;
+  color: #FFF;
+  background: #777;
+}
+.chartWrapper {
+  position: relative;
+}
+
+.chartWrapper > canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.chartAreaWrapper {
+  width: 100%;
+  overflow-x: scroll;
 }
 
 /** ======   Information Card   ====== */
