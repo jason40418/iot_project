@@ -29,6 +29,9 @@ https://kenwheeler.github.io/slick/
 http://jsfiddle.net/M4Fcd/186/
 https://bestjquery.com/tutorial/tab/demo77/
 https://github.com/1000hz/bootstrap-validator/issues/52
+https://stackoverflow.com/questions/35854244/how-can-i-create-a-horizontal-scrolling-chart-js-line-chart-with-a-locked-y-axis
+https://github.com/daneden/animate.css
+
 
 # Crontab自動排程
 crontab -l :檢視所有

@@ -18,7 +18,7 @@ root_dir = app.root_path
 config = cfg.Config(root_dir)
 
 socketio = SocketIO(app)
-from controllers import APIController, LEDController, WebSocketController, AvatarController, MemberController
+from controllers import APIController, LEDController, WebSocketController, AvatarController, MemberController, DataController
 
 SENSOR_DATA_LIST = SensorHelper.SENSOR_LIST
 
@@ -29,6 +29,7 @@ app.register_blueprint(APIController.api_blueprint, url_prefix='/api')
 app.register_blueprint(LEDController.led_blueprint, url_prefix='/led')
 app.register_blueprint(AvatarController.avatar_blueprint, url_prefix='/member/avatar')
 app.register_blueprint(MemberController.member_blueprint, url_prefix='/member')
+app.register_blueprint(DataController.data_blueprint, url_prefix='/data')
 
 ######################################
 # Route
