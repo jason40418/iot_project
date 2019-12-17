@@ -21,15 +21,20 @@ class DHT():
 
     def get_data(self):
         humidity, temperature = Adafruit_DHT.read_retry(self.__sensor, self.__pin)
-        # TODO: 檢測取回資料的數據正確性（數值超過正常範圍）
-
         # 讀取成功
         if humidity is not None and temperature is not None:
             print('Temp={0:0.1f}*C  Humidity={1:0.1f}%'.format(temperature, humidity))
-            return True, {
-                'temperature' : temperature,
-                'humidity'    : humidity
-            }
+            # 判斷數值是否異常
+            if humidity > 100 or humidity < 0:
+                return False, {
+                    'temperature' : None,
+                    'humidity'    : None
+                }
+            else:
+                return True, {
+                    'temperature' : temperature,
+                    'humidity'    : humidity
+                }
         # 讀取失敗
         else:
             return False, {
