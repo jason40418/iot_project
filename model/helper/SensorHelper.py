@@ -95,7 +95,7 @@ class SensorHelper():
             return True, result
 
     @staticmethod
-    def get_sensor_his_data(sensor, day=30):
+    def get_sensor_his_data(sensor, day=30, is_resample=True, remain=-1):
         # 今天日期
         today = datetime.date.today()
         # 最多獲取資料天數
@@ -112,7 +112,7 @@ class SensorHelper():
         if status and row != 0:
             sql = " SELECT  `record`.`datetime`, `data`.`value` \
                     FROM    `iot`.`record`, `iot`.`data` \
-                    WHERE   `record`.`id` = `data`.`record_id` AND `data`.`record_id` >= %(record_id)s AND `data`.`item` >= %(sensor)s"
+                    WHERE   `record`.`id` = `data`.`record_id` AND `data`.`record_id` >= %(record_id)s AND `data`.`item` = %(sensor)s"
             args =  {
                 'record_id' : record['id'],
                 'sensor'    : sensor
@@ -122,8 +122,17 @@ class SensorHelper():
             # 成功取回至少一筆資料
             if status and row != 0:
                 for datum in data:
-                    datum['value'] = round(float(datum['value']), 3)
-                df, df_h = SensorHelper.data_convert_to_dataframe(data)
+                    try:
+                        datum['value'] = round(float(datum['value']), 3)
+                    except:
+                        datum['value'] = None
+
+                df, df_h = SensorHelper.data_convert_to_dataframe(data, is_resample=is_resample)
+
+                # 判斷最後df要保留多少長度資料
+                if remain > 0 and len(df.index) >= remain:
+                    df = df[0:remain]
+
                 return True, df, df_h, row, day_info
             # 失敗或沒有取得資料
             else:
@@ -133,7 +142,7 @@ class SensorHelper():
             return False, pd.DataFrame(), pd.DataFrame(), 0, day_info
 
     @staticmethod
-    def data_convert_to_dataframe(data, resample='60Min', sort=False):
+    def data_convert_to_dataframe(data, resample='60Min', sort=False, is_resample=True):
         # TODO: 檢查參數是否型態與格式正確
         df = pd.DataFrame(data)
         df.set_index("datetime" , inplace=True)
@@ -142,26 +151,35 @@ class SensorHelper():
         df['high'] = df['value']
         df['low'] = df['value']
 
-        # 重新進行取樣
-        df = df.resample(resample).agg({
-            'high'  : 'max',
-            'low'   : 'min',
-            'value' : 'mean'
-        })
-        df = df.asfreq(resample)
+        if is_resample:
+            # 重新進行取樣
+            df = df.resample(resample).agg({
+                'high'  : 'max',
+                'low'   : 'min',
+                'value' : 'mean'
+            })
+            df = df.asfreq(resample)
 
-        # 以小時進行合併
-        s_low = df['low'].groupby(df['low'].index.hour).min()
-        s_high = df['high'].groupby(df['high'].index.hour).max()
-        s_mean = df['value'].groupby(df['value'].index.hour).mean()
-        df_h = pd.concat([s_low, s_high, s_mean], axis=1)
+            # 以小時進行合併
+            s_low = df['low'].groupby(df['low'].index.hour).min()
+            s_high = df['high'].groupby(df['high'].index.hour).max()
+            s_mean = df['value'].groupby(df['value'].index.hour).mean()
+            df_h = pd.concat([s_low, s_high, s_mean], axis=1)
+        else:
+            # 以分鐘進行合併
+            s_low = df['low'].groupby(df['low'].index.minute).min()
+            s_high = df['high'].groupby(df['high'].index.minute).max()
+            s_mean = df['value'].groupby(df['value'].index.minute).mean()
+            df_h = pd.concat([s_low, s_high, s_mean], axis=1)
 
         # 取小數點至第二位，並且重設index
         df = df.round(2).reset_index()
         df['datetime'] = df['datetime'].apply(lambda x: x.strftime("%Y-%m-%d %H:%M:%S"))
         df = df.sort_values(by=["datetime"], ascending=[sort])
+        df = df.dropna()
 
         df_h = df_h.round(2).reset_index()
+        df_h = df_h.dropna()
 
         return df, df_h
 

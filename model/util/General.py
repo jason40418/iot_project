@@ -1,4 +1,5 @@
 import ast, json, time, jwt
+from datetime import datetime, timedelta, date
 from functools import wraps
 from flask import request, redirect, jsonify, make_response
 from Crypto.Cipher import PKCS1_OAEP
@@ -261,3 +262,25 @@ def round_dict_value(data, decimal=1):
     for k, v in data.items():
         result.update({k: round(float(v), decimal)})
     return result
+
+
+def get_datetime_label():
+    def datetime_range(start, end, delta):
+        current = start
+        while current < end:
+            yield current
+            current += delta
+
+    # 今天日期
+    today = date.today()
+    # 最多獲取資料天數
+    next_day = today + timedelta(1)
+    time = datetime.min.time()
+    today = datetime.combine(today, time)
+    next_day = datetime.combine(next_day, time)
+
+    dts = [dt.strftime('%Y-%m-%d %H:%M:%S') for dt in
+        datetime_range(today, next_day,
+        timedelta(minutes=1))]
+
+    return dts

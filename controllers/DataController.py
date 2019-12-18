@@ -3,7 +3,7 @@ import pandas as pd
 from flask import Blueprint, jsonify
 from flask import request, make_response, render_template, abort
 from model.helper.SensorHelper import SensorHelper
-from model.util.General import public_key_require_page, token_no_require_page, token_require_page
+from model.util.General import public_key_require_page, token_no_require_page, token_require_page, get_datetime_label
 
 from __main__ import app
 
@@ -32,9 +32,38 @@ def his_df_to_list(df):
         'mean'  : df['value'].tolist() if 'value' in df else []
     }
 
+@data_blueprint.route("/realtime", methods=['GET'])
+def realtime():
+    sensor_data = list()
+
+    for item in sensor:
+        # 取得感測歷史資料
+        his_status, df, df_h, row, day_info = SensorHelper.get_sensor_his_data(item['id'], 0, is_resample=False, remain=60)
+        # 將感測資料轉換成list
+        his_chart = his_df_to_list(df)
+        # 計算資料長度與數量
+        his_chart_length = len(his_chart['label']) if len(his_chart['label']) <= 60 else 60
+        result = {
+            'id' : item['id'],
+            'name' : item['name'],
+            'label' : his_chart['label'],
+            'value' : his_chart['mean'],
+            'row' : his_chart_length,
+            'unit' : item['unit'],
+            'latest': {
+                'label' : his_chart['label'][0],
+                'value' : his_chart['mean'][0]
+            }
+        }
+        sensor_data.append(result)
+
+    resp = make_response(render_template('/app/data_center/realtime.html', sensor_data=sensor_data), 200)
+
+    return resp
+
 
 @data_blueprint.route("/history/<string:accessory>", methods=['GET'])
-def index(accessory):
+def history(accessory):
     day_para = request.args.get('day')
     try:
         day = int(day_para)

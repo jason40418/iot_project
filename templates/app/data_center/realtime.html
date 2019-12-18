@@ -1,0 +1,297 @@
+{%  extends  "app/base.html"  %}
+{%  block  title  %}即時資料{%  endblock  %}
+{%  block  description  %}允許使用者進行登入{%  endblock  %}
+
+  {%  block  custom_css  %}
+  <style>
+    .label {
+			display: inline-block;
+			text-align: right;
+			width: 90px;
+		}
+		.value {
+			display: inline-block;
+			text-align: left;
+			width: 60px;
+		}
+		.control {
+			width: 200px;
+		}
+    .nav-pills > li > a {
+      border-radius: 0;
+    }
+    .status > span {
+      padding-left: 20px;
+    }
+  </style>
+  {%  endblock  %}
+
+    {%  block  content  %}
+    <ul  class="nav nav-pills">
+      {% for i in range(sensor_data | length) %}
+      {% if i == 0 %}
+      <li class="active"><a href="#{{ sensor_data[i]['id'] }}_tabs" data-toggle="tab" class="tab_btn">{{ sensor_data[i]['name'] }}</a></li>
+      {% else %}
+      <li><a href="#{{ sensor_data[i]['id'] }}_tabs" data-toggle="tab" class="tab_btn">{{ sensor_data[i]['name'] }}</a>
+      {% endif %}
+      {%  endfor  %}
+    </ul>
+    <div id="real-time-id" style="visibility:hidden">-1</div>
+    <div class="tab-content clearfix">
+      {% for i in range(sensor_data | length) %}
+      {% if i == 0 %}
+      <div id="{{ sensor_data[i]['id'] }}_tabs" class="row tab-pane active">
+      {% else %}
+      <div id="{{ sensor_data[i]['id'] }}_tabs" class="row tab-pane">
+      {% endif %}
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-sm-4">
+              <div id="{{ sensor_data[i]['id'] }}-status-icon" class="status-icon"></div>
+              <div class="status"><span id="{{ sensor_data[i]['id'] }}-status">N/A</span></div>
+            </div>
+            <div class="pull-right">目前數值：<span id="{{ sensor_data[i]['id'] }}-value">{{ sensor_data[i]['latest']['value'] }}</span>{{ sensor_data[i]['unit'] }} | </div>
+            <div class="pull-right">最後更新日期：<span id="{{ sensor_data[i]['id'] }}-datetime">{{ sensor_data[i]['latest']['label'] }}</span> | </div>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <canvas id="{{ sensor_data[i]['id'] }}_chart"></canvas>
+        </div>
+        <div class="col-sm-4">
+          <!-- <canvas id="{{ sensor_data[i]['id'] }}_chart"></canvas> -->
+          <h2>標準</h2>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {%  endblock  %}
+
+  {%  block  custom_js  %}
+  <script src="/static/js/sensor_status.js" defer></script>
+  <script>
+    (() => {
+      /** ======================================================================
+       * 取得圖表參數
+       ====================================================================== */
+      let get_chart_config = (type, title, data) => {
+        let config = {
+          type: type,
+          title: title,
+          responsive: true,
+          maintainAspectRatio: false,
+          data: data,
+          options: {
+            scales: {
+              xAxes: [{
+                type: 'time',
+                time: {
+                  displayFormats: {
+                    'millisecond': 'MMM DD HH',
+                    'second': 'MMM DD HH',
+                    'minute': 'MMM DD HH',
+                    'hour': 'MMM DD HH',
+                    'day': 'MMM DD HH',
+                    'week': 'MMM DD HH',
+                    'month': 'MMM DD HH',
+                    'quarter': 'MMM DD HH',
+                    'year': 'MMM DD HH',
+                  }
+                },
+                ticks: {
+                  maxRotation: 0,
+                  minRotation: 0,
+                  fontSize: 14,
+                  display: true,
+                  callback: function (tick, index, array) {
+                    return (index % 3) ? "" : tick;
+                  }
+                }
+              }],
+              yAxes: [{
+                type: 'linear',
+                display: true,
+                scaleLabel: {
+                  display: true,
+                },
+                ticks: {
+                  maxRotation: 0,
+                  minRotation: 0,
+                  fontSize: 12,
+                  display: true,
+                }
+              }]
+            },
+            tooltips: {
+              mode: 'point',
+              intersect: false
+            },
+            hover: {
+              mode: 'point',
+              intersect: false
+            },
+          }
+        };
+        return config;
+      };
+      document.addEventListener("DOMContentLoaded", (event) => {
+        let isIE = navigator.userAgent.indexOf('MSIE') !== -1 || navigator.userAgent.indexOf('Trident') !== -1;
+
+        const chartColors = {
+          red    : 'rgb(255, 99, 132)',
+          orange : 'rgb(255, 159, 64)',
+          yellow : 'rgb(255, 205, 86)',
+          green  : 'rgb(75, 192, 192)',
+          blue   : 'rgb(54, 162, 235)',
+          purple : 'rgb(153, 102, 255)',
+          grey   : 'rgb(201, 203, 207)'
+        };
+
+        var color = Chart.helpers.color;
+
+        {% for item in sensor_data %}
+        let {{ item.id }}_label = JSON.parse("{{ item.label | safe }}".replace(/'/g, '"')).reverse();
+        let {{ item.id }}_value = JSON.parse("{{ item.value | safe }}".replace(/'/g, '"')).reverse();
+        let {{ item.id }}_data = {
+            labels: {{ item.id }}_label,
+            datasets: [{
+              label: '{{ item.name }}',
+              backgroundColor: color(chartColors.red).alpha(0.5).rgbString(),
+              borderColor: chartColors.red,
+              fill: false,
+              lineTension: 0,
+              borderDash: [8, 4],
+              data: {{ item.id }}_value
+            }]
+          };
+        let {{ item.id }}_config = get_chart_config('line', '溫濕度感應器', {{ item.id }}_data);
+        {% endfor %}
+
+
+        window.onload = function () {
+          {% for item in sensor_data %}
+          let {{ item.id }}_ctx = document.getElementById('{{ item.id }}_chart').getContext('2d');
+          window.{{ item.id }}_ctx = {{ item.id }}_ctx;
+          window.{{ item.id }}_config = {{ item.id }}_config;
+          window.{{ item.id }}_chart = new Chart({{ item.id }}_ctx, {{ item.id }}_config);
+          {% endfor %}
+        };
+
+        /** ====================================================================
+         *  更新
+        ===================================================================== */
+        /**
+         * /@requires: Chartjs
+         * /@description: 用於將新資料新增到圖表當中
+         * /@param:
+         * /@author:
+         * /@version: 1.0.0
+         *
+         */
+        var update_chart_data = (chart, idx, label, data) => {
+          let obj = window[chart];
+          obj.data.labels.push(label);
+          obj.data.labels.splice(0, 1);
+          obj.data.datasets[idx].data.splice(0, 1);
+          obj.data.datasets[idx].data.push(data);
+          obj.update();
+        };
+
+        /** ====================================================================
+         *  WebSocket 接收最新資料
+         ==================================================================== */
+        const last_update = document.getElementById("real-time-id");
+        const socket = io.connect('/client');
+
+        socket.on('connect', (payload) => {
+          console.log(payload);
+        });
+        // Subscribe the Flask server publish data
+        socket.on('sensor_data_pub_client', (payload) => {
+          //
+          // 檢查目前也面數據資料是否和payload的編號是否相同或為舊資料
+          if (Number(last_update.innerHTML) >= Number(payload['id'])) {
+            // 不用更新
+            console.log("[@index] Real-time data payload duplicate");
+          }
+          else {
+            last_update.innerHTML = payload['id'];
+            $.each(payload['data'], (key, value) => {
+              if (value === null) {
+                // 資料為null不用更新這部分
+                console.log("[@index] Sensor data not exist")
+              }
+              else {
+                // 如果資料存在則要更新
+                update_chart_data(key + "_chart", 0, payload.datetime, value);
+                $('#' + key + '-datetime').html(payload.datetime);
+                $('#' + key + '-value').html(value.toFixed(1));
+                blink_text('#' + key + '-value');
+                // 更新狀態
+                update_status(key, value);
+              }
+            });
+          }
+        });
+
+        update_curr_status();
+
+        /** ====================================================================
+         *  處理切換tab的動畫
+         ==================================================================== */
+        $(".tab_btn").click(function () {
+
+        });
+
+        $('a[data-toggle="tab"]').on('hide.bs.tab', function (e) {
+          var $old_tab = $($(e.target).attr("href"));
+          var $new_tab = $($(e.relatedTarget).attr("href"));
+
+          if($new_tab.index() < $old_tab.index()){
+            $old_tab.css('position', 'relative').css("right", "0").show();
+            $old_tab.animate({"right":"-100%"}, 300, function () {
+              $old_tab.css("right", 0).removeAttr("style");
+            });
+          }
+          else {
+            $old_tab.css('position', 'relative').css("left", "0").show();
+            $old_tab.animate({"left":"-100%"}, 300, function () {
+              $old_tab.css("left", 0).removeAttr("style");
+            });
+          }
+        });
+
+        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+          var $new_tab = $($(e.target).attr("href"));
+          var $old_tab = $($(e.relatedTarget).attr("href"));
+
+          if($new_tab.index() > $old_tab.index()){
+            $new_tab.css('position', 'relative').css("right", "-2500px");
+            $new_tab.animate({"right":"0"}, 500);
+          }
+          else {
+            $new_tab.css('position', 'relative').css("left", "-2500px");
+            $new_tab.animate({"left":"0"}, 500);
+          }
+        });
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+          let tag = $(this).attr("href").split('_')[0].split('#')[1];
+            window[tag + '_chart'].destroy();
+            window[tag + '_chart'] = new Chart(window[tag + '_ctx'], window[tag + '_config']);
+            window[tag + '_chart'].render({
+                duration: 800,
+                lazy: false,
+                easing: 'easeInExpo'
+          });
+          var url = new String(e.target);
+          var pieces = url.split('#');
+          var seq=$(this).children('a').attr('data-seq');
+          var tab=$(this).children('a').attr('href');
+          if (pieces[1] == "profile"){
+          leftSlide(tab);
+          }
+        });
+      });
+    })()
+  </script>
+  {%  endblock  %}
