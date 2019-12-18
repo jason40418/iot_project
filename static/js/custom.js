@@ -303,3 +303,32 @@ var blink_text = (obj) => {
 var get_status_code_by_value = (object, value) => {
   return Object.keys(object).find(key => (object[key]).toLowerCase() === value.toLowerCase());
 }
+
+var clean_status = (obj) => {
+  STATUS.forEach((element) => {
+    $(obj).removeClass('status-' + element);
+  })
+}
+
+var update_status = (sensor, value) => {
+  // 取回對應的狀態
+  var [result, title, status] = get_sensor_status(sensor, value);
+  // 如果檢驗狀態正確
+  if (result) {
+    // 更新標題
+    $('#' + sensor + '-status').html(title);
+    // 清除原先設定的狀態
+    clean_status('#' + sensor + '-status-icon');
+    // 設定新的狀態燈號
+    $('#' + sensor + '-status-icon').addClass('status-' + status);
+  }
+}
+
+var update_curr_status = () => {
+  $('.status-icon').each((idx, element) => {
+    let icon_id = $(element).attr("id");
+    let sensor = icon_id.split('-')[0];
+    let value = Number($('#' + sensor + '-value').html())
+    update_status(sensor, value);
+  });
+}
