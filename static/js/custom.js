@@ -271,11 +271,12 @@ var calc_value_change = (last, curr) => {
   return '<span style="color:' + color + ';">' + sign + ' ' + String(Math.abs(Number(change)).toFixed(1)) + '</span>';
 }
 
+/**
+ * 函數需要使用async，內部使用await
+ * @param {*} ms
+ */
 var sleep = (ms) => {
-  var start = new Date().getTime();
-  while(1)
-    if ((new Date().getTime() - start) > ms)
-      break;
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 /**

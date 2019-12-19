@@ -58,7 +58,7 @@
               <div class="col-xs-8">
                 <div class="data">
                   <p class="card-category">{{ statist_header[i] }}</p>
-                  <p class="card-title">{{ statist_data[i]['avg'] }}{{ unit | safe }}</p>
+                  <p class="card-title"><span class="sensor-avg-value">{{ statist_data[i]['avg'] }}</span>{{ unit | safe }}</p>
                   <p></p>
                 </div>
               </div>
@@ -66,7 +66,7 @@
           </div>
           <div class="card-footer">
             <hr>
-            <div class="stats"><i class="fa fa-calculator"></i><span class="footer-word">{{ statist_data[i]['count'] }}</div>
+            <div class="stats"><i class="fa fa-calculator"></i><span class="footer-word">{{ statist_data[i]['count'] }}</span></div>
             <div class="stats"><i class="fa fa-hourglass-start"></i><span class="footer-word">{{ statist_data[i]['start'] }}</span></div>
             <div class="stats"><i class="fa fa-hourglass-end"></i><span class="footer-word">{{ statist_data[i]['end'] }}</span></div>
           </div>
@@ -74,6 +74,7 @@
       </div>
       {% endfor %}
     </div>
+
     <div class="row">
       <div class="pull-right scale btn-group">
         <a href="?day=0" role="button" class="btn btn-default">Today</a>
@@ -396,6 +397,19 @@
           // TODO: 使用者在變動視窗大小其canvas不會跟著縮放
           addData(5, chartTest);
           $('#his_chart').scrollLeft(document.getElementById('his_chart').scrollWidth);
+
+          $('.sensor-avg-value').each(function (idx) {
+            var size = $(this).text().split(".")[1] ? $(this).text().split(".")[1].length : 0;
+            $(this).prop('Counter', 0).animate({
+              Counter: $(this).text()
+            }, {
+              duration: 2000,
+              easing: 'swing',
+              step: function (now) {
+                $(this).text(parseFloat(now).toFixed(size));
+              }
+            });
+          });
         });
       });
     })()

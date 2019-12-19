@@ -23,6 +23,11 @@
     .status > span {
       padding-left: 20px;
     }
+    .center-td {
+      display: flex;
+      align-items: center;
+      align-content: center;
+    }
   </style>
   {%  endblock  %}
 
@@ -47,19 +52,34 @@
         <div class="col-sm-12">
           <div class="row">
             <div class="col-sm-4">
-              <div id="{{ sensor_data[i]['id'] }}-status-icon" class="status-icon"></div>
-              <div class="status"><span id="{{ sensor_data[i]['id'] }}-status">N/A</span></div>
+              <div class="curr_status">
+                <div id="{{ sensor_data[i]['id'] }}-status-icon" class="status-icon"></div>
+                <div class="status"><span id="{{ sensor_data[i]['id'] }}-status">N/A</span></div>
+              </div>
             </div>
-            <div class="pull-right">目前數值：<span id="{{ sensor_data[i]['id'] }}-value">{{ sensor_data[i]['latest']['value'] }}</span>{{ sensor_data[i]['unit'] }} | </div>
-            <div class="pull-right">最後更新日期：<span id="{{ sensor_data[i]['id'] }}-datetime">{{ sensor_data[i]['latest']['label'] }}</span> | </div>
+            <div class="status_info">
+              <div class="pull-right ease">目前數值：<span id="{{ sensor_data[i]['id'] }}-value" class="text">{{ sensor_data[i]['latest']['value'] }}</span>{{ sensor_data[i]['unit'] }} | </div>
+              <div class="pull-right ease">最後更新日期：<span id="{{ sensor_data[i]['id'] }}-datetime" class="text">{{ sensor_data[i]['latest']['label'] }}</span> | </div>
+            </div>
           </div>
         </div>
         <div class="col-sm-8">
           <canvas id="{{ sensor_data[i]['id'] }}_chart"></canvas>
         </div>
         <div class="col-sm-4">
-          <!-- <canvas id="{{ sensor_data[i]['id'] }}_chart"></canvas> -->
-          <h2>標準</h2>
+          <h3>Level List</h3>
+          <hr/>
+          <table id="{{ sensor_data[i]['id'] }}_level_table" class="table table-striped">
+            <thead>
+              <tr>
+                <th>狀態</th>
+                <th>說明</th>
+                <th>數值</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
         </div>
       </div>
       {% endfor %}
@@ -135,7 +155,35 @@
       };
       document.addEventListener("DOMContentLoaded", (event) => {
         let isIE = navigator.userAgent.indexOf('MSIE') !== -1 || navigator.userAgent.indexOf('Trident') !== -1;
+        /** ====================================================================
+          * 取得臨界值，回填標準地方
+          =================================================================== */
+        $.each(sensor_level, (key, value) => {
+          let limit = '';
+          let row_html = '';
+          for(let i=0 ; i < value['level'].length ; i++) {
+            // 處理第一筆資料
+            if (i == 0) {
+              limit = '<' + value['limit'][i];
+            }
+            // 處理最後一筆資料
+            else if (i == value['level'].length-1) {
+              limit = '≥' + value['limit'][i-1];
+            }
+            else {
+              limit = value['limit'][i-1] + '~' + value['limit'][i]
+            }
+            row_html += '<tr>';
+            row_html += '<td class="center-td"><div id="status-icon" class="status-icon status-' + STATUS[value['level'][i]['status']] + '"></div></td>';
+            row_html += '<td class="ease"><span class="text">' + value['level'][i]['title'] + '</span></td>';
+            row_html += '<td class="ease"><span class="text">' + limit + '</span></td></tr>';
+          }
+          $('#' + key + '_level_table').find('tbody').append(row_html);
+        });
 
+        /** ====================================================================
+          * 繪製圖表
+          =================================================================== */
         const chartColors = {
           red    : 'rgb(255, 99, 132)',
           orange : 'rgb(255, 159, 64)',
@@ -215,12 +263,16 @@
           }
           else {
             last_update.innerHTML = payload['id'];
-            $.each(payload['data'], (key, value) => {
+            $.each(payload['data'], async (key, value) => {
               if (value === null) {
                 // 資料為null不用更新這部分
                 console.log("[@index] Sensor data not exist")
               }
               else {
+                $(".status_info .ease").removeClass("trigger").delay(2000).queue(function(){
+                  $(this).addClass("trigger").dequeue();
+                });
+                await sleep(1000);
                 // 如果資料存在則要更新
                 update_chart_data(key + "_chart", 0, payload.datetime, value);
                 $('#' + key + '-datetime').html(payload.datetime);
@@ -258,6 +310,7 @@
               $old_tab.css("left", 0).removeAttr("style");
             });
           }
+          $(".ease").removeClass("trigger");
         });
 
         $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
@@ -288,9 +341,14 @@
           var seq=$(this).children('a').attr('data-seq');
           var tab=$(this).children('a').attr('href');
           if (pieces[1] == "profile"){
-          leftSlide(tab);
+            leftSlide(tab);
           }
+          $(".ease").addClass("trigger");
         });
+
+        setTimeout(() => {
+          $(".ease").addClass("trigger");
+        }, 1000);
       });
     })()
   </script>
