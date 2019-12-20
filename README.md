@@ -31,6 +31,8 @@ https://bestjquery.com/tutorial/tab/demo77/
 https://github.com/1000hz/bootstrap-validator/issues/52
 https://stackoverflow.com/questions/35854244/how-can-i-create-a-horizontal-scrolling-chart-js-line-chart-with-a-locked-y-axis
 https://github.com/daneden/animate.css
+https://jsfiddle.net/dhirajbodicherla/wmaftobx/13/
+https://github.com/minhur/bootstrap-toggle
 
 
 # Crontab自動排程

@@ -284,3 +284,10 @@ def get_datetime_label():
         timedelta(minutes=1))]
 
     return dts
+
+def get_accessory_publish_data(accessory, status):
+    return {
+        'datatime'  : get_current_datetime("%Y-%m-%d %H:%M:%S"),
+        'accessory' : accessory,
+        'status'    : status
+    }

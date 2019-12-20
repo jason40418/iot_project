@@ -1,0 +1,94 @@
+{%  extends  "app/base.html"  %}
+{%  block  title  %}設備管理{%  endblock  %}
+{%  block  description  %}允許使用者進行登入{%  endblock  %}
+
+  {%  block  custom_css  %}
+  <style>
+    .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+    .toggle.ios .toggle-handle { border-radius: 20px; }
+    .table > tbody > tr > th, .table > tbody > tr > td {
+      vertical-align: middle;
+    }
+  </style>
+  {%  endblock  %}
+
+    {%  block  content  %}
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">設備</th>
+            <th scope="col">名稱</th>
+            <th scope="col">開關</th>
+            <th scope="col">說明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>呼吸燈</td>
+            <td><input id="breath_light" name="accessory" type="checkbox" data-toggle="toggle" data-style="ios" data-on="開啟" data-off="關閉"></td>
+            <td>@mdo</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    {%  endblock  %}
+
+  {%  block  custom_js  %}
+  <script>
+    (() => {
+      document.addEventListener("DOMContentLoaded", (event) => {
+        function change_toggle_without_event(obj, status, event) {
+          let toggle_status = (status) ? 'on' : 'off';
+          $(obj).off('change'); //先關閉Change事件。
+          $(obj).bootstrapToggle(toggle_status);
+          $(obj).on('change', event);  //執行完後打開Change 事件，並執行handler
+        }
+
+        function change_event () {
+          let status = $(this).prop('checked');
+
+          let api_result = '';
+          let api_response = new Object();
+          if (status) [api_result, api_response] = api_request('GET', '/api/led/on', {}, {});
+          else [api_result, api_response] = api_request('GET', '/api/led/off', {}, {});
+
+          if (Object.keys(api_response).length == 0)  status = !status;
+          else status = api_response['status']
+
+          change_toggle_without_event(this, status, change_event);
+        }
+
+        const toggle_event = {
+          'breath_light': change_event
+        }
+
+        // 建立socket連線
+        const socket = io.connect('/client');
+
+        socket.on('connect', (payload) => {
+          console.log(payload);
+        });
+
+        socket.on('accessory_status_pub_client', (payload) => {
+          // TODO: 可能需要檢查這個事件是否為過去事件
+          change_toggle_without_event('#' + payload['accessory'], payload['status'], toggle_event[payload['accessory']]);
+        });
+
+
+        let check_curr_status = function () {
+          let [api_result, api_response] = api_request('GET', '/accessory/status', {}, {}, [false, true]);
+          if (api_result) {
+            $.each(api_response, function(key, value) {
+              change_toggle_without_event('#' + key, value, toggle_event[key]);
+            });
+          }
+        }
+
+        $('#breath_light').on('change', change_event);
+        check_curr_status();
+      });
+    })()
+  </script>
+  {%  endblock  %}

@@ -3,3 +3,4 @@ from . import APIController
 from . import AvatarController
 from . import DataController
 from . import MemberController
+from . import LEDController

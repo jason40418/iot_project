@@ -6,7 +6,7 @@ from model import Auth
 from model.helper.SensorHelper import SensorHelper
 from model.util import Config as cfg
 from model.util import General
-from model.util.General import token_no_require_page
+from model.util.General import token_no_require_page, get_current_datetime
 import RPi.GPIO as GPIO
 
 app = Flask(__name__)
@@ -18,7 +18,7 @@ root_dir = app.root_path
 config = cfg.Config(root_dir)
 
 socketio = SocketIO(app)
-from controllers import APIController, LEDController, WebSocketController, AvatarController, MemberController, DataController
+from controllers import AccessoryController, APIController, LEDController, WebSocketController, AvatarController, MemberController, DataController
 
 SENSOR_DATA_LIST = SensorHelper.SENSOR_LIST
 
@@ -26,10 +26,11 @@ SENSOR_DATA_LIST = SensorHelper.SENSOR_LIST
 # 註冊，包含前輟字
 #####################################
 app.register_blueprint(APIController.api_blueprint, url_prefix='/api')
-app.register_blueprint(LEDController.led_blueprint, url_prefix='/led')
+app.register_blueprint(LEDController.led_blueprint, url_prefix='/api/led')
 app.register_blueprint(AvatarController.avatar_blueprint, url_prefix='/member/avatar')
 app.register_blueprint(MemberController.member_blueprint, url_prefix='/member')
 app.register_blueprint(DataController.data_blueprint, url_prefix='/data')
+app.register_blueprint(AccessoryController.accessory_blueprint, url_prefix='/accessory')
 
 ######################################
 # Route
@@ -39,12 +40,6 @@ def index():
     result, data = SensorHelper.get_latest_data()
     resp = make_response(render_template('app/index.html', SENSOR_DATA = SENSOR_DATA_LIST, data=data))
     return resp
-
-@app.route('/test', methods=['GET'])
-def path():
-    socketio.emit('server_led_check', {'action': 'check'}, json=True)
-    time.sleep(.5)
-    return str(LED.led_status)
 
 @app.route("/terms", methods=['GET'])
 def term():
@@ -82,7 +77,7 @@ def shutdown_server():
 
 @app.route('/shutdown', methods=['GET'])
 def shutdown():
-    socketio.emit('server_clean', data, json=True)
+    socketio.emit('server_clean_pub', data, json=True, broadcast=True, namespace='/pi')
     time.sleep(10)
     shutdown_server()
     return 'Server shutting down...'
@@ -96,6 +91,6 @@ if __name__ == '__main__':
     data = {
         'action': "清除可能未正確關閉的元件！"
     }
-    socketio.emit('server_clean', data, json=True)
+    socketio.emit('server_clean_pub', data, json=True, broadcast=True, namespace='/pi')
     GPIO.cleanup()
     socketio.run(app, host= ip, port=port, debug=True)
