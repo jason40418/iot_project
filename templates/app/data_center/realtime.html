@@ -184,16 +184,6 @@
         /** ====================================================================
           * 繪製圖表
           =================================================================== */
-        const chartColors = {
-          red    : 'rgb(255, 99, 132)',
-          orange : 'rgb(255, 159, 64)',
-          yellow : 'rgb(255, 205, 86)',
-          green  : 'rgb(75, 192, 192)',
-          blue   : 'rgb(54, 162, 235)',
-          purple : 'rgb(153, 102, 255)',
-          grey   : 'rgb(201, 203, 207)'
-        };
-
         var color = Chart.helpers.color;
 
         {% for item in sensor_data %}
@@ -203,8 +193,8 @@
             labels: {{ item.id }}_label,
             datasets: [{
               label: '{{ item.name }}',
-              backgroundColor: color(chartColors.red).alpha(0.5).rgbString(),
-              borderColor: chartColors.red,
+              backgroundColor: color('{{ item.color }}').alpha(0.5).rgbString(),
+              borderColor: '{{ item.color }}',
               fill: false,
               lineTension: 0,
               borderDash: [8, 4],

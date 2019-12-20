@@ -10,14 +10,16 @@ class SensorHelper():
             'icon'    : "fa-thermometer-half",
             'name'    : "溫度",
             'en_name' : "Temperature",
-            'unit'    : "°C"
+            'unit'    : "°C",
+            'color'   : "rgb(54, 162, 235)"
         },
         {
             'id'      : "humidity",
             'icon'    : "fa-tint",
             'name'    : "濕度",
             'en_name' : "Humidity",
-            'unit'    : "%"
+            'unit'    : "%",
+            'color'   : "rgb(102, 153, 153)"
         },
     ]
     # TODO: 若資料庫出錯是否要印出或做其他處置

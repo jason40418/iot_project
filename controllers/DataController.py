@@ -46,6 +46,7 @@ def realtime():
         result = {
             'id' : item['id'],
             'name' : item['name'],
+            'color' : item['color'],
             'label' : his_chart['label'],
             'value' : his_chart['mean'],
             'row' : his_chart_length,
