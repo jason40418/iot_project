@@ -4,8 +4,7 @@
   {%  block  content  %}
     <div class="jumbotron">
       <h1>會員註冊</h1>
-      <p class="lead">This example is a quick exercise to illustrate how the top-aligned navbar works. As you
-        scroll, this navbar remains in its original position and moves with the rest of the page.</p>
+      <p class="lead">註冊會員使用客製化環境提醒與臉部辨識檢視進出紀錄</p>
     </div>
     <form id="form" data-toggle="validator" role="form">
       <div class="form-group" has-feedback>
@@ -151,12 +150,13 @@
 
         // 讓vaildator能夠移動到第一個錯誤的位置
         $('form[data-toggle="validator"]').on('submit', function (e) {
-        window.setTimeout(function () {
-            var errors = $('.has-error')
-            if (errors.length) {
-                $('html, body').animate({ scrollTop: errors.offset().top - 100 }, 500);
-            }
-        }, 0);
+          window.setTimeout(function () {
+              var errors = $('.has-error')
+              if (errors.length) {
+                  $('html, body').animate({ scrollTop: errors.offset().top - 100 }, 500);
+              }
+          }, 0);
+        });
       });
     })()
   </script>
