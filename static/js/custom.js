@@ -144,17 +144,23 @@ var alert = (title, message, icon, button) => {
  * @param {*} request_data
  * @param {*} button
  */
-var api_request = (request_type, request_url, request_data, button) => {
+var api_request = (request_type, request_url, request_data, button, promp=[true, true]) => {
+  let api_result = false;
+  let api_response = new Object();
   $.ajax({
     type: request_type,
     url: request_url,
     data: JSON.stringify(request_data),
+    async: false,
     crossDomain: true,
     cache: false,
     dataType: 'json',
     contentType: 'application/json',
     timeout: 5000})
   .done((response, test_status, xhr) => {
+    // 紀錄API請求為成功
+    api_result = true;
+    api_response = response;
     let alert_msg = "";
     // 確認Response包含所需要的key值以正常顯示
     if (typeof response === 'undefined') {
@@ -166,21 +172,25 @@ var api_request = (request_type, request_url, request_data, button) => {
     else {
       alert_msg = "[" + xhr.status + "]" + xhr.statusText;
     }
-    // 跳出提示視窗
-    $.alert({
-      theme: 'modern',
-      icon: 'fa fa-check-circle',
-      type: 'green',
-      btnClass: 'btn-green',
-      animation: 'scale',
-      title: '成功',
-      content: alert_msg,
-      buttons: button['2XX']
-    });
+
+    if (promp[0]) {
+      // 跳出提示視窗
+      $.alert({
+        theme: 'modern',
+        icon: 'fa fa-check-circle',
+        type: 'green',
+        btnClass: 'btn-green',
+        animation: 'scale',
+        title: '成功',
+        content: alert_msg,
+        buttons: button['2XX']
+      });
+    }
   })
   .fail((xhr, type, message) => {
     let response = xhr.responseJSON;
     let alert_msg = "";
+    api_response = (typeof response === 'undefined') ? api_response : response;
     // 確認Response包含所需要的key值以正常顯示
     if (typeof response === 'undefined') {
       alert_msg = "[" + xhr.status + "]" + message;
@@ -193,37 +203,41 @@ var api_request = (request_type, request_url, request_data, button) => {
       alert_msg = "[" + xhr.status + "]" + message;
     }
 
-    // 使用者網路連線異常或伺服器無法進行連線
-    if (xhr.status == 0) {
-      alert('服務無法提供', '請確認網路連線是否正常或伺服器可能現在無法提供服務！', 'fa fa-chain-broken', { 確認: () => { }});
-    }
-    // 使用者端問題（4XX）
-    else if (xhr.status >= 400 & xhr.status < 500) {
-      $.alert({
-        theme: 'modern',
-        icon: 'fa fa-times',
-        type: 'red',
-        btnClass: 'btn-red',
-        animation: 'scale',
-        title: '錯誤',
-        content: alert_msg,
-        buttons: button['4XX']
-      });
-    }
-    // 伺服器端問題（5XX）
-    else if (xhr.status >= 500 & xhr.status < 600) {
-      $.alert({
-        theme: 'modern',
-        icon: 'fa fa-server',
-        type: 'red',
-        btnClass: 'btn-red',
-        animation: 'scale',
-        title: '錯誤',
-        content: alert_msg + "<br />" + "請將錯誤代碼與訊息聯絡管理員",
-        buttons: button['5XX']
-      });
+    if (promp[1]) {
+      // 使用者網路連線異常或伺服器無法進行連線
+      if (xhr.status == 0) {
+        alert('服務無法提供', '請確認網路連線是否正常或伺服器可能現在無法提供服務！', 'fa fa-chain-broken', { 確認: () => { }});
+      }
+      // 使用者端問題（4XX）
+      else if (xhr.status >= 400 & xhr.status < 500) {
+        $.alert({
+          theme: 'modern',
+          icon: 'fa fa-times',
+          type: 'red',
+          btnClass: 'btn-red',
+          animation: 'scale',
+          title: '錯誤',
+          content: alert_msg,
+          buttons: button['4XX']
+        });
+      }
+      // 伺服器端問題（5XX）
+      else if (xhr.status >= 500 & xhr.status < 600) {
+        $.alert({
+          theme: 'modern',
+          icon: 'fa fa-server',
+          type: 'red',
+          btnClass: 'btn-red',
+          animation: 'scale',
+          title: '錯誤',
+          content: alert_msg + "<br />" + "請將錯誤代碼與訊息聯絡管理員",
+          buttons: button['5XX']
+        });
+      }
     }
   });
+
+  return [api_result, api_response];
 }
 
 /**
