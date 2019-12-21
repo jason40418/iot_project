@@ -3,6 +3,7 @@
 '''
 import subprocess, time
 import socketio
+from model.util.Config import Config
 from model.util.Socket import Socket
 
 # TODO: 檢查模型是否訓練成功或發生錯誤
@@ -10,14 +11,24 @@ from model.util.Socket import Socket
 socket = Socket()
 connection = socket.connect()
 sio = socket.get_socket()
+config = Config()
+
+param = {
+    'dataset'           : config.getValue('face_model', 'dataset'),
+    'embeddings'        : config.getValue('face_model', 'embeddings'),
+    'detector'          : config.getValue('face_model', 'detector'),
+    'embedding_model'   : config.getValue('face_model', 'embedding_model'),
+    'recognizer'        : config.getValue('face_model', 'recognizer'),
+    'le'                : config.getValue('face_model', 'le')
+}
 
 # 如果WebSocker建立連線成功
 if connection:
     status = True
 
-    proc = subprocess.Popen(["bash train_model.sh -d 'dataset' -b 'output/embeddings.pickle'\
-                -t 'face_detection_model' -m 'openface_nn4.small2.v1.t7'\
-                -r 'output/recognizer.pickle' -e 'output/le.pickle'"], shell=True,
+    proc = subprocess.Popen(["bash train_model.sh -d '" + param['dataset'] + "' -b '" + param['embeddings'] + "'\
+                -t '" + param['detector'] + "' -m '" + param['embedding_model'] + "'\
+                -r '" + param['recognizer'] + "' -e '" + param['le'] + "'"], shell=True,
                stdin=None, stdout=None, stderr=None, close_fds=True)
 
     proc.communicate()

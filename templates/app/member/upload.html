@@ -262,13 +262,19 @@
 
       $('#train_btn').click(() => {
         let [api_result, api_response] = api_request('GET', '/member/avatar/train', {}, {}, [false, true]);
-        disable_btn('train_btn');
-        set_train_btn_status('train_btn');
+        if (Object.keys(api_response).length == 0) {
+          pass;
+        }
+        else {
+          disable_btn('train_btn');
+          set_train_btn_status('train_btn');
+        }
       })
 
       function set_train_btn_status (obj) {
         let [api_result, api_response] = api_request('GET', '/api/accessory/status', {}, {}, [false, true]);
         if (api_result && (!api_response['model_train'])) enable_btn(obj);
+        else if(Object.keys(api_response).length == 0) enable_btn(obj);
         else disable_btn(obj);
       }
 
