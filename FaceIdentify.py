@@ -1,6 +1,8 @@
 import RPi.GPIO as gpio
 import time
 import socketio
+import subprocess
+from picamera import PiCamera
 from model.util.Config import Config
 from model.util.Socket import Socket
 
@@ -14,6 +16,17 @@ pin_num = int(config.getValue('infrared', 'pin'))
 led_pin_num = int(config.getValue('infrared', 'led_pin'))
 
 gpio.setmode(gpio.BCM)
+
+camera = PiCamera()
+
+param = {
+    'dataset'           : config.getValue('face_model', 'dataset'),
+    'embeddings'        : config.getValue('face_model', 'embeddings'),
+    'detector'          : config.getValue('face_model', 'detector'),
+    'embedding_model'   : config.getValue('face_model', 'embedding_model'),
+    'recognizer'        : config.getValue('face_model', 'recognizer'),
+    'le'                : config.getValue('face_model', 'le')
+}
 
 # 初始化 socket
 socket = Socket()
@@ -51,6 +64,16 @@ if connection:
         elif i == 1:
             print("Intruder detected", i)
             gpio.output(led_pin_num, 1)  #Turn ON LED
+            camera.start_preview()
+            time.sleep(5)
+            camera.capture('model/face/images/image.jpg')
+            proc = subprocess.Popen(["bash face_identify.sh -d 'model/face/" + param['dataset'] + "' -b 'model/face/" + param['embeddings'] + "'\
+                -t 'model/face/" + param['detector'] + "' -m 'model/face/" + param['embedding_model'] + "'\
+                -r 'model/face/" + param['recognizer'] + "' -e 'model/face/" + param['le'] + "' -i 'model/face/images/image.jpg'"], shell=True,
+               stdin=None, stdout=None, stderr=None, close_fds=True)
+
+            proc.communicate()
+            camera.stop_preview()
             time.sleep(0.1)
 
         if not status:  break

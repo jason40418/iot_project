@@ -34,26 +34,14 @@ def sensor_data_pub_pi(data):
     emit('sensor_data_pub_client', data, namespace='/client', json=True, broadcast=True)
     return True, "receive", 200
 
+# TODO: 處理人員進出環境
+@socketio.on('face_identify_pub_pi', namespace='/pi')
+def face_identify_pub_pi(data):
+    print("Flask收到了：", data)
+    return True, "receive", 200
+
 # ==================================================================================================
 # Test
 # ==================================================================================================
 def ack():
     print('message was received!')
-
-@socketio.on('test')
-def test(data):
-    print("HELLO")
-    json = {
-        'test': "received"
-    }
-    emit('test', json, json=True, callback=ack)
-    emit('test', json, json=True, broadcast=True)
-
-@socketio.on('front-end-publish')
-def monitor(data):
-    json = {
-        'yes': 'succcess'
-    }
-    print(json)
-    emit('server_receive', {'receive': True}, json=True)
-    emit('front-end-response', json, json=True, broadcast=True)

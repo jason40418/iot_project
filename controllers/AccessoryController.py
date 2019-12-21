@@ -2,7 +2,7 @@ import datetime, json
 import pandas as pd
 from flask import Blueprint, jsonify
 from flask import request, make_response, render_template, abort
-from controllers import LEDController, AvatarController
+from controllers import LEDController, AvatarController, InfraredController
 from model.util.General import public_key_require_page, token_no_require_page, token_require_page, get_datetime_label, get_current_datetime
 
 from __main__ import app
@@ -18,6 +18,7 @@ def get_curr_accessory_status():
         'status' : 200,
         'datetime' : get_current_datetime("%Y-%m-%d %H:%M:%S"),
         'model_train' : AvatarController.avatar_model_during_train,
+        'infrared_sensor' : InfraredController.infrared_status,
         'breath_light' : LEDController.led_status
     }
     return data
