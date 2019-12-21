@@ -1,0 +1,67 @@
+{
+  "children": [
+    {
+      "children": [
+        {
+          "name": "john_hammond.jpg",
+          "type": "file"
+        },
+        {
+          "name": "ellie_sattler.jpg",
+          "type": "file"
+        },
+        {
+          "name": "ian_malcolm.jpg",
+          "type": "file"
+        },
+        {
+          "name": "own_grady.jpg",
+          "type": "file"
+        },
+        {
+          "name": "claire_dearing.jpg",
+          "type": "file"
+        },
+        {
+          "name": "alan_grant.jpg",
+          "type": "file"
+        }
+      ],
+      "name": "unknown",
+      "type": "directory"
+    },
+    {
+      "children": [
+        {
+          "name": "20191221172741Azu2ID3mF1.jpg",
+          "type": "file"
+        },
+        {
+          "name": "201912211727400K3t9u5Njp.jpg",
+          "type": "file"
+        },
+        {
+          "name": "201912211727419rc1KfyGAw.jpg",
+          "type": "file"
+        },
+        {
+          "name": "20191221172740RHCEb3ALvm.jpg",
+          "type": "file"
+        },
+        {
+          "name": "20191221172741j6EZkUaByN.jpg",
+          "type": "file"
+        },
+        {
+          "name": "20191221172741KWmaxJnozE.jpg",
+          "type": "file"
+        }
+      ],
+      "name": "jason40418",
+      "type": "directory"
+    }
+  ],
+  "datetime": "2019-12-21 19:54:50",
+  "name": "dataset",
+  "type": "directory"
+}

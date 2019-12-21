@@ -31,14 +31,18 @@ labels = le.fit_transform(data["names"])
 # then produce the actual face recognition
 print("[INFO] training model...")
 recognizer = SVC(C=1.0, kernel="linear", probability=True)
-recognizer.fit(data["embeddings"], labels)
 
-# write the actual face recognition model to disk
-f = open(args["recognizer"], "wb")
-f.write(pickle.dumps(recognizer))
-f.close()
+try:
+    recognizer.fit(data["embeddings"], labels)
 
-# write the label encoder to disk
-f = open(args["le"], "wb")
-f.write(pickle.dumps(le))
-f.close()
+    # write the actual face recognition model to disk
+    f = open(args["recognizer"], "wb")
+    f.write(pickle.dumps(recognizer))
+    f.close()
+
+    # write the label encoder to disk
+    f = open(args["le"], "wb")
+    f.write(pickle.dumps(le))
+    f.close()
+except ValueError as err:
+    print(err)

@@ -1,10 +1,11 @@
-import os, PIL, simplejson, traceback
+import os, PIL, simplejson, traceback, time, random, string, subprocess, json
 from PIL import Image
 from flask import Blueprint, jsonify, request, render_template, redirect, url_for, send_from_directory
 from werkzeug import secure_filename
 from model.upload.upload_file import uploadfile
 from model.util import General
-from __main__ import app
+from flask_socketio import send, emit
+from __main__ import app, socketio
 
 # 定義
 avatar_blueprint = Blueprint('avatar', __name__)
@@ -18,11 +19,14 @@ THUMBNAIL_FOLDER = os.path.join(ROOT_DIR, 'model/face', 'thumbnail')
 
 # TODO: 後端判斷檔案大小是否過大
 # 內容限制長度
-MAX_CONTENT_LENGTH = 50 * 1024 * 1024
+MAX_CONTENT_LENGTH = 5 * 1024 * 1024
 
 # 允許上傳格式型態（限定圖片檔案）
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 IGNORED_FILES = set(['.gitignore'])
+
+# 紀錄是否正在訓練模型
+avatar_model_during_train = False
 
 # 檢查是否為允許的檔案格式
 def allowed_file(filename):
@@ -34,12 +38,12 @@ def gen_file_name(filename, user_account):
     """
     If file was exist already, rename it and return a new name
     """
+    name, extension = os.path.splitext(filename)
+    name = General.get_current_datetime("%Y%m%d%H%M%S")
+    filename = '%s%s' % (name + ''.join(random.sample(string.ascii_letters+string.digits, 10)), extension)
 
-    i = 1
     while os.path.exists(os.path.join(UPLOAD_FOLDER, user_account, filename)):
-        name, extension = os.path.splitext(filename)
-        filename = '%s_%s%s' % (name, str(i), extension)
-        i += 1
+        filename = '%s%s' % (name + ''.join(random.sample(string.ascii_letters+string.digits, 10)), extension)
 
     return filename
 
@@ -63,6 +67,46 @@ def create_thumbnail(image, user_account):
 @General.token_require_page("/member/login", 'page')
 def index(payload):
    return render_template('app/member/upload.html')
+
+# 訓練人臉辨識模型
+@avatar_blueprint.route('/train', methods=['GET'])
+@General.token_require_page("/member/login", 'page')
+def train(payload):
+    global avatar_model_during_train
+    if not avatar_model_during_train:
+        avatar_model_during_train = True
+        # 匯出目前模型train的資料
+        folder_tree = General.tree_folder_dict('model/face/dataset')
+        folder_tree['datetime'] = General.get_current_datetime()
+        with open('static/json/face_folder.json', 'w') as f:
+            json.dump(folder_tree, f, ensure_ascii=False, indent = 2, sort_keys=True)
+        proc = subprocess.Popen(["python3 TrainFaceIdentifyModel.py"], shell=True,
+                stdin=None, stdout=None, stderr=None, close_fds=True)
+        emit_data = General.get_accessory_publish_data('face_model', avatar_model_during_train)
+        socketio.emit('model_train_pub_client', emit_data, json=True, broadcast=True, namespace='/client')
+        return jsonify({
+            'type'  : 'ModelTrainStart',
+            'msg'   : '人臉辨識模型訓練中，請稍後！',
+            'code'  : 200
+        }), 200
+        proc.communicate()
+
+    else:
+        return jsonify({
+            'error_type'  : 'ModelTrainDuring',
+            'error_msg'   : '人臉辨識模型正在訓練中，請勿重複開啟訓練！',
+            'error_code'  : 400
+        }), 400
+
+@socketio.on('model_train_pub_pi', namespace='/pi')
+def model_train_status(data):
+    global avatar_model_during_train
+    avatar_model_during_train = data['status']
+
+    # 將目前狀態發布給Client端（結束LED也會主動發布給Server）
+    emit_data = General.get_accessory_publish_data('face_model', avatar_model_during_train)
+    print(emit_data)
+    socketio.emit('model_train_pub_client', emit_data, json=True, broadcast=True, namespace='/client')
 
 @avatar_blueprint.route("/upload", methods=['GET', 'POST', 'HEAD'])
 @General.token_require_page("/member/login")

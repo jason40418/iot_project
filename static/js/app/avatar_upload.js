@@ -13,8 +13,8 @@ $(() => {
         // send Blob objects via XHR requests:
         disableImageResize: /Android(?!.*Chrome)|Opera/
             .test(window.navigator.userAgent),
-        maxFileSize: 500000000,
-        acceptFileTypes: /(\.|\/)(jpe?g|png|flac)$/i
+        maxFileSize: 5 * 1000 * 1000,
+        acceptFileTypes: /(\.|\/)(jpe?g|png)$/i
     })
 
     // Upload server status check for browsers with CORS support:

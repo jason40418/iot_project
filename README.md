@@ -45,3 +45,6 @@ https://blog.gtwang.org/linux/linux-crontab-cron-job-tutorial-and-examples/
 # 溫濕感應器
 https://kingfff.blogspot.com/2018/05/raspberry-pi-3-model-bdht22.html
 https://github.com/adafruit/Adafruit_Python_DHT
+
+# Known Issue
+- if face identify only one label SVM trainging would get fail

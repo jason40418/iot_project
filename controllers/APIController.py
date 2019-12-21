@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request, make_response
 from datetime import datetime
+from controllers import AccessoryController
 from model.entity.Member import Member
 from model.util.General import private_key_require_page, convert_byte_to_dict, generate_token
 from model.helper.MemberHelper import MemberHelper
@@ -90,3 +91,9 @@ def member_login(decode_result, data):
             # 設定token過期
             resp.set_cookie(key='token', value='', expires=0)
         return resp
+
+# 取得所有accessory的API
+@api_blueprint.route('/accessory/status', methods=['GET'])
+def status():
+    data = AccessoryController.get_curr_accessory_status()
+    return jsonify(data), 200

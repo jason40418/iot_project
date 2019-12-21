@@ -10,6 +10,8 @@ from model.util.General import token_no_require_page, get_current_datetime
 import RPi.GPIO as GPIO
 
 app = Flask(__name__)
+# 讓JSON能直接顯示中文
+app.config['JSON_AS_ASCII'] = False
 Misaka(app, fenced_code=True, highlight=True, quote=True, math=True,
 math_explicit=True, space_headers=True, hard_wrap=True, wrap=True,
 footnotes=True, autolink=True)

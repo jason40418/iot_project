@@ -1,4 +1,4 @@
-import ast, json, time, jwt
+import ast, json, time, jwt, os
 from datetime import datetime, timedelta, date
 from functools import wraps
 from flask import request, redirect, jsonify, make_response
@@ -291,3 +291,13 @@ def get_accessory_publish_data(accessory, status):
         'accessory' : accessory,
         'status'    : status
     }
+
+def tree_folder_dict(path):
+    d = {'name': os.path.basename(path)}
+    if os.path.isdir(path):
+        d['type'] = "directory"
+        d['children'] = [tree_folder_dict(os.path.join(path, x)) for x in os.listdir\
+(path)]
+    else:
+        d['type'] = "file"
+    return d
