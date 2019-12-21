@@ -9,14 +9,22 @@
     .table > tbody > tr > th, .table > tbody > tr > td {
       vertical-align: middle;
     }
+
+    .table > tbody > tr > th.left , .table > tbody > tr > td.left {
+      text-align: left;
+    }
   </style>
   {%  endblock  %}
 
     {%  block  content  %}
+    <div class="well lead">
+      <p>設備管理</p>
+    </div>
     <div class="table-responsive">
       <table class="table table-striped">
         <thead>
           <tr>
+            <th scope="col">編號</th>
             <th scope="col">設備</th>
             <th scope="col">名稱</th>
             <th scope="col">開關</th>
@@ -26,9 +34,10 @@
         <tbody>
           <tr>
             <th scope="row">1</th>
+            <td>LED（綠）</td>
             <td>呼吸燈</td>
             <td><input id="breath_light" name="accessory" type="checkbox" data-toggle="toggle" data-style="ios" data-on="開啟" data-off="關閉"></td>
-            <td>@mdo</td>
+            <td class="left">透過PWM控制LED燈光之頻率，藉以表示整體環境之舒適程度</td>
           </tr>
         </tbody>
       </table>
@@ -78,7 +87,7 @@
 
 
         let check_curr_status = function () {
-          let [api_result, api_response] = api_request('GET', '/accessory/status', {}, {}, [false, true]);
+          let [api_result, api_response] = api_request('GET', '/api/accessory/status', {}, {}, [false, true]);
           if (api_result) {
             $.each(api_response, function(key, value) {
               change_toggle_without_event('#' + key, value, toggle_event[key]);

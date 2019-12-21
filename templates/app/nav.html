@@ -1,48 +1,62 @@
 <!-- Fixed navbar -->
-<nav class="navbar navbar-default navbar-fixed-top">
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-      aria-expanded="false" aria-controls="navbar">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="/"><img src="/static/images/logo.svg" alt="PiEnvir" height="40" /></a>
-  </div>
-  <div id="navbar" class="navbar-collapse collapse">
-    <!-- 建議最多五個 -->
-    <ul class="nav navbar-nav">
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-          aria-expanded="false">資料中心<span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li class="active"><a href="/data/realtime">目前數值</a></li>
-          <li role="separator" class="divider"></li>
-          <li class="dropdown-header">歷史數值</li>
-          <li><a href="/data/history/temperature">溫度</a></li>
-          <li><a href="/data/history/humidity">濕度</a></li>
-        </ul>
-      <li>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+        aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/"><img src="/static/images/logo.svg" alt="PiEnvir" height="40" /></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <!-- 建議最多五個 li -->
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+            aria-expanded="false">資料中心<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="active"><a href="/data/realtime">目前數值</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header">歷史數值</li>
+            <li role="separator" class="divider"></li>
+            <li><a href="/data/history/temperature">溫度</a></li>
+            <li><a href="/data/history/humidity">濕度</a></li>
+          </ul>
+        <li>
 
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-          aria-expanded="false">會員<span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li role="separator" class="divider"></li>
-          <li class="dropdown-header">請先註冊或登入會員</li>
-          <li><a href="/member/register">會員註冊</a></li>
-          <li><a href="/member/login">會員登入</a></li>
-        </ul>
-      <li>
-      <li><a href="../navbar/">Default</a></li>
-      <li><a href="../navbar-static-top/">Static top</a></li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <li class="active">
-        <div class='clock'></div>
-      </li>
-    </ul>
-  </div>
-  <!--/.nav-collapse -->
-</nav>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+            aria-expanded="false">會員<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header">請先註冊或登入會員</li>
+            <li role="separator" class="divider"></li>
+            <li><a href="/member/register">會員註冊</a></li>
+            <li><a href="/member/login">會員登入</a></li>
+          </ul>
+        <li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+            aria-expanded="false">元件<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/accessory/">開關控制</a></li>
+            <li><a href="/accessory/status">元件狀態（開放資料）</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header">元件</li>
+          </ul>
+        <li>
+
+        <li><a href="../navbar/">Default</a></li>
+        <li><a href="../navbar-static-top/">Static top</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="active">
+          <div class='clock'></div>
+        </li>
+      </ul>
+    </div>
+    <!--/.nav-collapse -->
+  </nav>

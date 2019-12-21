@@ -1,0 +1,68 @@
+{%  extends  "app/base.html"  %}
+{%  block  title  %}開放資料{%  endblock  %}
+{%  block  description  %}允許使用者進行登入{%  endblock  %}
+
+  {%  block  custom_css  %}
+  {%  endblock  %}
+
+    {%  block  content  %}
+    <h2>資料集</h2>
+    <hr/>
+    <iframe src='{{ api_path }}' width="100%" frameborder="0"></iframe>
+    <h2>資料集描述</h2>
+    <hr/>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">項目</th>
+          <th scope="col">名稱</th>
+          <th scope="col">描述</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">API_URL</th>
+          <td>API路徑</td>
+          <td>{{ info['url'] }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Method</th>
+          <td>請求方式</td>
+          <td>{{ info['method'] }}</td>
+        </tr>
+        <tr>
+          <th scope="row">frequence</th>
+          <td>更新頻率</td>
+          <td>{{ info['frequence'] }}</td>
+        </tr>
+        <tr>
+          <th scope="row">description</th>
+          <td>API資料描述</td>
+          <td>{{ info['description'] }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2>資料欄位說明</h2>
+    <hr/>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">編號</th>
+          <th scope="col">名稱</th>
+          <th scope="col">說明</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in range(info['col'] | length) %}
+        <tr>
+          <th scope="row">{{ i+1 }}</th>
+          <td>{{ info['col'][i]['col'] }}</td>
+          <td>{{ info['col'][i]['zh_name'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {%  endblock  %}
+
+  {%  block  custom_js  %}
+  {%  endblock  %}
