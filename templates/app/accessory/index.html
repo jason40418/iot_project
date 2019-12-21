@@ -39,6 +39,13 @@
             <td><input id="breath_light" name="accessory" type="checkbox" data-toggle="toggle" data-style="ios" data-on="開啟" data-off="關閉"></td>
             <td class="left">透過PWM控制LED燈光之頻率，藉以表示整體環境之舒適程度</td>
           </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>紅外線感測器</td>
+            <td>拍照人臉辨識</td>
+            <td><input id="infrared_sensor" name="accessory" type="checkbox" data-toggle="toggle" data-style="ios" data-on="開啟" data-off="關閉"></td>
+            <td class="left">開啟功能判別所有人員進出紀錄</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -55,22 +62,32 @@
           $(obj).on('change', event);  //執行完後打開Change 事件，並執行handler
         }
 
-        function change_event () {
-          let status = $(this).prop('checked');
-
+        function getStatus(status, on_api, off_api) {
           let api_result = '';
           let api_response = new Object();
-          if (status) [api_result, api_response] = api_request('GET', '/api/led/on', {}, {});
-          else [api_result, api_response] = api_request('GET', '/api/led/off', {}, {});
+          if (status) [api_result, api_response] = api_request('GET', on_api, {}, {});
+          else [api_result, api_response] = api_request('GET', off_api, {}, {});
 
           if (Object.keys(api_response).length == 0)  status = !status;
           else status = api_response['status']
+          return status
+        }
 
-          change_toggle_without_event(this, status, change_event);
+        function breath_light_change_event () {
+          let status = $(this).prop('checked');
+          status = getStatus(status, '/api/led/on', '/api/led/off')
+          change_toggle_without_event(this, status, breath_light_change_event);
+        }
+
+        function infrared_sensor_change_event () {
+          let status = $(this).prop('checked');
+          status = getStatus(status, '/api/infrared/on', '/api/infrared/off')
+          change_toggle_without_event(this, status, breath_light_change_event);
         }
 
         const toggle_event = {
-          'breath_light': change_event
+          'breath_light'    : breath_light_change_event,
+          'infrared_sensor' : infrared_sensor_change_event
         }
 
         // 建立socket連線
@@ -95,7 +112,10 @@
           }
         }
 
-        $('#breath_light').on('change', change_event);
+        $('input[name="accessory"]').each(function () {
+
+          $(this).on('change', toggle_event[$(this).prop('id')]);
+        });
         check_curr_status();
       });
     })()
