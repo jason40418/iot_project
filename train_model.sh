@@ -24,4 +24,4 @@ python3 extract_embeddings.py --dataset $dataset --embeddings $embeddings \
 	--detector $detector --embedding-model $embedding_model
 echo -e "====== 臉部辨識模型訓練完成 ====== \a \n"
 python3 train_model.py --embeddings $embeddings \
-  --recognizer $recognizer.pickle --le $le
+  --recognizer $recognizer --le $le
