@@ -32,6 +32,7 @@ def index():
 def status():
     api_path = '/api/accessory/status'
     info = {
+        'title'             : '元件狀態',
         'url'               : api_path,
         'method'            : 'GET',
         'frequence'         : '即時（realtime）',

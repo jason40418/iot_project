@@ -1,6 +1,6 @@
 import os, PIL, simplejson, traceback, time, random, string, subprocess, json
 from PIL import Image
-from flask import Blueprint, jsonify, request, render_template, redirect, url_for, send_from_directory
+from flask import Blueprint, jsonify, request, render_template, redirect, url_for, send_from_directory, make_response
 from werkzeug import secure_filename
 from model.upload.upload_file import uploadfile
 from model.util import General
@@ -211,3 +211,34 @@ def face_static_file(payload, path):
     folder, file_name = General.get_folder_and_file_name(static_path)
     ext = file_name.split('.')[-1]
     return send_from_directory(folder, file_name, mimetype=General.MIME_TYPE[ext.lower()], cache_timeout =-1)
+
+@avatar_blueprint.route("/model", methods=['GET'])
+def status():
+    api_path = '/api/avatar/status'
+    info = {
+        'title'             : '模型訓練集',
+        'url'               : api_path,
+        'method'            : 'GET',
+        'frequence'         : '即時（realtime）',
+        'description'       : '用於獲取人臉辨識中模型目前所訓練之資料集',
+        'col': [
+            {
+                'col'       : "type",
+                'zh_name'   : "資料類型（檔案/目錄）"
+            },
+            {
+                'col'       : "name",
+                'zh_name'   : "檔案或目錄名稱"
+            },
+            {
+                'col'       : "children",
+                'zh_name'   : "子目錄內所包含資料"
+            },
+            {
+                'col'       : "datetime",
+                'zh_name'   : "資料獲取時間"
+            }
+        ]
+    }
+    resp = make_response(render_template('/app/open_data.html', api_path=api_path, info=info), 200)
+    return resp

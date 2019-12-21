@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint, jsonify, request, make_response
 from datetime import datetime
 from controllers import AccessoryController
@@ -94,6 +95,14 @@ def member_login(decode_result, data):
 
 # 取得所有accessory的API
 @api_blueprint.route('/accessory/status', methods=['GET'])
-def status():
+def accessory_status():
     data = AccessoryController.get_curr_accessory_status()
+    return jsonify(data), 200
+
+# 取得所有accessory的API
+@api_blueprint.route('/avatar/status', methods=['GET'])
+def avatar_status():
+    data = dict()
+    with open('static/json/face_folder.json') as json_file:
+        data = json.load(json_file)
     return jsonify(data), 200
