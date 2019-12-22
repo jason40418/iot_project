@@ -38,6 +38,8 @@ def sensor_data_pub_pi(data):
 @socketio.on('face_identify_pub_pi', namespace='/pi')
 def face_identify_pub_pi(data):
     print("Flask收到了：", data)
+    # 提醒前端使用者有新的照片可以更新了
+    emit('face_identify_pub_client', data, namespace='/client', json=True, broadcast=True)
     return True, "receive", 200
 
 # ==================================================================================================

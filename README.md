@@ -48,3 +48,6 @@ https://github.com/adafruit/Adafruit_Python_DHT
 
 # Known Issue
 - if face identify only one label SVM trainging would get fail
+  
+# SAMBA
+https://blog.gtwang.org/iot/raspberry-pi/raspberry-pi-samba-setup-tutorial/

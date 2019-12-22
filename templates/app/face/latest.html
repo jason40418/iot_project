@@ -1,0 +1,68 @@
+{%  extends  "app/base.html"  %}
+{%  block  title  %}最新人臉辨識{%  endblock  %}
+{%  block  description  %}允許使用者進行登入{%  endblock  %}
+
+  {%  block  custom_css  %}
+  <style>
+    .img-center {
+      text-align: center;
+    }
+  </style>
+  {%  endblock  %}
+
+    {%  block  content  %}
+    <h1>最新人臉辨識結果</h1>
+    <hr>
+    <div class="row">
+      <div class="status_info">
+        <div class="pull-right ease">更新日期：<span id="update_datetime" class="text">----/--/-- --:--:--</span></div>
+      </div>
+      <div class="clean"></div>
+    </div>
+
+    <div class="img-center">
+      <img id="face" src="/static/images/face_identify_default.png" alt="" width="80%">
+    </div>
+
+    {%  endblock  %}
+
+    {% block last_content %}
+    {% endblock %}
+
+  {%  block  custom_js  %}
+  <script>
+    (() => {
+      document.addEventListener("DOMContentLoaded", (event) => {
+        async function change_latest_image() {
+          let [api_result, api_response] = api_request('GET', '/api/face/latest', {}, {}, [false, true]);
+          $(".status_info .ease").removeClass("trigger").delay(2000).queue(function(){
+              $(this).addClass("trigger").dequeue();
+            });
+            await sleep(1000);
+          if (api_result && api_response['status']) {
+            $('#update_datetime').html(api_response['datetime'])
+            $('#face').fadeOut(500, function() {
+                $('#face').attr("src", api_response['path']);
+                $('#face').fadeIn(500);
+            });
+          }
+        }
+        // 建立socket連線
+        const socket = io.connect('/client');
+
+        socket.on('connect', (payload) => {
+          console.log(payload);
+        });
+
+        socket.on('face_identify_pub_client', (payload) => {
+          // TODO: 可能需要檢查這個事件是否為過去事件
+          change_latest_image();
+        });
+
+        setTimeout(() => {
+          change_latest_image();
+        }, 1000)
+      });
+    })()
+  </script>
+  {%  endblock  %}

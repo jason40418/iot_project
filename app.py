@@ -21,7 +21,7 @@ config = cfg.Config(root_dir)
 
 socketio = SocketIO(app)
 from controllers import AccessoryController, APIController, LEDController, WebSocketController, AvatarController, MemberController, DataController
-from controllers import InfraredController
+from controllers import FaceController, InfraredController
 
 SENSOR_DATA_LIST = SensorHelper.SENSOR_LIST
 
@@ -33,6 +33,7 @@ app.register_blueprint(LEDController.led_blueprint, url_prefix='/api/led')
 app.register_blueprint(InfraredController.infrared_blueprint, url_prefix='/api/infrared')
 app.register_blueprint(AvatarController.avatar_blueprint, url_prefix='/member/avatar')
 app.register_blueprint(MemberController.member_blueprint, url_prefix='/member')
+app.register_blueprint(FaceController.face_blueprint, url_prefix='/face')
 app.register_blueprint(DataController.data_blueprint, url_prefix='/data')
 app.register_blueprint(AccessoryController.accessory_blueprint, url_prefix='/accessory')
 

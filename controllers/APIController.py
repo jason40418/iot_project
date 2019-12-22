@@ -1,4 +1,4 @@
-import json
+import json, glob, os
 from flask import Blueprint, jsonify, request, make_response
 from datetime import datetime
 from controllers import AccessoryController
@@ -106,3 +106,29 @@ def avatar_status():
     with open('static/json/face_folder.json') as json_file:
         data = json.load(json_file)
     return jsonify(data), 200
+
+# 取得最新人臉辨識照片
+@api_blueprint.route('/face/latest', methods=['GET'])
+def latest_face():
+    # TODO: 應該檢查取回的檔案是否都是圖片檔案
+    list_of_files = glob.glob('static/images/identify/*')
+    if len(list_of_files) != 0:
+        latest_file = max(list_of_files, key=os.path.getctime)
+        filename = latest_file.split('/')[-1]
+        date = filename[0:4] + '-' + filename[4:6] + '-' + filename[6:8]
+        time = filename[8:10] + ':' + filename[10:12] + ':' + filename[12:14]
+        result =  {
+            'datetime'  : date + ' ' + time,
+            'filename'  : filename,
+            'path'      : '/' + latest_file,
+            'status'    : True
+        }
+    else:
+        result =  {
+            'datetime'  : '',
+            'filename'  : '',
+            'path'      : '',
+            'status'    : False
+        }
+
+    return jsonify(result), 200
