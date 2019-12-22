@@ -2,24 +2,41 @@ from __main__ import socketio
 from flask import jsonify, request
 from flask_socketio import send, emit
 
+@socketio.on('connect', namespace='/system')
+def system_connect():
+    client_id = request.sid
+    print('[@WebScoketController] A new user {} connect to system room!'.format(client_id))
+    emit('connect', {'id': client_id}, namespace='/system', json=True)
+
+@socketio.on('disconnect', namespace='/system')
+def system_disconnect():
+    client_id = request.sid
+    print('[@WebScoketController] Client {} disconnect to system room!'.format(client_id))
+    emit('disconnect', {'id': client_id}, namespace='/system', json=True)
 
 @socketio.on('connect', namespace='/client')
-def connect():
+def client_connect():
     client_id = request.sid
     print('[@WebScoketController] A new user {} connect!'.format(client_id))
     emit('connect', {'id': client_id}, namespace='/client', json=True)
+
+@socketio.on('disconnect', namespace='/client')
+def client_disconnect():
+    client_id = request.sid
+    print('[@WebScoketController] Client {} disconnect!'.format(client_id))
+    emit('disconnect', {'id': client_id}, namespace='/client', json=True)
 
 # ==================================================================================================
 # Raspberry Pi and Server
 # ==================================================================================================
 @socketio.on('connect', namespace='/pi')
-def connect():
+def pi_connect():
     client_id = request.sid
     print('[@WebScoketController] Pi System {} connect!'.format(client_id))
     emit('connect', {'id': client_id}, namespace='/pi', json=True)
 
 @socketio.on('disconnect', namespace='/pi')
-def disconnect():
+def pi_disconnect():
     client_id = request.sid
     print('[@WebScoketController] Pi System {} disconnect!'.format(client_id))
     emit('disconnect', {'id': client_id}, namespace='/pi', json=True)

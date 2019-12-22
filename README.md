@@ -33,6 +33,7 @@ https://stackoverflow.com/questions/35854244/how-can-i-create-a-horizontal-scrol
 https://github.com/daneden/animate.css
 https://jsfiddle.net/dhirajbodicherla/wmaftobx/13/
 https://github.com/minhur/bootstrap-toggle
+https://github.com/CodeSeven/toastr
 
 
 # Crontab自動排程
