@@ -1,0 +1,143 @@
+{%  extends  "app/base.html"  %}
+{%  block  title  %}會員編輯{%  endblock  %}
+{%  block  description  %}允許使用者進行登入{%  endblock  %}
+
+  {%  block  custom_css  %}
+  <style>
+    #profile ul > li {
+      min-height: 42px;
+    }
+  </style>
+  {%  endblock  %}
+
+    {%  block  content  %}
+    <div class="row">
+      <div class="col-sm-3">
+        {% include "app/member/panel.html" %}
+      </div>
+      <!--/col-3-->
+      <div class="col-sm-9">
+        <div class="jumbotron">
+          <h1>會員註冊</h1>
+          <p class="lead">註冊會員使用客製化環境提醒與臉部辨識檢視進出紀錄</p>
+        </div>
+        <form id="form" data-toggle="validator" role="form">
+          <div class="form-group" has-feedback>
+            <label for="account" class="control-label">帳號</label>
+            <div class="input-group">
+              <span class="input-group-addon">@</span>
+              <input type="text" class="form-control input-lg" id="account" name="account" value="{{ member.account }}" disabled>
+            </div>
+            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+            <div class="help-block with-errors"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="name" class="control-label">姓名</label>
+            <input type="text" pattern="^[^\s].+[^\s]$" maxlength="30" class="form-control input-lg" id="name"
+              placeholder="name" data-error="不允許空值與單獨空格出現（起始與結束不為空格）（至多30位數）" value="{{ member.name }}" required>
+            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+            <div class="help-block with-errors"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="control-label">電子郵件</label>
+            <input type="email" class="form-control input-lg" id="email" maxlength="50" placeholder="e-mail"
+              data-error="請輸入正確之電子郵件信箱格式（必須包含@）（至多50位數）" value="{{ member.email }}" required>
+            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+            <div class="help-block with-errors"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="control-label">新密碼（若不修改請輸入相同登入密碼）</label>
+            <div class="row">
+              <div class="col-sm-6">
+                <input type="password" pattern="[^\s]+" data-minlength="6" maxlength="30" class="form-control input-lg"
+                  id="password" data-pattern-error="密碼不允許任何空格" data-minlength-error="請輸入至少6位數以上密碼（至多30位數）"
+                  data-required-error="此欄位必須填寫" placeholder="passworsd" autocomplete required>
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                <div class="help-block">請輸入至少6位數以上密碼（至多30位數）</div>
+              </div>
+              <div class="col-sm-6">
+                <input type="password" pattern="[^\s]+" class="form-control input-lg" id="password_confirm"
+                  data-pattern-error="密碼不允許任何空格" data-error="請填寫此欄位" data-required-error="此欄位必須填寫"
+                  data-match-error="請確認密碼與先前輸入相同" data-match="#password" placeholder="password confirm" autocomplete
+                  required>
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                <div class="help-block with-errors"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">修改</button>
+          </div>
+          <div id="rsa-key" data-public-key="{{ rsa.public_key }}" data-key-id="{{ rsa.id }}"></div>
+        </form>
+      </div>
+    </div>
+    <!--/col-9-->
+    {%  endblock  %}
+
+  {%  block  custom_js  %}
+  <script>
+    (() => {
+      var submit_action = () => {
+        let data = get_data();
+        let [key_id, encrypt_data] = rsa_encrypt(data, 'rsa-key', 'public-key', 'key-id');
+        let request = {
+          'id': key_id,
+          'payload': encrypt_data,
+          'datetime': current_time()
+        }
+
+        api_request('POST', '/api/member/edit', request, {
+          '2XX': {
+            完成: () => {
+              document.location.href = '/member';
+            }
+          },
+          '4XX': {
+            確認: () => {
+              document.location.href = '/member/edit';
+            }
+          },
+          '5XX': {
+            確認: () => {
+            }
+          }
+        });
+      }
+
+      var get_data = () => {
+        let name = document.getElementById('name').value;
+        let email = document.getElementById('email').value;
+        let password = document.getElementById('password').value;
+        let password_confirm = document.getElementById('password_confirm').value;
+
+        let data = {
+          'name': name,
+          'email': email,
+          'password': password,
+          'password_confirm': password_confirm
+        }
+
+        return data;
+      }
+
+      document.addEventListener("DOMContentLoaded", function (event) {
+        disable_submit_form('form', submit_action);
+
+        // 讓vaildator能夠移動到第一個錯誤的位置
+        $('form[data-toggle="validator"]').on('submit', function (e) {
+          window.setTimeout(function () {
+              var errors = $('.has-error')
+              if (errors.length) {
+                  $('html, body').animate({ scrollTop: errors.offset().top - 100 }, 500);
+              }
+          }, 0);
+        });
+      });
+    })()
+  </script>
+  {%  endblock  %}

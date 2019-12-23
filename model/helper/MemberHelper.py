@@ -87,6 +87,42 @@ class MemberHelper():
             return True, m , 200
 
     @staticmethod
+    def update(member):
+        sql = " UPDATE `iot`.`member` \
+                SET `member`.`name`=%(name)s, `member`.`email`=%(email)s, \
+                    `member`.`password`=%(password)s, `member`.`modify`=%(modify)s \
+                WHERE `member`.`account`=%(account)s"
+        args = member.get_all_parameter()
+        status, row, result = MemberHelper.dbmgr.update(sql, args)
+
+        if not status:
+            return False, {
+                'error_type' : "DatabaseError",
+                'error_msg'  : "[" + str(result[0]) + "]" + str(result[1]),
+                'error_code' : 500
+            }, 500
+        # 發生未預期錯誤（帳號超過一個例外狀況）
+        elif row > 1:
+            return False, {
+                'error_type' : "AccountMoreThanOneException",
+                'error_msg'  : "資料庫存在該帳號之資料超過一筆異常",
+                'error_code' : 500
+            }, 500
+        # 找不到帳號
+        elif row == 0:
+            return False, {
+                'error_type' : "AccountVerifyError",
+                'error_msg'  : "帳號不存在或密碼錯誤，請確認後重新輸入",
+                'error_code' : 400
+            }, 400
+        else:
+            return True, {
+                'type' : "AccountUpdateSuccess",
+                'msg'  : "帳號更新成功",
+                'code' : 200
+            }, 200
+
+    @staticmethod
     def verify(account, password):
         sql = "SELECT `password`, `identity` FROM `iot`.`member` WHERE `account`=%(account)s"
         args = { 'account': account}

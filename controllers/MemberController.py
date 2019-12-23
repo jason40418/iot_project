@@ -9,7 +9,7 @@ from __main__ import app
 member_blueprint = Blueprint('member', __name__)
 
 @member_blueprint.route("/", methods=['GET'])
-@token_require_page('/member/login')
+@token_require_page('/member/login', request_type='pages')
 def index(payload):
     account = payload['account']
     # 取回會員資料
@@ -18,6 +18,24 @@ def index(payload):
     if status:
         resp = make_response(render_template('app/member/index.html',
                         member=result.get_all_parameter()))
+        return resp
+    # 會員資料取回失敗，重新導向登入頁面
+    else:
+        resp = make_response(redirect(url, code=302))
+        resp.set_cookie(key='token', value='', expires=0)
+        return resp
+
+@member_blueprint.route("/edit", methods=['GET'])
+@token_require_page('/member/login', request_type='pages')
+@public_key_require_page('member_edit', 'member_edit_rsa_key')
+def edit(rsa, payload):
+    account = payload['account']
+    # 取回會員資料
+    status, result, code = MemberHelper.get(account)
+    # 會員資料取回成功
+    if status:
+        resp = make_response(render_template('app/member/edit.html',
+                        member=result.get_all_parameter(), rsa=rsa))
         return resp
     # 會員資料取回失敗，重新導向登入頁面
     else:

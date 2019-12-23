@@ -48,6 +48,39 @@ def member_register(decode_result, data):
         result.update({'datetime' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'key_id': reqest_data['id']})
         return jsonify(result), code
 
+@api_blueprint.route('/member/edit', methods=['POST'])
+@private_key_require_page('member_edit')
+@token_require_page('/member/login')
+def member_edit(payload, decode_result, data):
+    # 取回Request資料
+    reqest_data = request.json
+
+    # 如果私鑰解密過程失敗
+    if not decode_result:
+        data.update({
+            'datetime'   : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'key_id'     : reqest_data['id']
+        })
+        return jsonify(data), data['error_code']
+    else:
+        # TODO: 使用者傳入資料後端需要再做驗證（含檢查所有key存在和資料格式）
+
+        # 取回會員資料
+        status, result, code = MemberHelper.get(payload['account'])
+        # 會員資料取回成功
+        if status:
+            m = result
+            m.update(data['name'], data['email'], data['password'])
+            status, result, code = MemberHelper.update(m)
+
+        # 會員資料取回失敗
+        else:
+            pass
+
+        # 增加其他要回傳的欄位資料
+        result.update({'datetime' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'key_id': reqest_data['id']})
+        return jsonify(result), code
+
 @api_blueprint.route('/member/login', methods=['POST'])
 @private_key_require_page('login')
 def member_login(decode_result, data):

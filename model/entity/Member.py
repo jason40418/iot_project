@@ -33,6 +33,12 @@ class Member(metaclass=MultipleMeta):
     def set_account_id(self, id):
         self.__id = id
 
+    def update(self, name, email, password):
+        self.__name = name
+        self.__email = email
+        self.__password = self.__encrypt_password(password)
+        self.__modify = datetime.now().replace(microsecond=0)
+
     def get_all_parameter(self):
         return {
             'id'       : self.__id,
@@ -50,4 +56,3 @@ class Member(metaclass=MultipleMeta):
         encoded_password = passwd.encode("utf-8")
         hash_password = bcrypt.hashpw(encoded_password, bcrypt.gensalt())
         return hash_password
-
