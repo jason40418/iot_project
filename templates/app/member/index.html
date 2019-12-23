@@ -7,11 +7,16 @@
     #profile ul > li {
       min-height: 42px;
     }
+
+    .author {
+      padding-right: 10px;
+    }
   </style>
   {%  endblock  %}
 
     {%  block  content  %}
     <div class="row">
+      <div id="real-time-id" style="visibility:hidden">{% if 'id' in data %}{{ data.id }}{% endif %}</div>
       <div class="col-sm-3">
         {% include "app/member/panel.html" %}
       </div>
@@ -26,22 +31,16 @@
           <div class="tab-content">
             <!-- 警示訊息 -->
             <div class="tab-pane active" id="alert">
-              <div class="alert alert-info" role="alert">
-                <i class="fa fa-info-circle"></i>
-                This is a success alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
-                <span class="pull-right"><strong>2019/12/30</strong></span>
+              <div id="pin">
+                <div class="alert alert-info" role="alert">
+                  <i class="fa fa-info-circle"></i>本區依照使用者自定義之偏好設定進行即時警示（範圍內綠燈，超過5%黃燈，超過10%以上紅燈）
+                  <div class="row author">
+                    <span class="pull-right"><strong>系統管理員</strong></span>
+                  </div>
+                </div>
               </div>
-              <div class="alert alert-success" role="alert">
-                <i class="fa fa-check-circle-o"></i>
-                This is a success alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
-              </div>
-              <div class="alert alert-danger" role="alert">
-                <i class="fa fa-times"></i>
-                This is a success alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
-              </div>
-              <div class="alert alert-warning" role="alert">
-                <i class="glyphicon glyphicon-exclamation-sign"></i>
-                This is a success alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+              <div id="alert_info">
+
               </div>
             </div>
 
@@ -70,6 +69,7 @@
     {%  endblock  %}
 
   {%  block  custom_js  %}
+  <script src="/static/js/sensor_status.js" defer></script>
   <script>
     document.addEventListener("DOMContentLoaded", (event) => {
       function get_innter_html(data) {
@@ -112,6 +112,107 @@
       });
 
       update_access_table();
+
+      /** ======================================================================
+       *  更新警示部分
+       * =====================================================================*/
+      var get_pref_data = () => {
+        let pref = get_cookie_data('pref');
+        let result = new Object();
+
+        if (pref.length != 0) {
+          $.each(pref, function (key, value) {
+            result[value['item']] = {
+              'min': value['min'],
+              'max': value['max']
+            }
+          })
+        }
+
+        return result;
+      }
+
+
+      // 個人偏好設定檔案
+      const pref = get_pref_data();
+      const alert = ['success', 'warning', 'danger'];
+      const alert_icon = ['fa fa-check-circle-o', 'glyphicon glyphicon-exclamation-sign', 'fa fa-times'];
+      const last_update = document.getElementById("real-time-id");
+      const sensor_map = sensor_level;
+
+      var get_alert_html = (alert_type, alert_icon, alert_title, alert_content) => {
+        let html = '';
+        html += '<div class="alert alert-' + alert_type + '" role="alert">';
+        html += '<i class="' + alert_icon + '"></i>' + alert_content;
+        html += '<div class="row author">';
+        html += '<span class="pull-right"><strong>' + alert_title + '</strong></span>';
+        html += '</div></div>';
+        return html;
+      }
+
+      var update_alert_panel = (payload) => {
+        last_update.innerHTML = payload['id'];
+        $('#alert_info').empty();
+        $.each(payload['data'], async (key, value) => {
+          let html = "";
+          if (value === null) {
+            // 資料為null不用更新這部分
+            console.log("[@index] Sensor data not exist")
+          }
+          else {
+            // 有新資料了
+            let title = get_date_time(payload['datetime']);
+            let msg = '';
+            let status = -1;
+            let pect = 0;
+            let pect_range = 0;
+            let abnormal = 0;
+            let range_text = '';
+            if (key in pref) {
+              // 適用於客製化設定檔案
+              if (value > pref[key]['max'] || value < pref[key]['min']) {
+                if (value > pref[key]['max']) {
+                  abnormal = value - pref[key]['max'];
+                  range_text = '超過';
+                  pect = abnormal / (pref[key]['max'] * 0.05);
+                  pect_range = Math.abs((pref[key]['max'] - value) / pref[key]['max'] * 100);
+                }
+                else {
+                  abnormal = pref[key]['min'] - value;
+                  range_text = '低於';
+                  pect = abnormal / (pref[key]['min'] * 0.05);
+                  pect_range = Math.abs((value - pref[key]['min']) / pref[key]['min'] * 100);
+                }
+                status = Math.round(pect);
+                status = (status > 2) ? 2 : 1;
+                msg = '目前該項目「' + sensor_map[key]['name'] +'」為' + value + sensor_map[key]['unit'] + range_text + pect_range.toFixed(2)  + '%（' + pref[key]['min']  + '~' + pref[key]['max'] + sensor_map[key]['unit'] + '）';
+              }
+              else {
+                status = 0;
+                msg = '目前該項目為「' + sensor_map[key]['name'] + '」' + value + sensor_map[key]['unit'] + '正常範圍（' + pref[key]['min']  + '~' + pref[key]['max'] + sensor_map[key]['unit'] + '）';
+              }
+              html += get_alert_html(alert[status], alert_icon[status], title, msg);
+              await sleep(2000);
+              $('#alert_info').append(html);
+            }
+            // 適用於通用設定檔案
+            else {
+
+            }
+          }
+        });
+      }
+
+      socket.on('sensor_data_pub_client', async (payload) => {
+        update_alert_panel(payload)
+      });
+
+      function set_default_alert () {
+        let [api_result, api_response] = api_request('GET', '/api/sensor/realtime', {}, {}, [false, false]);
+        if (api_response) update_alert_panel(api_response);
+      }
+
+      set_default_alert();
     });
   </script>
   {%  endblock  %}

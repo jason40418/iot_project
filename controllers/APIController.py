@@ -5,6 +5,7 @@ from controllers import AccessoryController
 from model.entity.Member import Member
 from model.util.General import private_key_require_page, convert_byte_to_dict, generate_token, token_require_page
 from model.helper.AccessHelper import AccessHelper
+from model.helper.SensorHelper import SensorHelper
 from model.helper.MemberHelper import MemberHelper
 from model.helper.MemberPreferenceHelper import MemberPreferenceHelper
 
@@ -14,6 +15,13 @@ api_blueprint = Blueprint('api', __name__)
 @api_blueprint.route('/', methods=['GET'])
 def api_index():
     return jsonify({'message': 'API路徑請求'}), 200
+
+@api_blueprint.route('/sensor/realtime', methods=['GET'])
+def sensor_data():
+
+    result, data = SensorHelper.get_latest_data()
+
+    return jsonify(data), 200
 
 @api_blueprint.route('/member/duplicate_confirm', methods=['GET'])
 def member_duplocate_confirm():
@@ -121,7 +129,7 @@ def member_login(decode_result, data):
 
                 # 設定 cookies
                 resp.set_cookie(key='token', value=token, expires=expired_time)
-                resp.set_cookie(key='pref', value=str(json.dumps(pref)), expires=expired_time)
+                resp.set_cookie(key='pref', value=str(json.dumps(pref, ensure_ascii=False)), expires=expired_time)
                 print(result)
             # 取回會員資料失敗
             else:

@@ -16,12 +16,6 @@ def exit_disconnect():
     print('[@WebScoketController] Manage exit camaera {} disconnect!'.format(client_id))
     emit('disconnect', {'id': client_id}, namespace='/system', json=True)
 
-@socketio.on('aaa', namespace='/exit')
-def bbb_connect(data):
-    client_id = request.sid
-    print('suprise', data)
-    return 200, 400
-
 @socketio.on('connect', namespace='/system')
 def system_connect():
     client_id = request.sid
@@ -69,6 +63,8 @@ def sensor_data_pub_pi(data):
         data {[dict]} -- JSON format data the could be emited to client
     """
     emit('sensor_data_pub_client', data, namespace='/client', json=True, broadcast=True)
+    emit('sensor_data_pub_system', data, namespace='/system', json=True, broadcast=True)
+
     return True, "receive", 200
 
 # 處理人員進入環境

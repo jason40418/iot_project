@@ -98,4 +98,4 @@ if __name__ == '__main__':
     }
     socketio.emit('server_clean_pub', data, json=True, broadcast=True, namespace='/pi')
     GPIO.cleanup()
-    socketio.run(app, host= '0.0.0.0', port=port, debug=True)
+    socketio.run(app, host=ip, port=port, debug=True)

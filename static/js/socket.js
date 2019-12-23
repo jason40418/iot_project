@@ -45,4 +45,8 @@
       });
     }
   });
+
+  socket.on('sensor_data_pub_system', (payload) => {
+    console.log(payload);
+  })
 })()

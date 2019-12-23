@@ -355,3 +355,19 @@ var update_curr_status = () => {
     update_status(sensor, value);
   });
 }
+
+var getCookie = (name) => {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+var get_cookie_data = (key) => {
+  let pref = (getCookie(key) == null) ?  "" : getCookie(key);
+  let pref_obj = new Object();
+  if (pref != "") {
+    pref = pref.replace(/\\054/g, ',');
+    pref_obj = JSON.parse(JSON.parse(pref));
+  }
+  return pref_obj;
+}
