@@ -15,6 +15,7 @@ import os
 import random, string
 import socketio
 from model.util.Socket import Socket
+from model.util.General import get_current_datetime
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -127,10 +128,19 @@ result = clean_result(result)
 
 if len(result) != 0:
     filename = strftime("%Y%m%d%H%M%S", localtime()) + ''.join(random.sample(string.ascii_letters+string.digits, 10))
-    cv2.imwrite('static/images/identify/' + filename + '.jpg', image)
+    cv2.imwrite('static/images/identify/' + filename + '_entry.jpg', image)
+
+    payload = {
+        'datetime' : get_current_datetime(),
+        'type' : 'FaceRecognize',
+        'data' : {
+            'category' : 'entry',
+            'people' : result
+        }
+    }
 
     try:
-        sio.call(event='face_identify_pub_pi', data={'data': result}, namespace='/pi', timeout=30)
+        sio.call(event='face_identify_pub_pi', data=payload, namespace='/pi', timeout=30)
     except socketio.exceptions.TimeoutError as err:
         print('timeout')
 

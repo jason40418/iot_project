@@ -1,6 +1,26 @@
 from __main__ import socketio
+import datetime
 from flask import jsonify, request
 from flask_socketio import send, emit
+from model.helper.AccessHelper import AccessHelper
+
+@socketio.on('connect', namespace='/exit')
+def exit_connect():
+    client_id = request.sid
+    print('[@WebScoketController] Manage exit camaera {} connect!'.format(client_id))
+    emit('connect', {'id': client_id}, namespace='/system', json=True)
+
+@socketio.on('disconnect', namespace='/exit')
+def exit_disconnect():
+    client_id = request.sid
+    print('[@WebScoketController] Manage exit camaera {} disconnect!'.format(client_id))
+    emit('disconnect', {'id': client_id}, namespace='/system', json=True)
+
+@socketio.on('aaa', namespace='/exit')
+def bbb_connect(data):
+    client_id = request.sid
+    print('suprise', data)
+    return 200, 400
 
 @socketio.on('connect', namespace='/system')
 def system_connect():
@@ -51,12 +71,54 @@ def sensor_data_pub_pi(data):
     emit('sensor_data_pub_client', data, namespace='/client', json=True, broadcast=True)
     return True, "receive", 200
 
-# TODO: 處理人員進出環境
+# 處理人員進入環境
 @socketio.on('face_identify_pub_pi', namespace='/pi')
-def face_identify_pub_pi(data):
-    print("Flask收到了：", data)
+def face_identify_pub_pi(payload):
+    dt = datetime.datetime.today()
+    result = payload
+    vaild = list()
+
+    for person in payload['data']['people']:
+        exist, record = AccessHelper.get_by_name(person)
+        if not exist:
+            vaild.append(person)
+            AccessHelper.entry(person)
+        elif record['datetime'].day < dt.day:
+            vaild.append(person)
+            AccessHelper.exit(person, record['datetime'], 'system')
+            AccessHelper.entry(person)
+        else:
+            pass
+
+    # 將最終判別結果告知前端
+    result['data']['people'] = vaild
+    emit('face_identify_pub_system', result, namespace='/system', json=True, broadcast=True)
     # 提醒前端使用者有新的照片可以更新了
-    emit('face_identify_pub_client', data, namespace='/client', json=True, broadcast=True)
+    emit('face_identify_pub_client', result, namespace='/client', json=True, broadcast=True)
+
+    return True, "receive", 200
+
+# 處理人員離開環境（假設一定要有進入才有出去）
+@socketio.on('face_identify_pub_pi', namespace='/exit')
+def face_identify_exit_pub_pi(payload):
+    dt = datetime.datetime.today()
+    result = payload
+    vaild = list()
+
+    for person in payload['data']['people']:
+        exist, record = AccessHelper.get_by_name(person)
+        if exist:
+            vaild.append(person)
+            AccessHelper.exit(person, record['datetime'], None)
+        else:
+            pass
+
+    # 將最終判別結果告知前端
+    result['data']['people'] = vaild
+    emit('face_identify_pub_system', result, namespace='/system', json=True, broadcast=True)
+    # 提醒前端使用者有新的照片可以更新了
+    emit('face_identify_pub_client', result, namespace='/client', json=True, broadcast=True)
+
     return True, "receive", 200
 
 # ==================================================================================================

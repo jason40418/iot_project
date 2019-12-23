@@ -49,6 +49,10 @@ https://github.com/adafruit/Adafruit_Python_DHT
 
 # Known Issue
 - if face identify only one label SVM trainging would get fail
+- pi channel could not sub as second camera
   
 # SAMBA
 https://blog.gtwang.org/iot/raspberry-pi/raspberry-pi-samba-setup-tutorial/
+python FaceIdentify_Exit.py --detector model/face/face_detection_model --embedding-model model/face/openface_nn4.small2.v1.t7 --recognizer model/face/output/recognizer.pickle --le model/face/output/le.pickle
+
+# You need to customize your second camera mannually

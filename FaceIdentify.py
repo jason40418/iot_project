@@ -67,6 +67,7 @@ if connection:
             camera.start_preview()
             time.sleep(5)
             camera.capture('model/face/images/image.jpg')
+            gpio.output(led_pin_num, 0)  #Turn OFF LED
             proc = subprocess.Popen(["bash face_identify.sh -d 'model/face/" + param['dataset'] + "' -b 'model/face/" + param['embeddings'] + "'\
                 -t 'model/face/" + param['detector'] + "' -m 'model/face/" + param['embedding_model'] + "'\
                 -r 'model/face/" + param['recognizer'] + "' -e 'model/face/" + param['le'] + "' -i 'model/face/images/image.jpg'"], shell=True,

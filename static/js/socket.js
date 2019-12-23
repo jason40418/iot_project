@@ -23,31 +23,26 @@
     "hideMethod": "fadeOut"
   }
 
-  toastr.success("標題", "內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", {
-    "onclick": () => {
-      console.log('yes')
-    },
-  });
-  toastr.warning("標題", "內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", {
-    "onclick": () => {
-      console.log('yes')
-    },
-  });
-  toastr.info("標題", "內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", {
-    "onclick": () => {
-      console.log('yes')
-    },
-  });
-  toastr.error("標題", "內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", {
-    "onclick": () => {
-      console.log('yes')
-    },
-  });
-
   const socket = io.connect('/system');
 
   // Subscribe the Flask server publish data
-  socket.on('sensor_data_pub_client', (data) => {
-    console.log(data);
+  socket.on('face_identify_pub_system', (payload) => {
+    console.log(payload);
+    // 處理進入環境事件
+    if (payload['data']['category'] == 'entry') {
+      $.each(payload['data']['people'], async function (key, value) {
+        toastr.success('[人臉辨識 Face Identify]', value + '已經進入該環境', () => {
+        });
+        await sleep(1000);
+      });
+    }
+    // 處理離開環境事件
+    else if (payload['data']['category'] == 'exit') {
+      $.each(payload['data']['people'], async function (key, value) {
+        toastr.success('[人臉辨識 Face Identify]', value + '已經離開該環境', () => {
+        });
+        await sleep(1000);
+      });
+    }
   });
 })()

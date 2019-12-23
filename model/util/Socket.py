@@ -3,12 +3,13 @@ from model.util.Config import Config
 
 class Socket():
 
-    def __init__(self, namespaces=['/', '/pi'], transports='websocket'):
+    def __init__(self, namespaces=['/', '/pi'], transports='websocket', ip=None):
         self.__namespace = namespaces
         self.__transports = transports
         self.__config = Config()
-        self.__ip = self.__config.getIPAddress()
+        self.__ip = self.__config.getIPAddress() if ip is None else ip
         self.__port = self.__config.getValue('host', 'port')
+        print(self.__ip, self.__port)
         self.__socket = None
         self.__connected = False
 
