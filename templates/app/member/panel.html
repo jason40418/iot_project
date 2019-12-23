@@ -1,0 +1,32 @@
+        <!-- ROADMAP: 會員可以自己上傳頭像，並顯示在nav
+        -->
+        <img title="profile image" class="img-circle img-responsive member-avaster" src="/static/images/avatar/default/image.png">
+        <span class="fill-all-center"><strong>{{ member.account }}</strong></span>
+
+        <div id="profile">
+          <ul class="list-group">
+            <li class="list-group-item text-muted"><i class="fa fa-address-card fa-1x"></i> 個人資料
+              <button class="btn btn-xs btn-default pull-right"><i class="fa fa-pencil"></i> 編輯</button>
+            </li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>編號</strong></span> {{ member.id }}</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>暱稱</strong></span> {{ member.name }}</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>身分</strong></span> {{ member.identity }}</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>修改</strong></span> {{ member.modify }}</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>加入</strong></span> {{ member.create }}</li>
+          </ul>
+
+          <div class="panel panel-default">
+            <div class="panel-heading"><i class="fa fa-envelope-open-o fa-1x"></i> 聯絡資訊</i></div>
+            <div class="panel-body"><i class="fa fa-at fa-1x"></i><a href="mailto:{{ member.email }}"> {{ member.email }}</a></i></div>
+          </div>
+
+          <ul class="list-group">
+            <li class="list-group-item text-muted"><i class="fa fa-cog fa-1x"></i> 偏好設定
+              <button class="btn btn-xs btn-default pull-right"><i class="fa fa-pencil"></i> 編輯</button>
+            </li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Shares</strong></span> 125</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Likes</strong></span> 13</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 37</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Followers</strong></span> 78</li>
+          </ul>
+        </div>
