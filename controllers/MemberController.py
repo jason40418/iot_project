@@ -80,4 +80,5 @@ def logout():
     resp = make_response(redirect('/member/login'), 302)
     # 設定token過期
     resp.set_cookie(key='token', value='', expires=0)
+    resp.set_cookie(key='pref', value='', expires=0)
     return resp

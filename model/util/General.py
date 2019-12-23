@@ -85,6 +85,7 @@ def token_require_page(url, request_type='api'):
                         }), 400
                     else:
                         resp.set_cookie(key='token', value='', expires=0)
+                        resp.set_cookie(key='pref', value='', expires=0)
                         return resp
                 # 檢查token有效性
                 elif time.time() > payload['expired_time']:
@@ -96,6 +97,7 @@ def token_require_page(url, request_type='api'):
                         }), 401
                     else:
                         resp.set_cookie(key='token', value='', expires=0)
+                        resp.set_cookie(key='pref', value='', expires=0)
                         return resp
                 else:
                     return f(payload, *args, **kwds)
@@ -108,6 +110,7 @@ def token_require_page(url, request_type='api'):
                     }), 401
                 else:
                     resp.set_cookie(key='token', value='', expires=0)
+                    resp.set_cookie(key='pref', value='', expires=0)
                     return resp
         return wrapper
     return actual_decorator

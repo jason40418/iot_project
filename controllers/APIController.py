@@ -115,19 +115,26 @@ def member_login(decode_result, data):
                 resp = make_response(jsonify(result), status)
                 # 產生token
                 token, expired_time = generate_token(result ,'login_expire')
+
+                # 取回預設偏好設定檔案
+                pref, item_list = MemberPreferenceHelper.get_by_account(account)
+
                 # 設定 cookies
                 resp.set_cookie(key='token', value=token, expires=expired_time)
+                resp.set_cookie(key='pref', value=str(json.dumps(pref)), expires=expired_time)
                 print(result)
             # 取回會員資料失敗
             else:
                 resp = make_response(jsonify(member_result), status)
                 # 設定token過期
                 resp.set_cookie(key='token', value='', expires=0)
+                resp.set_cookie(key='pref', value='', expires=0)
         # 回傳錯誤訊息
         else:
             resp = make_response(jsonify(result), code)
             # 設定token過期
             resp.set_cookie(key='token', value='', expires=0)
+            resp.set_cookie(key='pref', value='', expires=0)
         return resp
 
 # 取得所有accessory的API
