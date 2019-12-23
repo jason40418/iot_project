@@ -24,9 +24,11 @@
             <li class="list-group-item text-muted"><i class="fa fa-cog fa-1x"></i> 偏好設定
               <button class="btn btn-xs btn-default pull-right"><i class="fa fa-pencil"></i> 編輯</button>
             </li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Shares</strong></span> 125</li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Likes</strong></span> 13</li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 37</li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Followers</strong></span> 78</li>
+            {% for i in pref %}
+            <li class="list-group-item text-right">
+              <span class="pull-left"><i class="fa {{ item_df.loc[i['item']]['icon'] }}"></i><strong> {{ item_df.loc[i['item']]['name'] }}</strong></span>
+              <span>{{ i['min'] }} ~ {{ i['max'] }}{{ item_df.loc[i['item']]['unit'] }}</span>
+            </li>
+            {% endfor %}
           </ul>
         </div>

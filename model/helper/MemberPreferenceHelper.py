@@ -26,3 +26,19 @@ class MemberPreferenceHelper():
             status, row, result_id = MemberPreferenceHelper.dbmgr.insert(sql, args, multiple=True)
             if status:
                 break
+
+    @staticmethod
+    def get_by_account(account):
+        sql = "SELECT * FROM `iot`.`member_preference` WHERE `member_preference`.`account` = %(account)s"
+        args = { 'account'   : account}
+
+        item_list = list()
+
+        while True:
+            status, row, result = MemberPreferenceHelper.dbmgr.query(sql, args)
+            if status: break
+
+        for i in result:
+            item_list.append(i['item'])
+
+        return result, item_list
