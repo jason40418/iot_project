@@ -79,25 +79,18 @@
 
             <!-- 進出紀錄 -->
             <div class="tab-pane" id="access">
-              <ul class="list-group">
-                <li class="list-group-item text-muted">Inbox</li>
-                <li class="list-group-item text-right"><a href="#" class="pull-left">Here is your a link to the latest summary
-                    report from the..</a> 2.13.2014</li>
-                <li class="list-group-item text-right"><a href="#" class="pull-left">Hi Joe, There has been a request on your
-                    account since that was..</a> 2.11.2014</li>
-                <li class="list-group-item text-right"><a href="#" class="pull-left">Nullam sapien massaortor. A lobortis
-                    vitae, condimentum justo...</a> 2.11.2014</li>
-                <li class="list-group-item text-right"><a href="#" class="pull-left">Thllam sapien massaortor. A lobortis
-                    vitae, condimentum justo...</a> 2.11.2014</li>
-                <li class="list-group-item text-right"><a href="#" class="pull-left">Wesm sapien massaortor. A lobortis vitae,
-                    condimentum justo...</a> 2.11.2014</li>
-                <li class="list-group-item text-right"><a href="#" class="pull-left">For therepien massaortor. A lobortis
-                    vitae, condimentum justo...</a> 2.11.2014</li>
-                <li class="list-group-item text-right"><a href="#" class="pull-left">Also we, havesapien massaortor. A
-                    lobortis vitae, condimentum justo...</a> 2.11.2014</li>
-                <li class="list-group-item text-right"><a href="#" class="pull-left">Swedish chef is assaortor. A lobortis
-                    vitae, condimentum justo...</a> 2.11.2014</li>
-              </ul>
+              <table id="access_table" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">編號</th>
+                    <th scope="col">使用者</th>
+                    <th scope="col">進入時間</th>
+                    <th scope="col">離開時間</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
             </div>
             <!--/tab-pane-->
           </div>
@@ -109,4 +102,47 @@
     {%  endblock  %}
 
   {%  block  custom_js  %}
+  <script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+      function get_innter_html(data) {
+        var inner_html= "";
+        $.each(data, function(key, value) {
+          inner_html += "<tr>";
+          inner_html += "<td>" + value['id'] + "</td>";
+          inner_html += "<td>" + value['account'] + "</td>";
+          inner_html += "<td>" + get_date_time(value['entry']) + "</td>";
+          inner_html += "<td>" + get_date_time(value['exit']) + "</td>";
+          inner_html += "</tr>>";
+        });
+
+        return inner_html;
+      }
+
+      function update_access_table() {
+        let [api_result, api_response] = api_request('GET', '/api/member/access_record', {}, {}, [false, true]);
+        if (api_result) {
+          let html = get_innter_html(api_response['data']);
+          $('#access_table > tbody').empty()
+          $('#access_table > tbody').append(html)
+        }
+        else {
+          // 若抓取API失敗
+        }
+      }
+
+      // 建立socket連線
+      const socket = io.connect('/client');
+
+      socket.on('connect', (payload) => {
+        console.log(payload);
+      });
+
+      socket.on('face_identify_pub_client', (payload) => {
+        // TODO: 可能需要檢查這個事件是否為過去事件
+        update_access_table();
+      });
+
+      update_access_table();
+    });
+  </script>
   {%  endblock  %}

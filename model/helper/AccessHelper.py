@@ -25,6 +25,20 @@ class AccessHelper():
             return True, data[0]
 
     @staticmethod
+    def get_records_by_name(account):
+        sql = " SELECT * \
+                FROM `iot`.`access_record` \
+                WHERE `access_record`.`account` = %(account)s \
+                ORDER BY `access_record`.`id` DESC"
+        args = { 'account': account}
+
+        while True:
+            status, row, data = AccessHelper.dbmgr.query(sql, args)
+            if status:  break
+
+        return status, row, data
+
+    @staticmethod
     def entry(account):
         sql = "INSERT INTO `iot`.`access`(`access`.`account`) VALUES(%(account)s)"
         args = { 'account': account}

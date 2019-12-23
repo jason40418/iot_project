@@ -11,12 +11,13 @@ member_blueprint = Blueprint('member', __name__)
 @member_blueprint.route("/", methods=['GET'])
 @token_require_page('/member/login')
 def index(payload):
+    account = payload['account']
     # 取回會員資料
-    status, result, code = MemberHelper.get(payload['account'])
+    status, result, code = MemberHelper.get(account)
     # 會員資料取回成功
     if status:
-        print(result)
-        resp = make_response(render_template('app/member/index.html', member=result.get_all_parameter()))
+        resp = make_response(render_template('app/member/index.html',
+                        member=result.get_all_parameter()))
         return resp
     # 會員資料取回失敗，重新導向登入頁面
     else:

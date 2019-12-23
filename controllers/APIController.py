@@ -3,7 +3,8 @@ from flask import Blueprint, jsonify, request, make_response
 from datetime import datetime
 from controllers import AccessoryController
 from model.entity.Member import Member
-from model.util.General import private_key_require_page, convert_byte_to_dict, generate_token
+from model.util.General import private_key_require_page, convert_byte_to_dict, generate_token, token_require_page
+from model.helper.AccessHelper import AccessHelper
 from model.helper.MemberHelper import MemberHelper
 
 # 定義
@@ -132,3 +133,17 @@ def latest_face():
         }
 
     return jsonify(result), 200
+
+# 處理靜態（static）文件路徑
+@api_blueprint.route('/member/access_record', methods=['GET'])
+@token_require_page("/member/login")
+def access_record(payload):
+    account = payload['account']
+    # 取回該名會員的進出記錄
+    status, row, access_record = AccessHelper.get_records_by_name(account)
+    return jsonify({
+        'msg'  : '會員進出紀錄取得成功',
+        'type' : 'MemberAccessRecordFetchSuccess',
+        'code' : 200,
+        'data': access_record
+    }), 200

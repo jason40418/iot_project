@@ -90,6 +90,14 @@ var current_time = () => {
   return result;
 }
 
+var get_date_time = (data) => {
+
+  let date = new Date(data);
+  let result = date.toISOString().slice(0, 19).replace('T', ' ');
+
+  return result;
+}
+
 /**
  * 檢驗是否是function
  * @param {*} func
