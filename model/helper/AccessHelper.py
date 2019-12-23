@@ -24,6 +24,18 @@ class AccessHelper():
         else:
             return True, data[0]
 
+    def get_all():
+        sql = " SELECT * \
+                FROM `iot`.`access` \
+                ORDER BY `access`.`id` DESC"
+        args = {}
+
+        while True:
+            status, row, data = AccessHelper.dbmgr.query(sql, args)
+            if status:  break
+
+        return status, row, data
+
     @staticmethod
     def get_records_by_name(account):
         sql = " SELECT * \

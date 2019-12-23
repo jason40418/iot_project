@@ -1,0 +1,111 @@
+{%  extends  "app/base.html"  %}
+{%  block  title  %}目前人員{%  endblock  %}
+{%  block  description  %}允許使用者進行登入{%  endblock  %}
+
+  {%  block  custom_css  %}
+  <style>
+    .img-center {
+      text-align: center;
+    }
+
+    .box {
+      background: rgb(145, 148, 145);
+      border-radius: 10px;
+      margin: 2px;
+    }
+
+    .box-content {
+      padding-top: 10px;
+      font-size: 14px;
+      color: #000;
+    }
+
+    .box-content-item {
+      padding-bottom: 14px;
+    }
+  </style>
+  {%  endblock  %}
+
+    {%  block  content  %}
+    <h1>目前人員</h1>
+    <hr>
+    <div class="row">
+      <div class="status_info">
+        <div class="pull-right ease">更新日期：<span id="update_datetime" class="text">----/--/-- --:--:--</span></div>
+      </div>
+      <div class="clean"></div>
+    </div>
+    <div id='panel' class="row">
+
+    </div>
+
+    {%  endblock  %}
+
+    {% block last_content %}
+    {% endblock %}
+
+  {%  block  custom_js  %}
+  <script>
+    (() => {
+      document.addEventListener("DOMContentLoaded", (event) => {
+
+        function get_inner_html(data) {
+          let inner_html = '';
+
+          $.each(data, function (key, value) {
+            inner_html += '<div class="col-md-4 col-sm-6">';
+            inner_html += '<div class="row box">';
+            inner_html += '<div class="col-xs-4">';
+            inner_html += '<img title="profile image" class="img-circle img-responsive member-avaster" src="/static/images/avatar/default/image.png">';
+            inner_html += '</div>';
+            inner_html += '<div class="col-xs-8 box-content">';
+            inner_html += '<div class="row">';
+            inner_html += '<div class="col-xs-12 box-content-item">';
+            inner_html += '<span style="font-size: 16px;"><strong>' + value['account'] + '</strong></span>';
+            inner_html += '</div>';
+            inner_html += '<div class="col-xs-12 box-content-item">';
+            inner_html += '<span><strong>進入：' + get_date_time(value['datetime']) + '</strong></span>';
+            inner_html += '</div>';
+            inner_html += '<div class="col-xs-12 box-content-item">';
+            inner_html += '<span><strong>編號：' + value['id'] + '</strong></span>';
+            inner_html += '</div></div></div></div></div>';
+          });
+
+          return inner_html;
+        }
+
+        async function update_insider() {
+          $('#panel').fadeOut(0);
+          let [api_result, api_response] = api_request('GET', '/api/face/current', {}, {}, [false, false]);
+          $(".status_info .ease").removeClass("trigger").delay(2000).queue(function(){
+              $(this).addClass("trigger").dequeue();
+            });
+            await sleep(1000);
+          if (api_result && api_response['status']) {
+            $('#update_datetime').html(api_response['datetime'])
+            let html = get_inner_html(api_response['data']);
+            $('#panel').empty();
+            $('#panel').append(html);
+          }
+          $('#panel').fadeIn(3000);
+        }
+        // 建立socket連線
+        const socket = io.connect('/client');
+
+        socket.on('connect', (payload) => {
+          console.log(payload);
+        });
+
+        socket.on('face_identify_pub_client', (payload) => {
+          // TODO: 可能需要檢查這個事件是否為過去事件
+          $('#panel').fadeOut(1000);
+          update_insider();
+        });
+
+        setTimeout(() => {
+          update_insider();
+        }, 1000)
+      });
+    })()
+  </script>
+  {%  endblock  %}

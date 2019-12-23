@@ -134,7 +134,6 @@ def latest_face():
 
     return jsonify(result), 200
 
-# 處理靜態（static）文件路徑
 @api_blueprint.route('/member/access_record', methods=['GET'])
 @token_require_page("/member/login")
 def access_record(payload):
@@ -142,8 +141,23 @@ def access_record(payload):
     # 取回該名會員的進出記錄
     status, row, access_record = AccessHelper.get_records_by_name(account)
     return jsonify({
+        'datetime'   : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'status' : True,
         'msg'  : '會員進出紀錄取得成功',
         'type' : 'MemberAccessRecordFetchSuccess',
         'code' : 200,
         'data': access_record
+    }), 200
+
+@api_blueprint.route('/face/current', methods=['GET'])
+def curr_face_in_room():
+    status, row, data = AccessHelper.get_all()
+    return jsonify({
+        'datetime'   : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'status' : True,
+        'msg'  : '環境目前人員',
+        'type' : 'CurrentFaceInRoomFetchSuccess',
+        'code' : 200,
+        'row'  : row,
+        'data' : data
     }), 200
