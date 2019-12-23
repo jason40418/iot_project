@@ -11,7 +11,10 @@ class SensorHelper():
             'name'    : "溫度",
             'en_name' : "Temperature",
             'unit'    : "°C",
-            'color'   : "rgb(54, 162, 235)"
+            'color'   : "rgb(54, 162, 235)",
+            'default' : True,
+            'min'     : 22,
+            'max'     : 25
         },
         {
             'id'      : "humidity",
@@ -19,7 +22,10 @@ class SensorHelper():
             'name'    : "濕度",
             'en_name' : "Humidity",
             'unit'    : "%",
-            'color'   : "rgb(102, 153, 153)"
+            'color'   : "rgb(102, 153, 153)",
+            'default' : True,
+            'min'     : 40,
+            'max'     : 50
         },
     ]
     # TODO: 若資料庫出錯是否要印出或做其他處置

@@ -6,6 +6,7 @@ from model.entity.Member import Member
 from model.util.General import private_key_require_page, convert_byte_to_dict, generate_token, token_require_page
 from model.helper.AccessHelper import AccessHelper
 from model.helper.MemberHelper import MemberHelper
+from model.helper.MemberPreferenceHelper import MemberPreferenceHelper
 
 # 定義
 api_blueprint = Blueprint('api', __name__)
@@ -44,6 +45,8 @@ def member_register(decode_result, data):
 
         m = Member(str(data['account']), str(data['name']), str(data['email']), str(data['password']), 'member')
         status, result, code = MemberHelper.create(m)
+        # 新增預設設定檔案資料
+        MemberPreferenceHelper.add_default_value(str(data['account']))
         # 增加其他要回傳的欄位資料
         result.update({'datetime' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'key_id': reqest_data['id']})
         return jsonify(result), code
