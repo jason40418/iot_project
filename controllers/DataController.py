@@ -101,3 +101,46 @@ def history(accessory):
         return resp
     else:
         abort(404)
+
+@data_blueprint.route("/latest", methods=['GET'])
+def data_api():
+    api_path = '/api/sensor/realtime'
+    info = {
+        'title'             : '元件狀態',
+        'url'               : api_path,
+        'method'            : 'GET',
+        'frequence'         : '即時（realtime）',
+        'description'       : '用於獲取所有感測器最後測量數值',
+        'col': [
+            {
+                'col'       : "type",
+                'zh_name'   : "資料獲取訊息狀態"
+            },
+            {
+                'col'       : "msg",
+                'zh_name'   : "資料獲取訊息狀態（中文）"
+            },
+            {
+                'col'       : "status",
+                'zh_name'   : "資料獲取之HTTP狀態碼"
+            },
+            {
+                'col'       : "datetime",
+                'zh_name'   : "資料獲取時間"
+            },
+            {
+                'col'       : "data",
+                'zh_name'   : "測量資料（key-感測器；value-數值）（dict）"
+            },
+            {
+                'col'       : "fail",
+                'zh_name'   : "檢測失敗感測器（list）"
+            },
+            {
+                'col'       : "id",
+                'zh_name'   : "檢測編號"
+            }
+        ]
+    }
+    resp = make_response(render_template('/app/open_data.html', api_path=api_path, info=info), 200)
+    return resp

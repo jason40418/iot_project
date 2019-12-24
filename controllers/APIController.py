@@ -20,6 +20,11 @@ def api_index():
 def sensor_data():
 
     result, data = SensorHelper.get_latest_data()
+    data.update({
+        'type'  : 'SensorLastestDataFetchSuccess',
+        'msg'   : '感應器最新資料取得成功',
+        'code'  : 200
+    })
 
     return jsonify(data), 200
 
