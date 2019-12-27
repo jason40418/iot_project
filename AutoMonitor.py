@@ -34,6 +34,24 @@ dht_result, dht_data = dht.get_data()
 sensor_data.update(dht_data)
 if not dht_result:  fail_list.append('AM2302')
 
+'''
+02. PMS5003
+'''
+from model.accessory.PMS import PMS
+pms_sensor = PMS()
+pms_result, pms_data = pms_sensor.get_data()
+sensor_data.update(pms_data)
+if not pms_result:  fail_list.append('PMS5003')
+
+'''
+03. MQ2 + MCP3008
+'''
+from model.accessory.MQ2 import MQ2
+mq_sensor = MQ2()
+mq_result, mq_data = mq_sensor.get_data()
+sensor_data.update(mq_data)
+if not mq_result:  fail_list.append('MQ2')
+
 # ==============================================================================
 # 將監測資料新增至資料庫
 # ==============================================================================

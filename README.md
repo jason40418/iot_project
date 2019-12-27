@@ -56,3 +56,13 @@ https://blog.gtwang.org/iot/raspberry-pi/raspberry-pi-samba-setup-tutorial/
 python FaceIdentify_Exit.py --detector model/face/face_detection_model --embedding-model model/face/openface_nn4.small2.v1.t7 --recognizer model/face/output/recognizer.pickle --le model/face/output/le.pickle
 
 # You need to customize your second camera mannually
+
+## MQ2
+https://tutorials-raspberrypi.com/configure-and-read-out-the-raspberry-pi-gas-sensor-mq-x/
+https://tutorials-raspberrypi.de/wp-content/uploads/2016/10/Raspberry-Pi-Gas-Sensor-MQ2-Steckplatine.png
+https://github.com/tutRPi/Raspberry-Pi-Gas-Sensor-MQ/issues/3
+
+
+https://forums.pimoroni.com/t/pms5003-how-to-use/8081/12
+https://github.com/pimoroni/pms5003-python
+https://www.raspberrypi.org/documentation/configuration/uart.md
