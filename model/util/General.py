@@ -263,7 +263,10 @@ def get_current_datetime(format=None):
 def round_dict_value(data, decimal=1):
     result = dict()
     for k, v in data.items():
-        result.update({k: round(float(v), decimal)})
+        if v is not None:
+            result.update({k: round(float(v), decimal)})
+        else:
+            result.update({k: None})
     return result
 
 

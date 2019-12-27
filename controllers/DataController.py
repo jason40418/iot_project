@@ -52,8 +52,8 @@ def realtime():
             'row' : his_chart_length,
             'unit' : item['unit'],
             'latest': {
-                'label' : his_chart['label'][0],
-                'value' : his_chart['mean'][0]
+                'label' : his_chart['label'][0] if len(his_chart['label']) != 0 else '',
+                'value' : his_chart['mean'][0] if len(his_chart['mean']) != 0 else ''
             }
         }
         sensor_data.append(result)
