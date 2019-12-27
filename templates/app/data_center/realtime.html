@@ -35,9 +35,9 @@
     <ul  class="nav nav-pills">
       {% for i in range(sensor_data | length) %}
       {% if i == 0 %}
-      <li class="active"><a href="#{{ sensor_data[i]['id'] }}_tabs" data-toggle="tab" class="tab_btn">{{ sensor_data[i]['name'] }}</a></li>
+      <li class="active"><a href="#{{ sensor_data[i]['id'] | replace('.','') | replace('+','') }}_tabs" data-toggle="tab" class="tab_btn">{{ sensor_data[i]['name'] }}</a></li>
       {% else %}
-      <li><a href="#{{ sensor_data[i]['id'] }}_tabs" data-toggle="tab" class="tab_btn">{{ sensor_data[i]['name'] }}</a>
+      <li><a href="#{{ sensor_data[i]['id'] | replace('.','') | replace('+','') }}_tabs" data-toggle="tab" class="tab_btn">{{ sensor_data[i]['name'] }}</a>
       {% endif %}
       {%  endfor  %}
     </ul>
@@ -45,31 +45,31 @@
     <div class="tab-content clearfix">
       {% for i in range(sensor_data | length) %}
       {% if i == 0 %}
-      <div id="{{ sensor_data[i]['id'] }}_tabs" class="row tab-pane active">
+      <div id="{{ sensor_data[i]['id'] | replace('.','') | replace('+','') }}_tabs" class="row tab-pane active">
       {% else %}
-      <div id="{{ sensor_data[i]['id'] }}_tabs" class="row tab-pane">
+      <div id="{{ sensor_data[i]['id'] | replace('.','') | replace('+','') }}_tabs" class="row tab-pane">
       {% endif %}
         <div class="col-sm-12">
           <div class="row">
             <div class="col-sm-4">
               <div class="curr_status">
-                <div id="{{ sensor_data[i]['id'] }}-status-icon" class="status-icon"></div>
+                <div id="{{ sensor_data[i]['id'] | replace('.','') | replace('+','') }}-status-icon" class="status-icon"></div>
                 <div class="status"><span id="{{ sensor_data[i]['id'] }}-status">N/A</span></div>
               </div>
             </div>
             <div class="status_info">
-              <div class="pull-right ease">目前數值：<span id="{{ sensor_data[i]['id'] }}-value" class="text">{{ sensor_data[i]['latest']['value'] }}</span>{{ sensor_data[i]['unit'] }} | </div>
-              <div class="pull-right ease">最後更新日期：<span id="{{ sensor_data[i]['id'] }}-datetime" class="text">{{ sensor_data[i]['latest']['label'] }}</span> | </div>
+              <div class="pull-right ease">目前數值：<span id="{{ sensor_data[i]['id'] | replace('.','') | replace('+','') }}-value" class="text">{{ sensor_data[i]['latest']['value'] }}</span>{{ sensor_data[i]['unit'] }} | </div>
+              <div class="pull-right ease">最後更新日期：<span id="{{ sensor_data[i]['id'] | replace('.','') | replace('+','') }}-datetime" class="text">{{ sensor_data[i]['latest']['label'] }}</span> | </div>
             </div>
           </div>
         </div>
         <div class="col-sm-8">
-          <canvas id="{{ sensor_data[i]['id'] }}_chart"></canvas>
+          <canvas id="var_{{ sensor_data[i]['id'] | replace('.','') | replace('+','') }}_chart"></canvas>
         </div>
         <div class="col-sm-4">
           <h3>Level List</h3>
           <hr/>
-          <table id="{{ sensor_data[i]['id'] }}_level_table" class="table table-striped">
+          <table id="{{ sensor_data[i]['id'] | replace('.','') | replace('+','') }}_level_table" class="table table-striped">
             <thead>
               <tr>
                 <th>狀態</th>
@@ -187,10 +187,10 @@
         var color = Chart.helpers.color;
 
         {% for item in sensor_data %}
-        let {{ item.id }}_label = JSON.parse("{{ item.label | safe }}".replace(/'/g, '"')).reverse();
-        let {{ item.id }}_value = JSON.parse("{{ item.value | safe }}".replace(/'/g, '"')).reverse();
-        let {{ item.id }}_data = {
-            labels: {{ item.id }}_label,
+        let var_{{ item.id | replace(".","") | replace("+","") }}_label = JSON.parse("{{ item.label | safe }}".replace(/'/g, '"')).reverse();
+        let var_{{ item.id | replace(".","") | replace("+","") }}_value = JSON.parse("{{ item.value | safe }}".replace(/'/g, '"')).reverse();
+        let var_{{ item.id | replace(".","") | replace("+","") }}_data = {
+            labels: var_{{ item.id | replace(".","") | replace("+","") }}_label,
             datasets: [{
               label: '{{ item.name }}',
               backgroundColor: color('{{ item.color }}').alpha(0.5).rgbString(),
@@ -198,19 +198,19 @@
               fill: false,
               lineTension: 0,
               borderDash: [8, 4],
-              data: {{ item.id }}_value
+              data: var_{{ item.id | replace(".","") | replace("+","") }}_value
             }]
           };
-        let {{ item.id }}_config = get_chart_config('line', '溫濕度感應器', {{ item.id }}_data);
+        let var_{{ item.id | replace(".","") | replace("+","") }}_config = get_chart_config('line', '溫濕度感應器', var_{{ item.id | replace(".","") | replace("+","") }}_data);
         {% endfor %}
 
 
         window.onload = function () {
           {% for item in sensor_data %}
-          let {{ item.id }}_ctx = document.getElementById('{{ item.id }}_chart').getContext('2d');
-          window.{{ item.id }}_ctx = {{ item.id }}_ctx;
-          window.{{ item.id }}_config = {{ item.id }}_config;
-          window.{{ item.id }}_chart = new Chart({{ item.id }}_ctx, {{ item.id }}_config);
+          let var_{{ item.id | replace(".","") | replace("+","") }}_ctx = document.getElementById('var_{{ item.id | replace(".","") | replace("+","") }}_chart').getContext('2d');
+          window.var_{{ item.id | replace(".","") | replace("+","") }}_ctx = var_{{ item.id | replace(".","") | replace("+","") }}_ctx;
+          window.var_{{ item.id | replace(".","") | replace("+","") }}_config = var_{{ item.id | replace(".","") | replace("+","") }}_config;
+          window.var_{{ item.id | replace(".","") | replace("+","") }}_chart = new Chart(var_{{ item.id | replace(".","") | replace("+","") }}_ctx, var_{{ item.id | replace(".","") | replace("+","") }}_config);
           {% endfor %}
         };
 
@@ -228,9 +228,11 @@
         var update_chart_data = (chart, idx, label, data) => {
           let obj = window[chart];
           obj.data.labels.push(label);
-          obj.data.labels.splice(0, 1);
-          obj.data.datasets[idx].data.splice(0, 1);
           obj.data.datasets[idx].data.push(data);
+          if (obj.data.labels.length > 60) {
+            obj.data.labels.splice(0, 1);
+            obj.data.datasets[idx].data.splice(0, 1);
+          }
           obj.update();
         };
 
@@ -264,12 +266,12 @@
                 });
                 await sleep(1000);
                 // 如果資料存在則要更新
-                update_chart_data(key + "_chart", 0, payload.datetime, value);
-                $('#' + key + '-datetime').html(payload.datetime);
-                $('#' + key + '-value').html(value.toFixed(1));
-                blink_text('#' + key + '-value');
+                update_chart_data("var_" + key.replace('.', '').replace('+', '') + "_chart", 0, payload.datetime, value);
+                $('#' + key.replace('.', '').replace('+', '') + '-datetime').html(payload.datetime);
+                $('#' + key.replace('.', '').replace('+', '') + '-value').html(value.toFixed(1));
+                blink_text('#' + key.replace('.', '').replace('+', '') + '-value');
                 // 更新狀態
-                update_status(key, value);
+                update_status(key.replace('.', '').replace('+', ''), value);
               }
             });
           }
@@ -319,9 +321,9 @@
 
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           let tag = $(this).attr("href").split('_')[0].split('#')[1];
-            window[tag + '_chart'].destroy();
-            window[tag + '_chart'] = new Chart(window[tag + '_ctx'], window[tag + '_config']);
-            window[tag + '_chart'].render({
+            window['var_' + tag + '_chart'].destroy();
+            window['var_' + tag + '_chart'] = new Chart(window['var_' + tag + '_ctx'], window['var_' + tag + '_config']);
+            window['var_' + tag + '_chart'].render({
                 duration: 800,
                 lazy: false,
                 easing: 'easeInExpo'

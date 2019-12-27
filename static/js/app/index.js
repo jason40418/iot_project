@@ -61,14 +61,14 @@
           }
           else {
             // 如果資料存在則要更新
-            $('#' + key + '-datetime').html(payload['datetime']);
+            $('#' + key.replace('.', '').replace('+', '') + '-datetime').html(payload['datetime']);
             let original = $('#' + key + '-value').html();
-            $('#' + key + '-value').html(value.toFixed(1));
+            $('#' + key.replace('.', '').replace('+', '') + '-value').html(value.toFixed(1));
             let change_result = calc_value_change(original, value)
-            $('#' + key + '-value-change').html(change_result);
-            blink_text('#' + key + '-value');
+            $('#' + key.replace('.', '').replace('+', '') + '-value-change').html(change_result);
+            blink_text('#' + key.replace('.', '').replace('+', '') + '-value');
             // 更新狀態
-            update_status(key, value);
+            update_status(key.replace('.', '').replace('+', ''), value);
           }
         });
       }
