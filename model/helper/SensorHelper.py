@@ -1,33 +1,12 @@
 import datetime
 import pandas as pd
+from model.helper.SensorDataHelper import SensorDataHelper
 from model.util.DBMgr import DBMgr
 
 class SensorHelper():
     dbmgr = DBMgr()
-    SENSOR_LIST = [
-        {
-            'id'      : "temperature",
-            'icon'    : "fa-thermometer-half",
-            'name'    : "溫度",
-            'en_name' : "Temperature",
-            'unit'    : "°C",
-            'color'   : "rgb(54, 162, 235)",
-            'default' : True,
-            'min'     : 22,
-            'max'     : 25
-        },
-        {
-            'id'      : "humidity",
-            'icon'    : "fa-tint",
-            'name'    : "濕度",
-            'en_name' : "Humidity",
-            'unit'    : "%",
-            'color'   : "rgb(102, 153, 153)",
-            'default' : True,
-            'min'     : 40,
-            'max'     : 50
-        },
-    ]
+    SENSOR_LIST = SensorDataHelper.get_sensor_from_db()
+
     # TODO: 若資料庫出錯是否要印出或做其他處置
     @staticmethod
     def get_new_record_id(promotor='system'):
@@ -91,7 +70,9 @@ class SensorHelper():
                 if status:  break
 
             for datum in data:
-                data_dict.update({datum['item']: round(float(datum['value']), 1)})
+                data_dict.update({
+                    datum['item']: None if datum['value'] is None else round(float(datum['value']), 1)
+                })
 
             # 組回原本格式
             result = {
