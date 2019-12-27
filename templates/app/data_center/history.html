@@ -58,7 +58,10 @@
               <div class="col-xs-8">
                 <div class="data">
                   <p class="card-category">{{ statist_header[i] }}</p>
-                  <p class="card-title"><span class="sensor-avg-value">{{ statist_data[i]['avg'] }}</span>{{ unit | safe }}</p>
+                  <p class="card-title">
+                    <span class="sensor-avg-value" style="font-size: xx-large;">{{ statist_data[i]['avg'] }}</span>
+                    <span style="font-size: small;">{{ unit | safe }}</span>
+                  </p>
                   <p></p>
                 </div>
               </div>
