@@ -97,6 +97,22 @@ def member_edit(payload, decode_result, data):
         result.update({'datetime' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'key_id': reqest_data['id']})
         return jsonify(result), code
 
+#
+@api_blueprint.route('/member/pref_avg', methods=['GET'])
+def member_average():
+    data, people, num_people = MemberPreferenceHelper.calc_avg_pref_value()
+
+    return jsonify({
+        'datetime'  : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'status'    : True,
+        'type'      : 'FetchAveragePreferenceSucess',
+        'msg'       : '取得平均偏好設定成功',
+        'code'      : 200,
+        'people'    : people,
+        'num_people': num_people,
+        'data'      : data
+    }), 200
+
 @api_blueprint.route('/member/login', methods=['POST'])
 @private_key_require_page('login')
 def member_login(decode_result, data):
