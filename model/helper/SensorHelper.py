@@ -77,7 +77,7 @@ class SensorHelper():
             # 組回原本格式
             result = {
                 'id': record_id,
-                'datetime':  record['datetime'],
+                'datetime':  record['datetime'].strftime('%Y-%m-%d %H:%M:%S'),
                 'fail' : SensorHelper.dbmgr.string_to_list(record['fail_list']),
                 'data': data_dict
             }
