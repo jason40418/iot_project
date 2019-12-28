@@ -82,3 +82,58 @@ def logout():
     resp.set_cookie(key='token', value='', expires=0)
     resp.set_cookie(key='pref', value='', expires=0)
     return resp
+
+@member_blueprint.route("/average", methods=['GET'])
+def average():
+    api_path = '/api/member/pref_avg'
+    info = {
+        'title'             : '偏好設定平均值',
+        'url'               : api_path,
+        'method'            : 'GET',
+        'frequence'         : '即時（realtime）',
+        'description'       : '用於目前在環境中人員偏好設定平均值',
+        'col': [
+            {
+                'col'       : "type",
+                'zh_name'   : "資料獲取訊息狀態"
+            },
+            {
+                'col'       : "msg",
+                'zh_name'   : "資料獲取訊息狀態（中文）"
+            },
+            {
+                'col'       : "status",
+                'zh_name'   : "資料獲取之HTTP狀態碼"
+            },
+            {
+                'col'       : "datetime",
+                'zh_name'   : "資料獲取時間"
+            },
+            {
+                'col'       : "num_people",
+                'zh_name'   : "目前環境人數"
+            },
+            {
+                'col'       : "people",
+                'zh_name'   : "環境人員（list）"
+            },
+            {
+                'col'       : "status",
+                'zh_name'   : "資料取得狀態"
+            },
+            {
+                'col'       : "data",
+                'zh_name'   : "平均偏好設定資料（dict），key為項目"
+            },
+            {
+                'col'       : "data > min",
+                'zh_name'   : "該項目最小值"
+            },
+            {
+                'col'       : "data > max",
+                'zh_name'   : "該項目最大值"
+            }
+        ]
+    }
+    resp = make_response(render_template('/app/open_data.html', api_path=api_path, info=info), 200)
+    return resp
