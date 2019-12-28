@@ -54,7 +54,7 @@
             <div class="col-sm-4">
               <div class="curr_status">
                 <div id="{{ sensor_data[i]['id'] | replace('.','') | replace('+','') }}-status-icon" class="status-icon"></div>
-                <div class="status"><span id="{{ sensor_data[i]['id'] }}-status">N/A</span></div>
+                <div class="status"><span id="{{ sensor_data[i]['id'] | replace('.','') | replace('+','') }}-status">N/A</span></div>
               </div>
             </div>
             <div class="status_info">

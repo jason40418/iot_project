@@ -84,5 +84,329 @@
         "status": 4
       }
     ]
+  },
+  "PM100": {
+    "name" : "PM10.0",
+    "unit" : "µg/m³",
+    "limit": [20, 30, 50, 70],
+    "level": [
+      {
+        "title": "良好",
+        "status": 0
+      },
+      {
+        "title": "普通",
+        "status": 1
+      },
+      {
+        "title": "敏感",
+        "status": 2
+      },
+      {
+        "title": "不健康",
+        "status": 3
+      },
+      {
+        "title": "危害",
+        "status": 4
+      }
+    ]
+  },
+  "PM25": {
+    "name" : "PM2.5",
+    "unit" : "µg/m³",
+    "limit": [10, 15, 25, 35],
+    "level": [
+      {
+        "title": "良好",
+        "status": 0
+      },
+      {
+        "title": "普通",
+        "status": 1
+      },
+      {
+        "title": "敏感",
+        "status": 2
+      },
+      {
+        "title": "不健康",
+        "status": 3
+      },
+      {
+        "title": "危害",
+        "status": 4
+      }
+    ]
+  },
+  "PM10": {
+    "name" : "PM1.0",
+    "unit" : "µg/m³",
+    "limit": [5, 8, 13, 18],
+    "level": [
+      {
+        "title": "良好",
+        "status": 0
+      },
+      {
+        "title": "普通",
+        "status": 1
+      },
+      {
+        "title": "敏感",
+        "status": 2
+      },
+      {
+        "title": "不健康",
+        "status": 3
+      },
+      {
+        "title": "危害",
+        "status": 4
+      }
+    ]
+  },
+  "LPG": {
+    "name" : "液化石油氣",
+    "unit" : "ppb",
+    "limit": [10, 50, 100, 200],
+    "level": [
+      {
+        "title": "正常",
+        "status": 0
+      },
+      {
+        "title": "偏高",
+        "status": 1
+      },
+      {
+        "title": "異常",
+        "status": 2
+      },
+      {
+        "title": "洩漏",
+        "status": 3
+      },
+      {
+        "title": "危險",
+        "status": 4
+      }
+    ]
+  },
+  "CO": {
+    "name" : "一氧化碳",
+    "unit" : "ppb",
+    "limit": [70000, 150000, 400000, 1000000],
+    "level": [
+      {
+        "title": "正常",
+        "status": 0
+      },
+      {
+        "title": "異常",
+        "status": 1
+      },
+      {
+        "title": "危害",
+        "status": 2
+      },
+      {
+        "title": "高致命",
+        "status": 3
+      },
+      {
+        "title": "致死",
+        "status": 4
+      }
+    ]
+  },
+  "Smoke": {
+    "name" : "煙霧",
+    "unit" : "ppb",
+    "limit": [100, 150, 200, 300],
+    "level": [
+      {
+        "title": "正常",
+        "status": 0
+      },
+      {
+        "title": "偏高",
+        "status": 1
+      },
+      {
+        "title": "異常",
+        "status": 2
+      },
+      {
+        "title": "警告",
+        "status": 3
+      },
+      {
+        "title": "危險",
+        "status": 4
+      }
+    ]
+  },
+  "03um": {
+    "name" : "0.3um+",
+    "unit" : "µg",
+    "limit": [1000, 1400, 1800, 2000],
+    "level": [
+      {
+        "title": "正常",
+        "status": 0
+      },
+      {
+        "title": "偏高",
+        "status": 1
+      },
+      {
+        "title": "異常",
+        "status": 2
+      },
+      {
+        "title": "警告",
+        "status": 3
+      },
+      {
+        "title": "危險",
+        "status": 4
+      }
+    ]
+  },
+  "05um": {
+    "name" : "0.5um+",
+    "unit" : "µg",
+    "limit": [600, 1200, 1800, 2400],
+    "level": [
+      {
+        "title": "正常",
+        "status": 0
+      },
+      {
+        "title": "偏高",
+        "status": 1
+      },
+      {
+        "title": "異常",
+        "status": 2
+      },
+      {
+        "title": "警告",
+        "status": 3
+      },
+      {
+        "title": "危險",
+        "status": 4
+      }
+    ]
+  },
+  "10um": {
+    "name" : "1.0um+",
+    "unit" : "µg",
+    "limit": [120, 240, 360, 480],
+    "level": [
+      {
+        "title": "正常",
+        "status": 0
+      },
+      {
+        "title": "偏高",
+        "status": 1
+      },
+      {
+        "title": "異常",
+        "status": 2
+      },
+      {
+        "title": "警告",
+        "status": 3
+      },
+      {
+        "title": "危險",
+        "status": 4
+      }
+    ]
+  },
+  "25um": {
+    "name" : "2.5um+",
+    "unit" : "µg",
+    "limit": [20, 40, 60, 80],
+    "level": [
+      {
+        "title": "正常",
+        "status": 0
+      },
+      {
+        "title": "偏高",
+        "status": 1
+      },
+      {
+        "title": "異常",
+        "status": 2
+      },
+      {
+        "title": "警告",
+        "status": 3
+      },
+      {
+        "title": "危險",
+        "status": 4
+      }
+    ]
+  },
+  "50um": {
+    "name" : "5.0um+",
+    "unit" : "µg",
+    "limit": [10, 20, 30, 40],
+    "level": [
+      {
+        "title": "正常",
+        "status": 0
+      },
+      {
+        "title": "偏高",
+        "status": 1
+      },
+      {
+        "title": "異常",
+        "status": 2
+      },
+      {
+        "title": "警告",
+        "status": 3
+      },
+      {
+        "title": "危險",
+        "status": 4
+      }
+    ]
+  },
+  "100um": {
+    "name" : "10.0um+",
+    "unit" : "µg",
+    "limit": [10, 20, 30, 40],
+    "level": [
+      {
+        "title": "正常",
+        "status": 0
+      },
+      {
+        "title": "偏高",
+        "status": 1
+      },
+      {
+        "title": "異常",
+        "status": 2
+      },
+      {
+        "title": "警告",
+        "status": 3
+      },
+      {
+        "title": "危險",
+        "status": 4
+      }
+    ]
   }
 }

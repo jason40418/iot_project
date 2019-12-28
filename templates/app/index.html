@@ -22,18 +22,18 @@
               <span id="{{ i.id  | replace('.','') | replace('+','') }}-datetime">{% if i.id in data.data and 'datetime' in data%}{{ data['datetime'] }}{% else %}----/--/-- --:--{% endif %}</span>
             </div>
             <div class="icon">
-              <i class="fa {{ i.icon }}" aria-hidden="true"></i>
+              <i class="{{ i.icon }}" aria-hidden="true"></i>
             </div>
             <div class="info">
               <div class="value">
                 <span id="{{ i.id  | replace('.','') | replace('+','') }}-value" class="number">{% if i.id in data.data and data['data'][i.id] is not none %}{{ data['data'][i.id] }}{% else %}--.-{% endif %}</span>
                 <span style="font-size: small;">{{ i.unit }}</span>
-                <span class="value-change">(<span id="{{ i.id }}-value-change" class="number">--.-</span>)</span>
+                <span class="value-change">(<span id="{{ i.id  | replace('.','') | replace('+','') }}-value-change" class="number">--.-</span>)</span>
               </div>
               <div class="hr"></div>
               <div class="title">{{ i.name }}（{{ i.en_name }}）</div>
               <div id="{{ i.id  | replace('.','') | replace('+','') }}-status-icon" class="status-icon"></div>
-              <div class="status"><span id="{{ i.id }}-status">N/A</span></div>
+              <div class="status"><span id="{{ i.id  | replace('.','') | replace('+','') }}-status">N/A</span></div>
               <div class="clear"></div>
             </div>
           </div>

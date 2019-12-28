@@ -83,6 +83,9 @@ body {
       font-size: 80px;
       padding-top: 15px;
     }
+    .card > .icon > .glyphicon {
+      font-size: 80px;
+    }
 
   .card > .info {
     font-weight: 700;

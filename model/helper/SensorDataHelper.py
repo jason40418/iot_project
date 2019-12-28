@@ -12,6 +12,4 @@ class SensorDataHelper():
             status, row, record = SensorDataHelper.dbmgr.query(sql, args)
             if status:  break
 
-        print(record)
-
         return record

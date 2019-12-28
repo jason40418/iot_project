@@ -26,7 +26,7 @@
             </li>
             {% for i in pref %}
             <li class="list-group-item text-right">
-              <span class="pull-left"><i class="fa {{ item_df.loc[i['item']]['icon'] }}"></i><strong> {{ item_df.loc[i['item']]['name'] }}</strong></span>
+              <span class="pull-left"><i class="{{ item_df.loc[i['item']]['icon'] }}"></i><strong> {{ item_df.loc[i['item']]['name'] }}</strong></span>
               <span>{{ i['min'] }} ~ {{ i['max'] }}{{ item_df.loc[i['item']]['unit'] }}</span>
             </li>
             {% endfor %}
