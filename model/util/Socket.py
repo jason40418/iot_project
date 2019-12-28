@@ -3,7 +3,7 @@ from model.util.Config import Config
 
 class Socket():
 
-    def __init__(self, namespaces=['/', '/pi'], transports='websocket', ip=None):
+    def __init__(self, namespaces=['/', '/pi', '/system'], transports='websocket', ip=None):
         self.__namespace = namespaces
         self.__transports = transports
         self.__config = Config()
