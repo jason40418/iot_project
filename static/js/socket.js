@@ -67,7 +67,7 @@
           let range = '(' + obj[key]['min'] + '~' + obj[key]['max'] + ')';
 
           if (value < obj[key]['min'])        toastr.error('[' + title + ']', '" ' + value + ' "低於範圍數值' + range, () => {});
-          else if (value < obj[key]['max'])   toastr.error('[' + title + ']', '" ' + value + ' "超過範圍數值' + range, () => {});
+          else if (value > obj[key]['max'])   toastr.error('[' + title + ']', '" ' + value + ' "超過範圍數值' + range, () => {});
           else                                console.log('[' + title + ']', '" ' + value + ' "位於正常範圍' + range);
         }
         // 無偏好設定

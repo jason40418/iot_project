@@ -22,7 +22,7 @@ class AQI():
                 idx = 0
 
                 for i in limit:
-                    if data[key] < i:
+                    if float(data[key]) < float(i):
                         break
                     else:
                         idx += 1
