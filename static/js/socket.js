@@ -56,36 +56,38 @@
     if (api_result) obj = api_response['data'];
 
     $.each(payload['data'], function (key, value) {
-      if (value === undefined || value === null) {
-      }
-      else {
-        let clean_key = key.replace('.', '').replace('+', '');
-        let title = sensor[clean_key]['name'] + ' ' + clean_key;
-
-        // 有偏好設定
-        if (key in obj) {
-          let range = '(' + obj[key]['min'] + '~' + obj[key]['max'] + ')';
-
-          if (value < obj[key]['min'])        toastr.error('[' + title + ']', '" ' + value + ' "低於範圍數值' + range, () => {});
-          else if (value > obj[key]['max'])   toastr.error('[' + title + ']', '" ' + value + ' "超過範圍數值' + range, () => {});
-          else                                console.log('[' + title + ']', '" ' + value + ' "位於正常範圍' + range);
+      sleep(1000 * Math.floor((Math.random() * 5) + 1)).then(() => {
+        if (value === undefined || value === null) {
         }
-        // 無偏好設定
         else {
-          let [status, content, style] = get_sensor_status(clean_key, value);
+          let clean_key = key.replace('.', '').replace('+', '');
+          let title = sensor[clean_key]['name'] + ' ' + clean_key;
 
-          if (status) {
-            let key = STATUS.indexOf(style);
-            console.log(key);
-            if (key > 2)        toastr.error('[' + title + ']', '目前數值" ' + value + ' "' + content + '，請遠離！', () => {});
-            else if (key > 0)   toastr.warning('[' + title + ']', '目前數值" ' + value + ' "' + content + '，請多加留意！', () => {});
-            else if (key == 0)  console.log('[' + title + ']', '目前數值" ' + value + ' "，位於正常範圍！');
+          // 有偏好設定
+          if (key in obj) {
+            let range = '(' + obj[key]['min'] + '~' + obj[key]['max'] + ')';
+
+            if (value < obj[key]['min'])        toastr.error('[' + title + ']', '" ' + value + ' "低於範圍數值' + range, () => {});
+            else if (value > obj[key]['max'])   toastr.error('[' + title + ']', '" ' + value + ' "超過範圍數值' + range, () => {});
+            else                                console.log('[' + title + ']', '" ' + value + ' "位於正常範圍' + range);
           }
+          // 無偏好設定
           else {
+            let [status, content, style] = get_sensor_status(clean_key, value);
 
+            if (status) {
+              let key = STATUS.indexOf(style);
+              console.log(key);
+              if (key > 2)        toastr.error('[' + title + ']', '目前數值" ' + value + ' "' + content + '，請遠離！', () => {});
+              else if (key > 0)   toastr.warning('[' + title + ']', '目前數值" ' + value + ' "' + content + '，請多加留意！', () => {});
+              else if (key == 0)  console.log('[' + title + ']', '目前數值" ' + value + ' "，位於正常範圍！');
+            }
+            else {
+
+            }
           }
         }
-      }
+      });
     });
   })
 })()
