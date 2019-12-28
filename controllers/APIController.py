@@ -1,6 +1,7 @@
 import json, glob, os
 from flask import Blueprint, jsonify, request, make_response
 from datetime import datetime
+from flask_socketio import send, emit
 from controllers import AccessoryController
 from model.entity.Member import Member
 from model.util.General import private_key_require_page, convert_byte_to_dict, generate_token, token_require_page
@@ -232,4 +233,84 @@ def curr_face_in_room():
         'code' : 200,
         'row'  : row,
         'data' : data
+    }), 200
+
+@api_blueprint.route('/virtual/entry', methods=['POST'])
+def virtual_entry():
+    # 取回Request資料
+    reqest_data = request.json
+
+    payload = {
+        'datetime' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'type' : 'FaceRecognize',
+        'data' : {
+            'category' : 'entry',
+            'people' : [reqest_data['payload']['entry']]
+        }
+    }
+    emit('face_identify_pub_system', payload, namespace='/system', json=True, broadcast=True)
+
+    return jsonify({
+        'datetime'   : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'status' : True,
+        'msg'  : '模擬人員進入成功',
+        'type' : 'VirtualFaceInRoomSuccess',
+    }), 200
+
+@api_blueprint.route('/virtual/exit', methods=['POST'])
+def virtual_exit():
+    # 取回Request資料
+    reqest_data = request.json
+
+    payload = {
+        'datetime' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'type' : 'FaceRecognize',
+        'data' : {
+            'category' : 'exit',
+            'people' : [reqest_data['payload']['exit']]
+        }
+    }
+    emit('face_identify_pub_system', payload, namespace='/system', json=True, broadcast=True)
+
+    return jsonify({
+        'datetime'   : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'status' : True,
+        'msg'  : '模擬人員離開成功',
+        'type' : 'VirtualFaceOutRoomSuccess',
+    }), 200
+
+@api_blueprint.route('/virtual/data', methods=['POST'])
+def virtual_data():
+    # 取回Request資料
+    reqest_data = request.json
+
+    data = {
+        'id' : 'virtual-label',
+        'datetime' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'fail' : [],
+        'data' : {
+          'humidity'    : reqest_data['payload']['humidity'],
+          'temperature' : reqest_data['payload']['temperature'],
+          'PM10.0'      : reqest_data['payload']['PM100'],
+          'PM2.5'       : reqest_data['payload']['PM25'],
+          'PM1.0'       : reqest_data['payload']['PM10'],
+          'LPG'         : reqest_data['payload']['LPG'],
+          'CO'          : reqest_data['payload']['CO'],
+          'Smoke'       : reqest_data['payload']['Smoke'],
+          '0.3um+'      : reqest_data['payload']['03um'],
+          '0.5um+'      : reqest_data['payload']['05um'],
+          '1.0um+'      : reqest_data['payload']['10um'],
+          '2.5um+'      : reqest_data['payload']['25um'],
+          '5.0um+'      : reqest_data['payload']['50um'],
+          '10.0um+'     : reqest_data['payload']['100um']
+        }
+    }
+    emit('sensor_data_pub_client', data, namespace='/client', json=True, broadcast=True)
+    emit('sensor_data_pub_system', data, namespace='/system', json=True, broadcast=True)
+
+    return jsonify({
+        'datetime'   : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'status' : True,
+        'msg'  : '模擬感測器資料成功',
+        'type' : 'VirtualSensorDataSuccess',
     }), 200

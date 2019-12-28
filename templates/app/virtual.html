@@ -1,0 +1,189 @@
+{%  extends  "app/base.html"  %}
+{%  block  title  %}監測資料模擬{%  endblock  %}
+{%  block  description  %}允許使用者進行登入{%  endblock  %}
+
+  {%  block  custom_css  %}
+  {%  endblock  %}
+
+    {%  block  content  %}
+    <div class="jumbotron">
+      <h1>監測資料模擬</h1>
+      <p class="lead">此處可模擬監測資料，但並不會存入資料庫當中</p>
+    </div>
+
+    <form>
+      <div class="form-group">
+        <label for="entry">進入環境</label>
+        <input id="entry" class="form-control input-lg" type="text" placeholder="請輸入進入者帳號" value="tester-IN">
+      </div>
+      <button id="entry-btn" type="button" class="btn btn-primary">進入</button>
+    </form>
+
+    <hr/>
+
+    <form>
+      <div class="form-group">
+        <label for="exit">離開環境</label>
+        <input id="exit" class="form-control input-lg" type="text" placeholder="請輸入離開者帳號" value="tester-OUT">
+      </div>
+      <button id="exit-btn" type="button" class="btn btn-primary">離開</button>
+    </form>
+
+    <hr/>
+
+    <form>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="temperature">溫度</label>
+            <input id="temperature" class="form-control input-lg" type="number" placeholder="請輸入溫度" min="0" step="0.01" value="25.2">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="humidity">濕度</label>
+            <input id="humidity" class="form-control input-lg" type="number" placeholder="請輸入溫度" min="0" step="0.01" value="80">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="pm10">PM1.0</label>
+            <input id="pm10" class="form-control input-lg" type="number" placeholder="請輸入PM1.0數值" min="0" step="0.01" value="20">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="pm25">PM2.5</label>
+            <input id="pm25" class="form-control input-lg" type="number" placeholder="請輸入PM2.5數值" min="0" step="0.01" value="40">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="pm100">PM10.0</label>
+            <input id="pm100" class="form-control input-lg" type="number" placeholder="請輸入PM10.0數值" min="0" step="0.01" value="80">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="03um">0.3um</label>
+            <input id="03um" class="form-control input-lg" type="number" placeholder="請輸入0.3um數值" min="0" step="0.01" value="1500">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="05um">0.5um</label>
+            <input id="05um" class="form-control input-lg" type="number" placeholder="請輸入0.5um數值" min="0" step="0.01" value="1200">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="10um">1.0um</label>
+            <input id="10um" class="form-control input-lg" type="number" placeholder="請輸入1.0um數值" min="0" step="0.01" value="360">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="25um">2.5um</label>
+            <input id="25um" class="form-control input-lg" type="number" placeholder="請輸入2.5um數值" min="0" step="0.01" value="80">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="50um">5.0um</label>
+            <input id="50um" class="form-control input-lg" type="number" placeholder="請輸入5.0um數值" min="0" step="0.01" value="50">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="100um">10.0um</label>
+            <input id="100um" class="form-control input-lg" type="number" placeholder="請輸入10.0um數值" min="0" step="0.01" value="50">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="co">CO</label>
+            <input id="co" class="form-control input-lg" type="number" placeholder="請輸入CO數值" min="0" step="0.01" value="1200000">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="lpg">LPG</label>
+            <input id="lpg" class="form-control input-lg" type="number" placeholder="請輸入LPG數值" min="0" step="0.01" value="300">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="smoke">Smoke</label>
+            <input id="smoke" class="form-control input-lg" type="number" placeholder="請輸入Smoke數值" min="0" step="0.01" value="400">
+          </div>
+        </div>
+      </div>
+      <button id="data-btn" type="button" class="btn btn-primary">模擬</button>
+    </form>
+
+    <hr/>
+    {%  endblock  %}
+
+    {% block last_content %}
+    {% endblock %}
+
+  {%  block  custom_js  %}
+  <script>
+    (() => {
+      var submit_action = (api) => {
+        let data = get_data();
+        let request = {
+          'payload': data,
+          'datetime': current_time()
+        }
+
+        api_request('POST', api, request, {
+          '2XX': {
+            完成: () => {
+            }
+          },
+          '4XX': {
+            確認: () => {
+            }
+          },
+          '5XX': {
+            確認: () => {
+            }
+          }
+        }, [false, false]);
+      }
+
+      // TODO: 是否要驗證資料
+      var get_data = () => {
+        let entry = document.getElementById('entry').value;
+        let exit = document.getElementById('exit').value;
+
+        let data = {
+          'entry'       : document.getElementById('entry').value,
+          'exit'        : document.getElementById('exit').value,
+          'humidity'    : document.getElementById('humidity').value,
+          'temperature' : document.getElementById('temperature').value,
+          'PM100'       : document.getElementById('pm100').value,
+          'PM25'        : document.getElementById('pm25').value,
+          'PM10'        : document.getElementById('pm10').value,
+          'LPG'         : document.getElementById('lpg').value,
+          'CO'          : document.getElementById('co').value,
+          'Smoke'       : document.getElementById('smoke').value,
+          '03um'        : document.getElementById('03um').value,
+          '05um'        : document.getElementById('05um').value,
+          '10um'        : document.getElementById('10um').value,
+          '25um'        : document.getElementById('25um').value,
+          '50um'        : document.getElementById('50um').value,
+          '100um'       : document.getElementById('100um').value
+        }
+        return data;
+      }
+
+      document.addEventListener("DOMContentLoaded", function (event) {
+        $('#entry-btn').click(function () { submit_action('/api/virtual/entry')});
+        $('#exit-btn').click(function () { submit_action('/api/virtual/exit')});
+        $('#data-btn').click(function () { submit_action('/api/virtual/data')});
+      });
+    })()
+  </script>
+  {%  endblock  %}

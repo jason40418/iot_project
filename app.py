@@ -48,6 +48,12 @@ def index():
     resp = make_response(render_template('app/index.html', SENSOR_DATA = SENSOR_DATA_LIST, data=data))
     return resp
 
+@app.route('/virtual', methods=['GET'])
+def virtual():
+    result, data = SensorHelper.get_latest_data()
+    resp = make_response(render_template('app/virtual.html'))
+    return resp
+
 @app.route("/terms", methods=['GET'])
 def term():
     resp = make_response(render_template('terms/latest.md'))
