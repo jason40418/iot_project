@@ -66,3 +66,5 @@ https://github.com/tutRPi/Raspberry-Pi-Gas-Sensor-MQ/issues/3
 https://forums.pimoroni.com/t/pms5003-how-to-use/8081/12
 https://github.com/pimoroni/pms5003-python
 https://www.raspberrypi.org/documentation/configuration/uart.md
+
+https://tutorials-raspberrypi.com/raspberry-pi-servo-motor-control/

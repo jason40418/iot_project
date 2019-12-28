@@ -47,7 +47,7 @@ def main():
          'accessory': 'buzzer',
          'status'   : buzzer_status,
          'code'     : 200,
-         'type'     : 'buzzerSensorCloseSuccess',
+         'type'     : 'BuzzerCloseSuccess',
          'msg'      : '蜂鳴器已經開啟！'
       }), 200
    else:
@@ -57,7 +57,7 @@ def main():
          'accessory'  : 'buzzer',
          'status'     : buzzer_status,
          'error_code' : 400,
-         'error_type' : 'buzzerSensorReopen',
+         'error_type' : 'BuzzerReopen',
          'error_msg'  : '請勿重複開啟蜂鳴器！'
       }), 400
 
@@ -76,10 +76,10 @@ def off_led():
          'code'     : 200,
          'accessory': 'buzzer',
          'status'   : buzzer_status,
-         'type'     : 'buzzerSensorCloseSuccess',
+         'type'     : 'BuzzerCloseSuccess',
          'msg'      : '蜂鳴器已經關閉！'
       }
-      socketio.emit('Buzzer_off_publish_server', data, json=True, namespace='/pi', broadcast=True)
+      socketio.emit('buzzer_off_publish_server', data, json=True, namespace='/pi', broadcast=True)
       return jsonify(data), 200
    else:
       return jsonify({
@@ -88,7 +88,7 @@ def off_led():
          'accessory' : 'buzzer',
          'status'    : buzzer_status,
          'error_code': 400,
-         'error_type': 'buzzerSensorUnopen',
+         'error_type': 'BuzzerUnopen',
          'error_msg' : '請勿在未開啟狀態關閉蜂鳴器！！'
       }), 400
 

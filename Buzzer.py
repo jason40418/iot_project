@@ -17,9 +17,10 @@ def beep_action(sec, sleep_sec):
 
 # 取得設定檔案
 config = Config()
-PIN_NUM = 2
+PIN_NUM = int(config.getValue('buzzer', 'pin'))
+PIN_MODE = config.getValue('buzzer', 'mode')
 
-# 初始化呼吸燈速度
+# 初始化蜂鳴器速度
 aqi = AQI()
 METRIX = ['CO', 'LPG', 'Smoke']
 score, total = aqi.get_latest_value(METRIX)
@@ -35,14 +36,14 @@ if connection:
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(PIN_NUM, GPIO.OUT)
 
-    @sio.on('Buzzer_off_publish_server', namespace='/pi')
+    @sio.on('buzzer_off_publish_server', namespace='/pi')
     @sio.on('server_clean_pub', namespace='/pi')
     def on_message(data):
         print("[@Buzzer]TEST")
         global status
         status = False
 
-    @sio.on('Buzzer_status_check_pub_system', namespace='/pi')
+    @sio.on('buzzer_status_check_pub_system', namespace='/pi')
     def check(data):
         print('[@Buzzer] Buzzer Check...')
         sio.emit('buzzer_status_pub_pi', {'status': True, 'method': '被動'}, namespace='/pi')
@@ -61,8 +62,8 @@ if connection:
 
     # Change duty cycle for varying the brightness of buzzer.
     while status:
-        beep_action(0.01, SLEEP)
         sio.emit('buzzer_status_pub_pi', {'status': True}, namespace='/pi')
+        beep_action(0.01, SLEEP)
 
     try:
         sio.call(event='buzzer_status_pub_pi', data={'status': False}, namespace='/pi', timeout=30)

@@ -2,7 +2,7 @@ import datetime, json
 import pandas as pd
 from flask import Blueprint, jsonify
 from flask import request, make_response, render_template, abort
-from controllers import LEDController, AvatarController, InfraredController, BuzzerController
+from controllers import LEDController, AvatarController, InfraredController, BuzzerController, MotorController
 from model.util.General import public_key_require_page, token_no_require_page, token_require_page, get_datetime_label, get_current_datetime
 
 from __main__ import app
@@ -14,6 +14,7 @@ def get_curr_accessory_status():
     LEDController.check_led_status()
     BuzzerController.check_buzzer_status()
     InfraredController.check_infrared_status()
+    MotorController.check_motor_status()
     data = {
         'msg': '取得所有可控制元件成功！',
         'type' : 'FetchAccessoryStatusSuccess',
@@ -22,6 +23,7 @@ def get_curr_accessory_status():
         'model_train' : AvatarController.avatar_model_during_train,
         'infrared_sensor' : InfraredController.infrared_status,
         'buzzer' : BuzzerController.buzzer_status,
+        'motor' : MotorController.motor_status,
         'breath_light' : LEDController.led_status
     }
     return data

@@ -21,7 +21,7 @@ config = cfg.Config(root_dir)
 
 socketio = SocketIO(app)
 from controllers import AccessoryController, APIController, LEDController, WebSocketController, AvatarController, MemberController, DataController
-from controllers import FaceController, InfraredController, BuzzerController
+from controllers import FaceController, InfraredController, BuzzerController, MotorController
 
 SENSOR_DATA_LIST = SensorHelper.SENSOR_LIST
 
@@ -32,6 +32,7 @@ app.register_blueprint(APIController.api_blueprint, url_prefix='/api')
 app.register_blueprint(LEDController.led_blueprint, url_prefix='/api/led')
 app.register_blueprint(InfraredController.infrared_blueprint, url_prefix='/api/infrared')
 app.register_blueprint(BuzzerController.buzzer_blueprint, url_prefix='/api/buzzer')
+app.register_blueprint(MotorController.motor_blueprint, url_prefix='/api/motor')
 app.register_blueprint(AvatarController.avatar_blueprint, url_prefix='/member/avatar')
 app.register_blueprint(MemberController.member_blueprint, url_prefix='/member')
 app.register_blueprint(FaceController.face_blueprint, url_prefix='/face')
