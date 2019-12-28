@@ -2,6 +2,7 @@ import pandas as pd
 from flask import Blueprint, jsonify
 from flask import request, make_response, render_template, redirect
 from model.helper.MemberHelper import MemberHelper
+from model.helper.MemberPreferenceHelper import MemberPreferenceHelper
 from model.util.General import public_key_require_page, token_no_require_page, token_require_page
 from model.helper.SensorHelper import SensorHelper
 from model.helper.MemberPreferenceHelper import MemberPreferenceHelper
@@ -30,6 +31,33 @@ def index(payload):
         pref, item_df = get_perf_data(account)
         resp = make_response(render_template('app/member/index.html',
                         member=result.get_all_parameter(), pref=pref, item_df = item_df))
+        return resp
+    # 會員資料取回失敗，重新導向登入頁面
+    else:
+        resp = make_response(redirect(url, code=302))
+        resp.set_cookie(key='token', value='', expires=0)
+        return resp
+
+@member_blueprint.route("/preference", methods=['GET'])
+@token_require_page('/member/login', request_type='pages')
+def preference(payload):
+    account = payload['account']
+    # 取回會員資料
+    status, result, code = MemberHelper.get(account)
+    # 會員資料取回成功
+    if status:
+        # 取回偏好設定參數
+        pref, item_df = get_perf_data(account)
+
+        pref_dict = dict()
+        for i in pref:
+            pref_dict.update({ i['item']: i})
+
+        default = MemberPreferenceHelper.DEFAULT_ITEM
+
+        resp = make_response(render_template('app/member/preference.html',
+                        member=result.get_all_parameter(), pref=pref, item_df = item_df,
+                        pref_dict=pref_dict, default=default))
         return resp
     # 會員資料取回失敗，重新導向登入頁面
     else:

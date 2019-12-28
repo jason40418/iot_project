@@ -98,6 +98,41 @@ def member_edit(payload, decode_result, data):
         result.update({'datetime' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'key_id': reqest_data['id']})
         return jsonify(result), code
 
+@api_blueprint.route('/member/pref_edit', methods=['POST'])
+@token_require_page('/member/login')
+def member_pref_edit(payload):
+    # 取回Request資料
+    reqest_data = request.json
+    account = payload['account']
+
+    # TODO: 使用者傳入資料後端需要再做驗證（含檢查所有key存在和資料格式）
+    args = list()
+    for item in reqest_data['payload']:
+        temp = item
+        temp.update({ 'account': account})
+        args.append(temp)
+
+    row = MemberPreferenceHelper.edit(args)
+
+    result = {
+        'datetime'  : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'msg'       : '會員偏好設定更新成功',
+        'type'      : 'MemberPreferenceEditSuccess',
+        'code'      : 200,
+        'data'      : reqest_data['payload']
+    }
+
+    resp = make_response(jsonify(result), 200)
+
+    # 產生token
+    token, expired_time = generate_token(result ,'login_expire')
+
+    # 取回偏好設定並重新進行設定
+    pref, item_list = MemberPreferenceHelper.get_by_account(account)
+    resp.set_cookie(key='pref', value=str(json.dumps(pref, ensure_ascii=False)), expires=expired_time)
+
+    return resp
+
 #
 @api_blueprint.route('/member/pref_avg', methods=['GET'])
 def member_average():

@@ -95,3 +95,17 @@ class MemberPreferenceHelper():
                     })
 
         return result, people, len(people)
+
+    @staticmethod
+    def edit(args):
+        sql = " UPDATE  `iot`.`member_preference` \
+                SET     `member_preference`.`min` = %(min)s, \
+                        `member_preference`.`max` = %(max)s \
+                WHERE   `member_preference`.`item` = %(item)s AND \
+                        `member_preference`.`account` = %(account)s"
+
+        while True:
+            status, row, result = MemberPreferenceHelper.dbmgr.update(sql, args, multiple=True)
+            if status: break
+
+        return row

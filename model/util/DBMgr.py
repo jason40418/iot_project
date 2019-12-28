@@ -78,13 +78,16 @@ class DBMgr:
         self.close()
         return True, row, result_id
 
-    def update(self, sql, args):
+    def update(self, sql, args, multiple=False):
         row = -1
         result = -1
         if(self.conn()):
             try:
                 with self.cursor() as cursor:
-                    row = cursor.execute(sql, args)
+                    if not multiple:
+                        row = cursor.execute(sql, args)
+                    else:
+                        row = cursor.executemany(sql, args)
                     self.commit()
 
             except self.mysql_error() as e:

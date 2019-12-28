@@ -1,0 +1,93 @@
+{%  extends  "app/base.html"  %}
+{%  block  title  %}偏好設定管理{%  endblock  %}
+{%  block  description  %}允許使用者進行登入{%  endblock  %}
+
+  {%  block  custom_css  %}
+  {%  endblock  %}
+
+    {%  block  content  %}
+    <div class="row">
+      <div class="col-sm-3">
+        {% include "app/member/panel.html" %}
+      </div>
+      <!--/col-3-->
+      <div class="col-sm-9">
+        <div class="jumbotron">
+          <h1>會員偏好設定</h1>
+          <p class="lead">設定客製化環境參數</p>
+        </div>
+        <form action="">
+          {% for item in default %}
+          <div class="form-group" has-feedback>
+            <label for="sensor" class="control-label">{{ item['name'] }}</label>
+            <input type="text" class="js-range-slider" id="{{ item['id'] }}" value=""
+              data-skin="round"
+              data-type="double"
+              data-min="{{ item['range_min'] }}"
+              data-max="{{ item['range_max'] }}"
+              data-from="{{ pref_dict[item['id']]['min'] }}"
+              data-to="{{ pref_dict[item['id']]['max'] }}"
+              data-step="0.1"
+              data-grid="true"
+            />
+          </div>
+          {% endfor %}
+          <button id="submit" type="button" class="btn btn-primary">修改</button>
+        </form>
+
+      </div>
+    </div>
+    <!--/col-9-->
+    {%  endblock  %}
+
+  {%  block  custom_js  %}
+  <script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+      $(".js-range-slider").ionRangeSlider();
+
+      var submit_action = () => {
+        let data = get_data();
+        let request = {
+          'payload': data,
+          'datetime': current_time()
+        }
+
+        api_request('POST', '/api/member/pref_edit', request, {
+          '2XX': {
+            完成: () => {
+              document.location.href = '/member';
+            }
+          },
+          '4XX': {
+            確認: () => {
+              document.location.href = '/member/preference';
+            }
+          },
+          '5XX': {
+            確認: () => {
+            }
+          }
+        });
+      }
+
+      var get_data = () => {
+        let result = Array();
+
+        $(".js-range-slider").each(function() {
+          result.push({
+            'item': $(this)[0]['id'],
+            'min' : $(this)[0]['value'].split(';')[0],
+            'max' : $(this)[0]['value'].split(';')[1]
+          });
+        });
+
+        return result;
+      }
+
+      $('#submit').click(function () {
+        submit_action();
+      })
+
+    });
+  </script>
+  {%  endblock  %}
