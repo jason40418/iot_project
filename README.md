@@ -34,7 +34,7 @@ https://github.com/daneden/animate.css
 https://jsfiddle.net/dhirajbodicherla/wmaftobx/13/
 https://github.com/minhur/bootstrap-toggle
 https://github.com/CodeSeven/toastr
-
+http://ionden.com/a/plugins/ion.rangeSlider/index.html
 
 # Crontab自動排程
 crontab -l :檢視所有
