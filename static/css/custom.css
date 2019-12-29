@@ -435,3 +435,6 @@ a:hover, a:focus{
   margin-bottom: 20px
 }
 
+.slick-dots {
+  bottom: -50px;
+}
