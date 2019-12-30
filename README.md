@@ -1,5 +1,45 @@
 # iot_project
 
+![](documentation/image/logo_full.svg)
+
+> Version: 1.0.0
+> 
+> Date: 2019-12-31
+> 
+> Video:
+
+## 1. Introduction
+
+## 2. Screenshots
+
+## 3. Features
+
+## 4. Prepare
+### Hardward
+- Raspberry Pi model 3+
+
+### Software
+### Sensors
+### Data Display
+
+## 5. Setup and Installation
+
+
+## 6. Usage
+
+## 7. Versioning
+- This library uses SemVer for versioning. For the versions available, see the tags on this repository.
+
+## H. Author
+
+## 8. References
+- This project use a lot of code from the following pages and repositories.
+- Thanks for a lot of people who contributed.
+
+## 9. Known Issues
+
+
+
 Google Font Chinese：https://fonts.google.com/specimen/Noto+Sans+TC?selection.family=Noto+Sans+TC
 Bootstrap
 fileupload
