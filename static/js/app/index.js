@@ -63,7 +63,7 @@
             // 如果資料存在則要更新
             $('#' + key.replace('.', '').replace('+', '') + '-datetime').html(payload['datetime']);
             let original = $('#' + key + '-value').html();
-            $('#' + key.replace('.', '').replace('+', '') + '-value').html(value.toFixed(1));
+            $('#' + key.replace('.', '').replace('+', '') + '-value').html(parseFloat(value).toFixed(1));
             let change_result = calc_value_change(original, value)
             $('#' + key.replace('.', '').replace('+', '') + '-value-change').html(change_result);
             blink_text('#' + key.replace('.', '').replace('+', '') + '-value');

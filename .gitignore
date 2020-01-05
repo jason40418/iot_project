@@ -111,4 +111,4 @@ venv.bak/
 
 .vscode/
 
-static/images/identify/
+static/images/identify/*

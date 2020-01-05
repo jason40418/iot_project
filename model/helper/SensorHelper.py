@@ -215,13 +215,14 @@ class SensorHelper():
                     'sensor'    : sensor
                 }
                 status, row, data = SensorHelper.dbmgr.query(sql, args, fetch='one')
+                print('row', row)
 
                 # 成功取回至少一筆資料
                 if status and row != 0:
                     temp_result.update({
-                        'sum': round(data['sum'], 2),
+                        'sum': round(data['sum'], 2) if data['sum'] != None else 0.00,
                         'count': int(data['count']),
-                        'avg': round(data['avg'], 2)
+                        'avg': round(data['avg'], 2) if data['avg'] != None else 0.00
                     })
                 # 失敗或沒有取得資料
                 else:
