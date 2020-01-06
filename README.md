@@ -44,8 +44,8 @@
 > :sparkles: But in this project, I would not improve and care about the face recognition challenges which mention above.
 
 ## 2. Screenshots
-- ![real-time](https://i.imgur.com/VXSiJse.gif)
-- ![history](https://i.imgur.com/eP0NXmE.gif)
+- ![real-time](static/gif/real-time.gif)
+- ![history](static/gif/history.gif)
 - ![](https://i.imgur.com/YoFpzvb.png)
 - ![](https://i.imgur.com/lIeEI6P.png)
 - ![](https://i.imgur.com/Nb8Lem0.png)
