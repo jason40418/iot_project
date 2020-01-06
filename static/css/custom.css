@@ -438,3 +438,11 @@ a:hover, a:focus{
 .slick-dots {
   bottom: -50px;
 }
+
+.footer-link-a {
+  color: #CCC;
+}
+
+.footer-link-a:hover {
+  color: #FFF;
+}

@@ -234,3 +234,9 @@ $ wget https://github.com/jason40418/iot_project/archive/master.zip
 7. http://jsfiddle.net/M4Fcd/186/
 8. https://github.com/dabeaz/python-cookbook/blob/master/src/9/multiple_dispatch_with_function_annotations/example1.py
 9. https://pjchender.blogspot.com/2017/01/html-5-data-attribute.html
+
+### 8.3. Python Package
+1. [Face Recongnize](https://www.pyimagesearch.com/2018/06/25/raspberry-pi-face-recognition/)
+2. [DHT22](https://github.com/adafruit/Adafruit_Python_DHT)
+3. [MQ-2](https://github.com/tutRPi/Raspberry-Pi-Gas-Sensor-MQ)
+4. [PMS5003](https://github.com/pimoroni/pms5003-python)
