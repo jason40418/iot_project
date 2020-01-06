@@ -135,6 +135,7 @@ class SensorHelper():
         # TODO: 檢查參數是否型態與格式正確
         df = pd.DataFrame(data)
         df.set_index("datetime" , inplace=True)
+        df = df.dropna()
 
         # 新增統計高低數值欄位
         df['high'] = df['value']
@@ -149,17 +150,23 @@ class SensorHelper():
             })
             df = df.asfreq(resample)
 
-            # 以小時進行合併
-            s_low = df['low'].groupby(df['low'].index.hour).min()
-            s_high = df['high'].groupby(df['high'].index.hour).max()
-            s_mean = df['value'].groupby(df['value'].index.hour).mean()
-            df_h = pd.concat([s_low, s_high, s_mean], axis=1)
+            if len(df.index) != 0:
+                # 以小時進行合併
+                s_low = df['low'].groupby(df['low'].index.hour).min()
+                s_high = df['high'].groupby(df['high'].index.hour).max()
+                s_mean = df['value'].groupby(df['value'].index.hour).mean()
+                df_h = pd.concat([s_low, s_high, s_mean], axis=1)
+            else:
+                df_h = df
         else:
-            # 以分鐘進行合併
-            s_low = df['low'].groupby(df['low'].index.minute).min()
-            s_high = df['high'].groupby(df['high'].index.minute).max()
-            s_mean = df['value'].groupby(df['value'].index.minute).mean()
-            df_h = pd.concat([s_low, s_high, s_mean], axis=1)
+            if len(df.index) != 0:
+                # 以分鐘進行合併
+                s_low = df['low'].groupby(df['low'].index.minute).min()
+                s_high = df['high'].groupby(df['high'].index.minute).max()
+                s_mean = df['value'].groupby(df['value'].index.minute).mean()
+                df_h = pd.concat([s_low, s_high, s_mean], axis=1)
+            else:
+                df_h = df
 
         # 取小數點至第二位，並且重設index
         df = df.round(2).reset_index()

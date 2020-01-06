@@ -5,10 +5,8 @@
 - To read more detail document, you could visit this [page](https://hackmd.io/c/Ers4gemdQ6abEiLBeTVNYw).
 
 > Version: 1.0.0
-> 
 > Date: 2019-12-31
-> 
-> Video:
+> Video: https://www.youtube.com/watch?v=guugmRgO0NU
 
 ## 1. Introduction
 ### Why environment monitor important?
