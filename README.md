@@ -44,8 +44,8 @@
 > :sparkles: But in this project, I would not improve and care about the face recognition challenges which mention above.
 
 ## 2. Screenshots
-- ![](https://i.imgur.com/VXSiJse.gif)
-- ![](https://i.imgur.com/eP0NXmE.gif)
+- ![real-time](https://i.imgur.com/VXSiJse.gif)
+- ![history](https://i.imgur.com/eP0NXmE.gif)
 - ![](https://i.imgur.com/YoFpzvb.png)
 - ![](https://i.imgur.com/lIeEI6P.png)
 - ![](https://i.imgur.com/Nb8Lem0.png)
@@ -61,7 +61,7 @@
 - ***PiEnvir*** also provide a clear user interface (UI) design that make you easier to read the data and warns you the room environment is suit for you or not currently.
 
 ## 4. Prepare
-### Hardward
+### 4.1. Hardward
 1. Raspberry Pi Model 3B *1
 2. Personal Computer (Windows OS) *1
 3. USB Cable for Raspberry Pi *1
@@ -74,7 +74,7 @@
 10. HDMI to Video Graphics Array (VGA Cable) *1
 11. Keyboard, Video and Mouse (KVM) Switch *1
 
-### Software
+### 4.2. Software
 1. SD Card Formatter — 5.0.1
 2. Raspbian OS — 2019-09-26
 3. Win32 Disk Imager — 1.0
@@ -82,7 +82,7 @@
 5. Berryconda — 2.0.0
 6. Visaul Studio Code — 1.41.1
 
-### Accessories
+### 4.3. Accessories
 1. Plantower G5 PMS5003 *1
 2. Grove - Gas Sensor MQ2 (Seed Studio) *1
 3. MCP3008 10-bit Analog-to-Digital Converter (ADC) *1
