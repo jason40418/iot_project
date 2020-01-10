@@ -9,6 +9,8 @@
 > Date: 2019-12-31
 >
 > Video: https://www.youtube.com/watch?v=guugmRgO0NU
+>
+> :sparkles: Do not forget to turn on the **close caption (CC)**.
 
 ## 1. Introduction
 ### Why environment monitor important?
