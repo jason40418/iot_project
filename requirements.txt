@@ -47,7 +47,7 @@ imutils==0.5.3
 isort==4.3.4
 itsdangerous==0.24
 jedi==0.13.2
-Jinja2==2.10
+Jinja2==2.11.3
 joblib==0.14.0
 keyring==17.1.1
 keyrings.alt==3.1.1
