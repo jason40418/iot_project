@@ -65,7 +65,7 @@ motephat==0.0.2
 multidict==4.6.1
 mypy==0.670
 mypy-extensions==0.4.1
-numpy==1.16.2
+numpy==1.22.0
 oauthlib==2.1.0
 olefile==0.46
 pandas==0.25.3
